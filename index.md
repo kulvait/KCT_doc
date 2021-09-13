@@ -15,7 +15,7 @@ These tools are tested and the compatibility will be maintained towards Debian 1
 
 ## [KCT cbct](https://github.com/kulvait/KCT_cbct)
 
-Contains C++ and OpenCL implementation of various methods for algebraic CT reconstruction. Use the following [Geometry model](link:/slug/geometry-model).
+Contains C++ and OpenCL implementation of various methods for algebraic CT reconstruction. Use the following [Geometry model](link://slug/geometry-model).
 
 ## [KCT dentk](https://github.com/kulvait/KCT_dentk)
 

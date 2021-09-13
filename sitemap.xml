@@ -15,11 +15,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/archive.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
- </url>
- <url>
-  <loc>https://kulvait.github.io/KCT_doc/blog/</loc>
-  <lastmod>2021-09-13T10:20:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/</loc>
@@ -27,11 +23,11 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/galleries/</loc>
@@ -39,42 +35,30 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/geometry-model.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/license-tcga-gbm.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/listings/</loc>
   <lastmod>2021-09-13T10:03:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kulvait.github.io/KCT_doc/pages/</loc>
-  <lastmod>2021-09-13T10:27:00Z</lastmod>
- </url>
- <url>
-  <loc>https://kulvait.github.io/KCT_doc/pages/geometry-model.html</loc>
-  <lastmod>2021-09-13T10:23:00Z</lastmod>
- </url>
- <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/</loc>
-  <lastmod>2021-09-13T12:31:00Z</lastmod>
- </url>
- <url>
-  <loc>https://kulvait.github.io/KCT_doc/posts/den-format.html</loc>
-  <lastmod>2021-09-13T10:31:00Z</lastmod>
+  <lastmod>2021-09-13T14:03:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/kct-framework.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-defining-flat-detector-ct-trajectory-by-means-of-camera-matrices.html</loc>
-  <lastmod>2021-09-13T14:03:00Z</lastmod>
+  <lastmod>2021-09-13T14:15:00Z</lastmod>
  </url>
 </urlset>
