@@ -1,0 +1,4 @@
+Sitemap: https://kulvait.github.io/KCT_doc/sitemapindex.xml
+
+User-Agent: *
+Host: kulvait.github.io
