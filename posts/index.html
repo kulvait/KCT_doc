@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
 <link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]-->
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -62,22 +62,44 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-2-defining-flat-detector-ct-trajectory-by-means-of-camera-matrices.html" class="u-url">Working with KCT CBCT 2 Defining flat detector CT trajectory by means of camera matrices</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" class="u-url">Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Vojtěch Kulvait
             </span></p>
             <p class="dateline">
-            <a href="working-with-kct-cbct-2-defining-flat-detector-ct-trajectory-by-means-of-camera-matrices.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-13T14:28:24+02:00" itemprop="datePublished" title="2021-09-13 14:28">2021-09-13 14:28</time></a>
+            <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" rel="bookmark">
+            <time class="published dt-published" datetime="2021-09-14T12:05:50+02:00" itemprop="datePublished" title="2021-09-14 12:05">2021-09-14 12:05</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
     <div>
-<p>In the last post Working with KCT CBCT 1 we converted DICOM data to the DEN format and explained how volumes are encoded. Today we create a CT trajectory setup and encode it in the format that can be recognized in KCT. Finally, we use KCT to reproject the volume from the last post using this trajectory.</p>
-<h3>Theoretical scanning trajectory</h3>
-<p>Let's reproject the volume we have using theoretical C-Arm FDCT trajectory. Let's say that our device rotates along the axis parallel to the z axis. By angle $\omega$ we denote polar angle between normal to detector that is pointing towards the source and x axis. Let's fix source to isocenter and source to detector lengths and create a setup in which patient is irradiated from 360 different angles corresponding to integer $\omega$ values. Let's create (camera matrices)[https://en.wikipedia.org/wiki/Camera_matrix], which encode this setup. We create them as float64 DEN files, where z dimension will represent number of angles. So that we produce file of dimensions (dimx, dimy, dimz)=(3,4,360).</p>
-<h3>Volume reprojection</h3>
+<p>Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.</p>
+<h3>CT projections geometry</h3>
+<p>In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Natural space of the detector when considering discretization is $ \mathbb{R}^2 $ as the projections are 2D images. The process of the projection is analogous to the pinhole camera model that projects the scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.</p>
+<h3>Projective geometry</h3>
+<p>Projective space is a structure on top of an Vector space $\mathbf{V}$ that is not a vector space itself. For an introduction into the projective geometry, see <a href="http://math.unife.it/insegnamenti/geometria-differenziale/materiale-didattico/projective.pdf">class notes of Nigel Hitchin</a>. I will follow some of its definitions</p>
+<blockquote>
+<p>The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.</p>
+</blockquote>
+<p>It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere. We however will be projecting this structure onto the planar detector.</p>
+<h3>Construction of camera matrices</h3>
+<p>Let's have the following FDCT setup</p>
+<p><img src="../images/CTSchemeCVP.png"></p>
+<p>The configuration is uniquely determined by the position of the source $\vec{s} = (s_0, s_1, s_2)$ in the word coordinates, position of the principal point $\vec{p} = (p_0, p_1, p_2)$ that is a point on the detector such that the line |\vec{s} \vec{p}| is orthogonal to the detector surface. The ray defined by that line is called the principal ray. Apart from that we have to define position of the zero on the detector, size of the detector pixels. All this information can be embedded in the camera matrix.</p>
+<p>Size of the detector by means of the </p>
+<p>Let's suppose we have a source position $\vec{s} = (s_0, s_1, s_2)$ and that the $z$ axis of the geometry is the axis of the rotation. We further assume that principal ray hits the detector in its center and at the same time principal ray is orthogonal to $z$ axis. Lets $A$ be the distance from the source to detector $(P_0, P_1)$ be the sizes of the detector pixels in the units of the coordinates $(x,y,z)$ that are isometric. There is $M \times N$ detector pixels. Its axes will be $\chi_1$ and $\chi_2$, where $\chi_1$ will be orthogonal to $z$ and $\chi_2$ will be parrallel to $z$ with oposite orientation. Orientation of the world coordinates will be as it is described <a href="https://www.slicer.org/w/img_auth.php/2/22/Coordinate_sytems.png">here</a>. By angle $\omega$ we describe polar angle that principal ray from the detector to source has with $xy$ axes.</p>
+<p>From this information we construct camera matrix for given projection setup. First we transform $(x,y,z)$ to the $(x' , y' , z' )$ that is centered in the source position. First as on the projections $\chi_2$ coordinate is usually encoded going from the top to bottom we would like to identify positive direction of $\chi_2$ with negative direction of $z$ by means of $z'=-z$. We rotate the geometry in the way that $y'$ will be in the direction of principal ray and $x'$ will be colinear with $\chi_1$ on the detector. So we use the following projective element 
+$$
+\mathbb{X}_1 =
+\begin{pmatrix} 
+\sin{\alpha}&amp; -\cos{\alpha} &amp;0 &amp;0 \\
+\cos{\alpha}&amp; \sin{\alpha}&amp;0 &amp;0 \\ 
+0&amp;0&amp;-1&amp;0 \\
+0&amp;0&amp;0&amp;1 
+\end{pmatrix},
+$$
+where $\alpha = \atantwo{(-s_1, -s_0)}$.</p>
 </div>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" class="u-url">Working with KCT CBCT 1 Converting DICOM volume to DEN volume</a></h1>
@@ -95,7 +117,7 @@ bg-dark
 <p>In this series of blog posts, I will describe how to work with the KCT framework from the first steps of importing data to the more advanced topics as a running reconstruction. </p>
 <p>In the post today, I explain how to import files in DICOM into the DEN format that is used within the framework. I use the data from the public repository.</p>
 <h3>Example dataset</h3>
-<p>I have choosen a publicly available dataset from <a href="https://public.cancerimagingarchive.net/">The Cancer Imaging Archive</a> containing a brain CT scan, ID TCGA-19-1787. To download this dataset I followed the procedure described on (The Cancer Imaging Archive page)[https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images]. It is needed to instal their application NBIA Data Retriever and provide it with the information in the <code>manifest-1631446347856.tcia</code> file, which must contain the following</p>
+<p>I have choosen a publicly available dataset from <a href="https://public.cancerimagingarchive.net/">The Cancer Imaging Archive</a> containing a brain CT scan, ID TCGA-19-1787. To download this dataset I followed the procedure described on <a href="https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images">The Cancer Imaging Archive page</a>. It is needed to instal their application NBIA Data Retriever and provide it with the information in the <code>manifest-1631446347856.tcia</code> file, which must contain the following</p>
 <pre class="code literal-block"><span></span><code><span class="n">downloadServerUrl</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">public</span><span class="o">.</span><span class="n">cancerimagingarchive</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">nbia</span><span class="o">-</span><span class="n">download</span><span class="o">/</span><span class="n">servlet</span><span class="o">/</span><span class="n">DownloadServlet</span>
 <span class="n">includeAnnotation</span><span class="o">=</span><span class="bp">true</span>
 <span class="n">noOfrRetry</span><span class="o">=</span><span class="mi">4</span>
@@ -106,9 +128,9 @@ bg-dark
 </code></pre>
 
 
-<p>Example dataset is published under the terms of Creative Commons Attribution 3.0 Unported License (http://creativecommons.org/licenses/by/3.0/) and the <a href="../license-tcga-gbm.html">following terms</a>. This licencing apply to any user even the user of the derived data, which I publish here in scope of this demonstration in <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>.</p>
-<p>When we unpack the data of example volume, we see that dicom files with the suffix dcm are in the directory <code>TCGA-19-1787/04-20-2002-NA-NR CT HEAD W CE-97133/2.000000-Head Vol.  1.5  H40s ST-51391</code>. For simplicity I rename this directory just to DICOM. 
-From the DICOM header we can see that it is a scan on SIEMENS Sensation Cardiac 64 CT machine. It contains 124 slices with the thickness of 1.5mm of the dimension 512x512, the voxel sizes are (0.64453125mm, 0.64453125mm, 1.5mm).</p>
+<p>Example dataset is published under the terms of <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> and the <a href="../license-tcga-gbm.html">following terms</a>. This licencing apply to any user even the user of the derived data, which I publish here in scope of this demonstration in <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>.</p>
+<p>When we unpack the data of example volume, we see that dicom files with the suffix dcm are in the directory <code>TCGA-19-1787/04-20-2002-NA-NR CT HEAD W CE-97133/2.000000-Head Vol.  1.5  H40s ST-51391</code>. For simplicity I rename this directory just to DICOM and remove parent subdirectories. 
+From the DICOM headers we can see that it is a scan on SIEMENS Sensation Cardiac 64 CT machine. It contains $124$ slices with the thickness of $1.5$mm of the dimension $512 \times 512$, the voxel sizes are ($0.64453125$mm, $0.64453125$mm, $1.5$mm).</p>
 <h3>Conversion of DICOM series to DEN format</h3>
 <p>For the purpose of this example, we have to transform the DICOM dataset into the <a href="../den-format.html">DEN format</a>, which is used by KCT framework. We do it using <a href="https://github.com/kulvait/KCT_denpy">KCT_denpy package</a>. This package allow us to convert between the representations of the volume data as numpy.ndarray, DEN file or DICOM series. Internally it uses the package pydicom to read DICOM data.</p>
 <p>For the conversion, I have created a simple script <code>[DICOMTODEN.py](https://github.com/kulvait/KCT_scripts/blob/master/DICOMTODEN.py)</code>. The command to convert the data to the DEN format will then be</p>
@@ -116,7 +138,7 @@ From the DICOM header we can see that it is a scan on SIEMENS Sensation Cardiac 
 </code></pre>
 
 
-<p>After you run this command, the new directory <code>DEN_HU</code> will be created, which contains file <code>Series_00.den</code>. This is a converted DICOM file into the DEN format. To vizualize the volume can be used (KCT Den file opener)[https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/KCT_Den_File_Opener-1.1.1.jar], a plugin to the (ImageJ)[https://imagej.nih.gov/ij/] viewer that works also with (Fiji)[https://imagej.net/software/fiji/]. It is sufficient to put a file KCT_Den_File_Opener-1.1.1.jar into the .imagej/plugins configuration directory of ImageJ. Then simpy select <code>File-&gt;Open DEN ..</code> and navigate to <code>Series_00.den</code>.</p>
+<p>After you run this command, the new directory <code>DEN_HU</code> will be created, which contains file <code>Series_00.den</code>. This is a converted DICOM file into the DEN format. To vizualize the volume can be used <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/KCT_Den_File_Opener-1.1.1.jar">KCT Den file opener</a>, a plugin of <a href="https://imagej.nih.gov/ij/">ImageJ</a> viewer that works also with <a href="https://imagej.net/software/fiji/">Fiji</a>. It is sufficient to put a file KCT_Den_File_Opener-1.1.1.jar into the .imagej/plugins configuration directory of ImageJ. Then simpy select <code>File-&gt;Open DEN ..</code> and navigate to <code>Series_00.den</code>.</p>
 <p>You can notice that the values are integers starting from $-1024$ in the areas of the air up to values greater than $1000$ in the dense bone areas. These are in (Hounsfield units)[https://en.wikipedia.org/wiki/Hounsfield_scale], which are good for the physicans to compare tissue contrasts in a convenient scale, but they do not represent raw attenuation values. To do a projection of the data using KCT or reconstruction of these projections, we need raw attenuation values.</p>
 <p>Conversion between Hounsfield units and raw attenuation values is possible using (KCT dentk toolkit)[https://github.com/kulvait/KCT_dentk]. Install the tool <code>dentk-fromhu</code> to your path and then the conversion can be done either by calling</p>
 <pre class="code literal-block"><span></span><code>dentk-fromhu Series_00.den Series_00.raw
@@ -172,21 +194,19 @@ From the DICOM header we can see that it is a scan on SIEMENS Sensation Cardiac 
 
 
         
-        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script><script>
-                renderMathInElement(document.body,
-                    {
-                        
-delimiters: [
-    {left: "$$", right: "$$", display: true},
-    {left: "\\[", right: "\\]", display: true},
-    {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
-    {left: "$", right: "$", display: false},
-    {left: "\\(", right: "\\)", display: false}
-]
-
-                    }
-                );
-            </script><!--End of body content--><footer id="footer">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--End of body content--><footer id="footer">
             Contents © 2021         <a href="mailto:kulvait@gmail.com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
             
             

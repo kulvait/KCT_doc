@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry | KCT framework</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
+<link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="Vojtěch Kulvait">
+<link rel="prev" href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" title="Working with KCT CBCT 1 Converting DICOM volume to DEN volume" type="text/html">
+<meta property="og:site_name" content="KCT framework">
+<meta property="og:title" content="Working with KCT CBCT 2 Projective geometry and camera matrices to des">
+<meta property="og:url" content="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">
+<meta property="og:description" content="Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2021-09-14T12:05:50+02:00">
+<meta property="article:tag" content="using_kct_blog">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../">
+
+            <span id="blog-title">KCT framework</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="#" rel="bookmark">
+            <time class="published dt-published" datetime="2021-09-14T12:05:50+02:00" itemprop="datePublished" title="2021-09-14 12:05">2021-09-14 12:05</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.</p>
+<h3>CT projections geometry</h3>
+<p>In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Natural space of the detector when considering discretization is $ \mathbb{R}^2 $ as the projections are 2D images. The process of the projection is analogous to the pinhole camera model that projects the scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.</p>
+<h3>Projective geometry</h3>
+<p>Projective space is a structure on top of an Vector space $\mathbf{V}$ that is not a vector space itself. For an introduction into the projective geometry, see <a href="http://math.unife.it/insegnamenti/geometria-differenziale/materiale-didattico/projective.pdf">class notes of Nigel Hitchin</a>. I will follow some of its definitions</p>
+<blockquote>
+<p>The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.</p>
+</blockquote>
+<p>It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere. We however will be projecting this structure onto the planar detector.</p>
+<h3>Construction of camera matrices</h3>
+<p>Let's have the following FDCT setup</p>
+<p><img src="../images/CTSchemeCVP.png"></p>
+<p>The configuration is uniquely determined by the position of the source $\vec{s} = (s_0, s_1, s_2)$ in the word coordinates, position of the principal point $\vec{p} = (p_0, p_1, p_2)$ that is a point on the detector such that the line |\vec{s} \vec{p}| is orthogonal to the detector surface. The ray defined by that line is called the principal ray. Apart from that we have to define position of the zero on the detector, size of the detector pixels. All this information can be embedded in the camera matrix.</p>
+<p>Size of the detector by means of the </p>
+<p>Let's suppose we have a source position $\vec{s} = (s_0, s_1, s_2)$ and that the $z$ axis of the geometry is the axis of the rotation. We further assume that principal ray hits the detector in its center and at the same time principal ray is orthogonal to $z$ axis. Lets $A$ be the distance from the source to detector $(P_0, P_1)$ be the sizes of the detector pixels in the units of the coordinates $(x,y,z)$ that are isometric. There is $M \times N$ detector pixels. Its axes will be $\chi_1$ and $\chi_2$, where $\chi_1$ will be orthogonal to $z$ and $\chi_2$ will be parrallel to $z$ with oposite orientation. Orientation of the world coordinates will be as it is described <a href="https://www.slicer.org/w/img_auth.php/2/22/Coordinate_sytems.png">here</a>. By angle $\omega$ we describe polar angle that principal ray from the detector to source has with $xy$ axes.</p>
+<p>From this information we construct camera matrix for given projection setup. First we transform $(x,y,z)$ to the $(x' , y' , z' )$ that is centered in the source position. First as on the projections $\chi_2$ coordinate is usually encoded going from the top to bottom we would like to identify positive direction of $\chi_2$ with negative direction of $z$ by means of $z'=-z$. We rotate the geometry in the way that $y'$ will be in the direction of principal ray and $x'$ will be colinear with $\chi_1$ on the detector. So we use the following projective element 
+$$
+\mathbb{X}_1 =
+\begin{pmatrix} 
+\sin{\alpha}&amp; -\cos{\alpha} &amp;0 &amp;0 \\
+\cos{\alpha}&amp; \sin{\alpha}&amp;0 &amp;0 \\ 
+0&amp;0&amp;-1&amp;0 \\
+0&amp;0&amp;0&amp;1 
+\end{pmatrix},
+$$
+where $\alpha = \atantwo{(-s_1, -s_0)}$.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" rel="prev" title="Working with KCT CBCT 1 Converting DICOM volume to DEN volume">Previous post</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script></article><!--End of body content--><footer id="footer">
+            Contents © 2021         <a href="mailto:kulvait@gmail.com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
