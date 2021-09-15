@@ -139,44 +139,24 @@ To shift the $\chi^{(0,0)}$ to its intended position let's do this
 
 In the KCT we use the convention that integer projection coordinates denote center of given pixel.
 Therefore zero is achieved at the center of corner pixel.
+Now the principal point has coordinates $(PX,PY)=((N-1)/2, (M-1)/2)$ we may need to shift it further. We might want to do something fancy as [quarter detector offset shifting to improve resolution](https://doi.org/10.1109/TMI.2004.826950). Or we might just want to adjust the positioning to the real device we are trying to model. 
 
-Finally we obtain projection matrix that for given position in the volume provides the position on the projector
+
+\begin{equation}
+\mathbf{A}_3 =
+\begin{pmatrix}
+1&0&PX_o\\\
+0&1&PY_o\\\
+0&0&1
+\end{pmatrix}
+\end{equation}
+
+Is a projective element, which does this final offsetting with $(PX_o,PY_o)=(0,0)$ in our demonstration example. 
+
+Finally we obtain camera matrix, sometimes in this context also called projection matrix, that for given position in the volume provides the position on the projector
 $$
-\mathbf{P} = \mathbf{A}_2 \mathbf{A}_1 \mathbf{E} \mathbf{X}_2 \mathbf{X}_1.
+\mathbf{P} = \mathbf{A}_3 \mathbf{A}_2 \mathbf{A}_1 \mathbf{E} \mathbf{X}_2 \mathbf{X}_1.
 $$
-
-## Python implementation
-We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
-I have put a script that implements what has been said [to github](https://github.com/kulvait/KCT_scripts/blob/master/tutorials/createProjectionMatrices.py).
-Version of denpy package must be at least 1.1.2 to have function for storing double DEN `storeNdarrayAsDoubleDEN`.
-
-Using the script, we produce the camera matrices we need for given trajectory setup.
-We can check their properties such as source position by running `dentk-matinfo` with the following output
-```
-dentk-matinfo CM.den -f 0-3
-Camera matrix from 0-th frame:
-    |   -0.257     1.623     0.000   192.252|                     | 1944.805    -0.000   307.500| |    0.000     1.000     0.000|    0.000|
-P = |   -0.200     0.000    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
-    |   -0.001     0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000     0.000    -0.000|  749.000|
-S = [749.00,  0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
-Camera matrix from 1-th frame:
-    |   -0.285     1.619     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.017     1.000    -0.000|    0.000|
-P = |   -0.200    -0.003    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
-    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000    -0.017    -0.000|  749.000|
-S = [748.89, 13.07, -0.00], -Q^T u = [748.89, 13.07,  0.00].
-Camera matrix from 2-th frame:
-    |   -0.313     1.613     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.035     0.999    -0.000|    0.000|
-P = |   -0.200    -0.007    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
-    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.035    -0.000|  749.000|
-S = [748.54, 26.14, -0.00], -Q^T u = [748.54, 26.14,  0.00].
-Camera matrix from 3-th frame:
-    |   -0.341     1.608     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.052     0.999    -0.000|    0.000|
-P = |   -0.200    -0.010    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
-    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.052    -0.000|  749.000|
-S = [747.97, 39.20, -0.00], -Q^T u = [747.97, 39.20,  0.00].
-```
-
-Here we can see that it was able to show us source positions $S$ for first three views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.
 
 ## Next post
-In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will make projections.
+In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the [DEN file](link://slug/den-format).
