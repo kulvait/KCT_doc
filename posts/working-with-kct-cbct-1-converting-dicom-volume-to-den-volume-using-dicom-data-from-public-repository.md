@@ -1,7 +1,7 @@
 <!--
 .. title: Working with KCT CBCT 1 Converting DICOM volume to DEN volume
 .. slug: working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository
-.. date: 2021-09-13 12:44:40 UTC+02:00
+.. date: 2021-09-13 21:05:35 UTC+02:00
 .. tags: using_kct_blog
 .. category: 
 .. link: 
