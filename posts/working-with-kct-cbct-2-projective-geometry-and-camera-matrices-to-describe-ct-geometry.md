@@ -1,7 +1,7 @@
 <!--
 .. title: Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry
 .. slug: working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry
-.. date: 2021-09-14 12:05:50 UTC+02:00
+.. date: 2021-09-14 21:05:50 UTC+02:00
 .. tags: using_kct_blog
 .. category: 
 .. link: 

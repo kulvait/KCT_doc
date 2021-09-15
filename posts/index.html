@@ -68,14 +68,136 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" class="u-url">Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html" class="u-url">Working with KCT CBCT 3 Python implementation of circular CT trajectory</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html" rel="bookmark">
+            <time class="published dt-published" datetime="2021-09-15T12:05:50+02:00" itemprop="datePublished" title="2021-09-15 12:05">2021-09-15 12:05</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.</p>
+<p>Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.</p>
+<h3>System setup</h3>
+<p>We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
+I have put a script that implements what has been said <a href="https://github.com/kulvait/KCT_scripts/blob/master/createCameraMatricesForCircularScanTrajectory.py">to github</a>.
+Version of <a href="https://github.com/kulvait/KCT_denpy">denpy</a> package must be at least 1.1.2 to have function for storing double DEN <code>storeNdarrayAsDoubleDEN</code>.</p>
+<p>For this demonstration to run on your computer you first need to install <code>denpy</code> package and clone <a href="https://github.com/kulvait/KCT_scripts">DEN scripts</a> package. Let's suppose you are running Debian 11. </p>
+<p>You can create a folder <code>KCT</code> and <code>KCT_bin</code> in your home directory. Go into this folder and clone KCT scripts into the folder scripts.</p>
+<pre class="code literal-block"><span></span><code>git clone https://github.com/kulvait/KCT_scripts.git scripts
+</code></pre>
+
+
+<p>Then into your .bashrc you can add the following</p>
+<pre class="code literal-block"><span></span><code><span class="k">export</span> <span class="n">PATH</span><span class="o">=$</span><span class="n">PATH</span><span class="p">:</span><span class="o">~/</span><span class="n">KCT_bin</span><span class="p">::</span><span class="o">~/</span><span class="n">KCT_scripts</span>
+</code></pre>
+
+
+<p>Then you shall also install <a href="https://github.com/kulvait/KCT_denpy">denpy</a></p>
+<pre class="code literal-block"><span></span><code>pip3 install --user git+https://github.com/kulvait/KCT_denpy.git
+</code></pre>
+
+
+<p>if you need to upgrade run</p>
+<pre class="code literal-block"><span></span><code>pip3 install --user --upgrade git+https://github.com/kulvait/KCT_denpy.git
+</code></pre>
+
+
+<p>Now you have installed everything to produce the camera matrices. Optionally you might need to install KCT dentk package, that will be very useful for working with the files in <a href="../den-format.html">DEN format</a>.</p>
+<p>Go to the KCT folder and clone it</p>
+<pre class="code literal-block"><span></span><code>git clone https://github.com/kulvait/KCT_dentk dentk
+</code></pre>
+
+
+<p>Then follow the instructions in README file at https://github.com/kulvait/KCT_dentk to build the package.</p>
+<h3>Python implementation</h3>
+<p>When the system is set up, we can just run</p>
+<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --force --write-params-file CM.den
+</code></pre>
+
+
+<p>as I set all the default parameters of this script according to <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">last post</a>. You can see that the den file <code>CM.den</code> and the text file <code>CM.den.params</code> were produced. Params file is not apriori needed for working with KCT but it is a good practice to know how your files were created.</p>
+<p>Let's have a look to the main part of the script</p>
+<pre class="code literal-block"><span></span><code><span class="n">I</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">source_to_isocenter</span>
+<span class="n">A</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">source_to_detector</span>
+<span class="n">M</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">projection_sizey</span><span class="p">)</span>
+<span class="n">N</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">projection_sizex</span><span class="p">)</span>
+<span class="n">PX</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">pixel_sizex</span>
+<span class="n">PY</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">pixel_sizey</span>
+<span class="n">VIEWCOUNT</span> <span class="o">=</span> <span class="n">ARG</span><span class="o">.</span><span class="n">number_of_angles</span>
+<span class="n">OMEGA</span> <span class="o">=</span> <span class="n">ARG</span><span class="o">.</span><span class="n">omega_zero</span>
+<span class="n">OMEGAINCREMENT</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">VIEWCOUNT</span>
+
+<span class="c1">#Let's create specified set of projection matrices as np.array</span>
+<span class="n">CameraMatrices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">viewIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">VIEWCOUNT</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sourcePosition</span><span class="p">(</span><span class="n">OMEGA</span><span class="p">,</span> <span class="n">I</span><span class="p">)</span> 
+    <span class="n">_A3</span><span class="o">=</span><span class="n">A3</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">pixel_offsetx</span><span class="p">,</span> <span class="n">ARG</span><span class="o">.</span><span class="n">pixel_offsety</span><span class="p">)</span>
+    <span class="n">_A2</span><span class="o">=</span><span class="n">A2</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">_A1</span> <span class="o">=</span> <span class="n">A1</span><span class="p">(</span><span class="n">PX</span><span class="p">,</span> <span class="n">PY</span><span class="p">)</span>
+    <span class="n">_E</span> <span class="o">=</span> <span class="n">E</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">_X2</span> <span class="o">=</span> <span class="n">X2</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> 
+    <span class="n">_X1</span> <span class="o">=</span> <span class="n">X1</span><span class="p">(</span><span class="n">OMEGA</span><span class="p">)</span>
+    <span class="n">CM</span> <span class="o">=</span> <span class="n">_A3</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_A2</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_A1</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_E</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_X2</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_X1</span><span class="p">)</span>
+    <span class="n">CameraMatrices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">CameraMatrices</span><span class="p">,</span> <span class="n">CM</span><span class="p">))</span>
+    <span class="n">OMEGA</span> <span class="o">+=</span> <span class="n">OMEGAINCREMENT</span>
+
+<span class="n">DEN</span><span class="o">.</span><span class="n">storeNdarrayAsDoubleDEN</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">outputMatrixFile</span><span class="p">,</span> <span class="n">CameraMatrices</span><span class="p">,</span> <span class="n">ARG</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
+</code></pre>
+
+
+<p>First we initialize the parameters.</p>
+<p>Then we prepare the numpy matrices according to <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">the last post</a> and finally we do the multiplication and concatenate the matrices.</p>
+<p>On the last line you can see how easy is to convert <code>numpy.ndarray</code> into the DEN by one call. </p>
+<p>Using the script, we produce the camera matrices we need for given trajectory setup.
+To remind you the parameters let's have a look to the <code>CM.den.params</code> file</p>
+<p>We can check their properties such as source position of first few frames by running </p>
+<pre class="code literal-block"><span></span><code>dentk-matinfo CM.den -f <span class="m">0</span>-3
+</code></pre>
+
+
+<p>with the following output</p>
+<pre class="code literal-block"><span></span><code>Camera matrix from 0-th frame:
+    |   -0.257     1.623     0.000   192.252|                     | 1944.805    -0.000   307.500| |    0.000     1.000     0.000|    0.000|
+P = |   -0.200     0.000    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.001     0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000     0.000    -0.000|  749.000|
+S = [749.00,  0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
+Camera matrix from 1-th frame:
+    |   -0.285     1.619     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.017     1.000    -0.000|    0.000|
+P = |   -0.200    -0.003    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000    -0.017    -0.000|  749.000|
+S = [748.89, 13.07, -0.00], -Q^T u = [748.89, 13.07,  0.00].
+Camera matrix from 2-th frame:
+    |   -0.313     1.613     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.035     0.999    -0.000|    0.000|
+P = |   -0.200    -0.007    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.035    -0.000|  749.000|
+S = [748.54, 26.14, -0.00], -Q^T u = [748.54, 26.14,  0.00].
+Camera matrix from 3-th frame:
+    |   -0.341     1.608     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.052     0.999    -0.000|    0.000|
+P = |   -0.200    -0.010    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.052    -0.000|  749.000|
+S = [747.97, 39.20, -0.00], -Q^T u = [747.97, 39.20,  0.00].
+</code></pre>
+
+
+<p>Here we can see that it was able to show us source positions $S$ for first three views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.</p>
+<h3>Next post</h3>
+<p>In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" class="u-url">Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Vojtěch Kulvait
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-14T12:05:50+02:00" itemprop="datePublished" title="2021-09-14 12:05">2021-09-14 12:05</time></a>
+            <time class="published dt-published" datetime="2021-09-14T21:05:50+02:00" itemprop="datePublished" title="2021-09-14 21:05">2021-09-14 21:05</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -206,7 +328,7 @@ $$</p>
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-13T12:44:40+02:00" itemprop="datePublished" title="2021-09-13 12:44">2021-09-13 12:44</time></a>
+            <time class="published dt-published" datetime="2021-09-13T21:05:35+02:00" itemprop="datePublished" title="2021-09-13 21:05">2021-09-13 21:05</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
