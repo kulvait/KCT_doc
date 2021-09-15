@@ -97,38 +97,65 @@ On the last line you can see how easy is to convert `numpy.ndarray` into the DEN
 Using the script, we produce the camera matrices we need for given trajectory setup.
 To remind you the parameters let's have a look to the `CM.den.params` file
 
-
-We can check their properties such as source position of first few frames by running 
+```json
+{
+  "_json_message": "Created using KCT script createCameraMatricesForCircularScanTrajectory.py",
+  "force": true,
+  "number_of_angles": 360,
+  "omega_zero": 0,
+  "outputMatrixFile": "CM.den",
+  "pixel_offsetx": 0.0,
+  "pixel_offsety": 0.0,
+  "pixel_sizex": 0.616,
+  "pixel_sizey": 0.616,
+  "projection_sizex": 616,
+  "projection_sizey": 480,
+  "source_to_detector": 1198.0,
+  "source_to_isocenter": 749.0,
+  "write_params_file": true
+}
+```
+So that we can check which particular parameters were used to create our trajectory. To dig deeper, I have written `dentk-mathinfo` as part of the dentk package. We can check decompose our matrices and check properties such as source position of first few frames by running 
 
 ```bash 
-dentk-matinfo CM.den -f 0-3
+dentk-matinfo CM.den -f 0-5
 ```
 
 with the following output
 ```
 Camera matrix from 0-th frame:
-    |   -0.257     1.623     0.000   192.252|                     | 1944.805    -0.000   307.500| |    0.000     1.000     0.000|    0.000|
-P = |   -0.200     0.000    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.200     1.623     0.000   149.737|                     | 1944.805    -0.000   239.500| |    0.000     1.000     0.000|    0.000|
+P = |   -0.257     0.000    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000    -0.000    -1.000|    0.000|
     |   -0.001     0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000     0.000    -0.000|  749.000|
-S = [749.00,  0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
+S = [749.00, -0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
 Camera matrix from 1-th frame:
-    |   -0.285     1.619     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.017     1.000    -0.000|    0.000|
-P = |   -0.200    -0.003    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.228     1.620     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.017     1.000    -0.000|    0.000|
+P = |   -0.257    -0.004    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000    -0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000    -0.017    -0.000|  749.000|
 S = [748.89, 13.07, -0.00], -Q^T u = [748.89, 13.07,  0.00].
 Camera matrix from 2-th frame:
-    |   -0.313     1.613     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.035     0.999    -0.000|    0.000|
-P = |   -0.200    -0.007    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.256     1.615     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.035     0.999    -0.000|    0.000|
+P = |   -0.257    -0.009    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000     0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.035    -0.000|  749.000|
 S = [748.54, 26.14, -0.00], -Q^T u = [748.54, 26.14,  0.00].
 Camera matrix from 3-th frame:
-    |   -0.341     1.608     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.052     0.999    -0.000|    0.000|
-P = |   -0.200    -0.010    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.285     1.611     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.052     0.999    -0.000|    0.000|
+P = |   -0.256    -0.013    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000     0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.052    -0.000|  749.000|
 S = [747.97, 39.20, -0.00], -Q^T u = [747.97, 39.20,  0.00].
+Camera matrix from 4-th frame:
+    |   -0.313     1.605     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.070     0.998    -0.000|   -0.000|
+P = |   -0.256    -0.018    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|    0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.998    -0.070    -0.000|  749.000|
+S = [747.18, 52.25, -0.00], -Q^T u = [747.18, 52.25,  0.00].
+Camera matrix from 5-th frame:
+    |   -0.341     1.600     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.087     0.996     0.000|   -0.000|
+P = |   -0.256    -0.022    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|    0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.996    -0.087    -0.000|  749.000|
+S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 ```
 
-Here we can see that it was able to show us source positions $S$ for first three views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.
+Here we can see that it was among other things able to show us source positions $S$ for the first views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.
 
 ## Next post
 In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.

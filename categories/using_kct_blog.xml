@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>KCT framework (Posts about using_kct_blog)</title><link>https://kulvait.github.io/KCT_doc/</link><description></description><atom:link rel="self" type="application/rss+xml" href="https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml"></atom:link><language>en</language><copyright>Contents © 2021 &lt;a href="mailto:kulvait at gmail dot com"&gt;Vojtěch Kulvait&lt;/a&gt; 
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>KCT framework (Posts about using_kct_blog)</title><link>https://kulvait.github.io/KCT_doc/</link><description></description><atom:link href="https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2021 &lt;a href="mailto:kulvait at gmail dot com"&gt;Vojtěch Kulvait&lt;/a&gt; 
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Wed, 15 Sep 2021 11:56:25 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 3 Python implementation of circular CT trajectory</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;div&gt;&lt;p&gt;In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.&lt;/p&gt;
+</copyright><lastBuildDate>Wed, 15 Sep 2021 12:00:52 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 3 Python implementation of circular CT trajectory</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;div&gt;&lt;p&gt;In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.&lt;/p&gt;
 &lt;p&gt;Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.&lt;/p&gt;
 &lt;h3&gt;System setup&lt;/h3&gt;
 &lt;p&gt;We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
@@ -79,36 +79,65 @@ Version of &lt;a href="https://github.com/kulvait/KCT_denpy"&gt;denpy&lt;/a&gt; 
 &lt;p&gt;On the last line you can see how easy is to convert &lt;code&gt;numpy.ndarray&lt;/code&gt; into the DEN by one call. &lt;/p&gt;
 &lt;p&gt;Using the script, we produce the camera matrices we need for given trajectory setup.
 To remind you the parameters let's have a look to the &lt;code&gt;CM.den.params&lt;/code&gt; file&lt;/p&gt;
-&lt;p&gt;We can check their properties such as source position of first few frames by running &lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;dentk-matinfo CM.den -f &lt;span class="m"&gt;0&lt;/span&gt;-3
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;"_json_message"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"Created using KCT script createCameraMatricesForCircularScanTrajectory.py"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"force"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"number_of_angles"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;360&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"omega_zero"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"outputMatrixFile"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"CM.den"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"pixel_offsetx"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"pixel_offsety"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"pixel_sizex"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.616&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"pixel_sizey"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;0.616&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"projection_sizex"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;616&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"projection_sizey"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;480&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"source_to_detector"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;1198.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"source_to_isocenter"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;749.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"write_params_file"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+
+&lt;p&gt;So that we can check which particular parameters were used to create our trajectory. To dig deeper, I have written &lt;code&gt;dentk-mathinfo&lt;/code&gt; as part of the dentk package. We can check decompose our matrices and check properties such as source position of first few frames by running &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;dentk-matinfo CM.den -f &lt;span class="m"&gt;0&lt;/span&gt;-5
 &lt;/code&gt;&lt;/pre&gt;
 
 
 &lt;p&gt;with the following output&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Camera matrix from 0-th frame:
-    |   -0.257     1.623     0.000   192.252|                     | 1944.805    -0.000   307.500| |    0.000     1.000     0.000|    0.000|
-P = |   -0.200     0.000    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.200     1.623     0.000   149.737|                     | 1944.805    -0.000   239.500| |    0.000     1.000     0.000|    0.000|
+P = |   -0.257     0.000    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000    -0.000    -1.000|    0.000|
     |   -0.001     0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000     0.000    -0.000|  749.000|
-S = [749.00,  0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
+S = [749.00, -0.00, -0.00], -Q^T u = [749.00,  0.00,  0.00].
 Camera matrix from 1-th frame:
-    |   -0.285     1.619     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.017     1.000    -0.000|    0.000|
-P = |   -0.200    -0.003    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000    -0.000    -1.000|    0.000|
+    |   -0.228     1.620     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.017     1.000    -0.000|    0.000|
+P = |   -0.257    -0.004    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000    -0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000    -0.017    -0.000|  749.000|
 S = [748.89, 13.07, -0.00], -Q^T u = [748.89, 13.07,  0.00].
 Camera matrix from 2-th frame:
-    |   -0.313     1.613     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.035     0.999    -0.000|    0.000|
-P = |   -0.200    -0.007    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.256     1.615     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.035     0.999    -0.000|    0.000|
+P = |   -0.257    -0.009    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000     0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.035    -0.000|  749.000|
 S = [748.54, 26.14, -0.00], -Q^T u = [748.54, 26.14,  0.00].
 Camera matrix from 3-th frame:
-    |   -0.341     1.608     0.000   192.252|                     | 1944.805     0.000   307.500| |   -0.052     0.999    -0.000|    0.000|
-P = |   -0.200    -0.010    -1.623   149.737| = C[Q|u] =    1198.0|    0.000  1944.805   239.500|.|   -0.000     0.000    -1.000|    0.000|
+    |   -0.285     1.611     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.052     0.999    -0.000|    0.000|
+P = |   -0.256    -0.013    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000     0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.999    -0.052    -0.000|  749.000|
 S = [747.97, 39.20, -0.00], -Q^T u = [747.97, 39.20,  0.00].
+Camera matrix from 4-th frame:
+    |   -0.313     1.605     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.070     0.998    -0.000|   -0.000|
+P = |   -0.256    -0.018    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|    0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.998    -0.070    -0.000|  749.000|
+S = [747.18, 52.25, -0.00], -Q^T u = [747.18, 52.25,  0.00].
+Camera matrix from 5-th frame:
+    |   -0.341     1.600     0.000   149.737|                     | 1944.805     0.000   239.500| |   -0.087     0.996     0.000|   -0.000|
+P = |   -0.256    -0.022    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|    0.000     0.000    -1.000|    0.000|
+    |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.996    -0.087    -0.000|  749.000|
+S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 &lt;/code&gt;&lt;/pre&gt;
 
 
-&lt;p&gt;Here we can see that it was able to show us source positions $S$ for first three views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.&lt;/p&gt;
+&lt;p&gt;Here we can see that it was among other things able to show us source positions $S$ for the first views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.&lt;/p&gt;&lt;/div&gt;</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</guid><pubDate>Wed, 15 Sep 2021 10:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;div&gt;&lt;p&gt;Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.&lt;/p&gt;
 &lt;h3&gt;CT projections geometry&lt;/h3&gt;
