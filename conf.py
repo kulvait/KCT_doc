@@ -140,7 +140,9 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ("/archive.html", "Archive"),
+		("/categories/using_kct_blog.html", "Using KCT blog"),
+        ("/posts", "Blog posts"),
+        ("/archive.html", "Blog Archive"),
         ("/categories/", "Tags"),
         ("/rss.xml", "RSS feed"),
     ),
