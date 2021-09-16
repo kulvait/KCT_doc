@@ -1,7 +1,7 @@
 <!--
 .. title: Working with KCT CBCT 4 First cone beam CT projection
 .. slug: working-with-kct-cbct-4-first-cone-beam-ct-projection
-.. date: 2021-09-15 14:28:24 UTC+02:00
+.. date: 2021-09-19 14:28:24 UTC+02:00
 .. tags: using_kct_blog
 .. category: 
 .. link: 
