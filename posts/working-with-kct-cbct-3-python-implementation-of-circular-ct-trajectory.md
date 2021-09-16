@@ -12,8 +12,6 @@
 
 In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.
 
-Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.
-
 ## System setup
 We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
 I have put a script that implements what has been said [to github](https://github.com/kulvait/KCT_scripts/blob/master/createCameraMatricesForCircularScanTrajectory.py).
