@@ -1,8 +1,8 @@
 <!--
-.. title: CVP paper 2020: The platforms
-.. slug: cvp-paper-2020-1-the-platforms
+.. title: CVP paper 2021: The platforms
+.. slug: cvp-paper-2021-1-the-platforms
 .. date: 2021-10-04 16:07:05 UTC+02:00
-.. tags: cvp-paper-2020 
+.. tags: cvp-paper-2021,cvp-paper-2020
 .. category: 
 .. link: 
 .. description: 
@@ -15,9 +15,9 @@ We have made the following statement in the publication that will be sent for pe
 <pre style="white-space: pre-wrap;">
 Transparency and reproducibility of the results
 
-We believe in the concept of open science. Therefore, we are not only publishing the software we used to achieve these results under an open source license, but we are also publishing with this paper all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
+We believe in the concept of open science. Therefore, not only the software developed by the first author is published under an open source license, we are also publishing all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
 
-This is also important for us and for the users of our software, because in the future we can publish how, for example, the run times of the projectors change with new versions of the software or with new hardware.
+This is also important for the users of the software, because in the future we can disclose how the run times of the projectors change with new versions of the software or with new hardware.
 </pre>
 
 Here I describe the platforms we use to produce the results in more details.
