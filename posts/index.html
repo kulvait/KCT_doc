@@ -68,13 +68,144 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2020-2-adjoint-product-test.html" class="u-url">CVP paper 2020: Adjoint product test</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-4-comparing-projectors-accuracy.html" class="u-url">CVP paper 2021: Comparing projectors accuracy</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Vojtěch Kulvait
             </span></p>
             <p class="dateline">
-            <a href="cvp-paper-2020-2-adjoint-product-test.html" rel="bookmark">
+            <a href="cvp-paper-2021-4-comparing-projectors-accuracy.html" rel="bookmark">
+            <time class="published dt-published" datetime="2021-10-05T22:15:32+02:00" itemprop="datePublished" title="2021-10-05 22:15">2021-10-05 22:15</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>We have made the following statement in the publication that will be sent for peer review to the <a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=42">IEEE Transactions on Medical Imaging</a>:</p>
+<pre style="white-space: pre-wrap;">
+Transparency and reproducibility of the results
+
+We believe in the concept of open science. Therefore, not only the software developed by the first author is published under an open source license, we are also publishing all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
+
+This is also important for the users of the software, because in the future we can disclose how the run times of the projectors change with new versions of the software or with new hardware.
+</pre>
+
+<h2>Comparison of the accuracy</h2>
+<h3>Data files</h3>
+<p>Data files contain projections of the voxels and the differences of the projections with Siddon512 algorithm. Therefore, they are quite large and we split them to the three packages corresponding to individual parts of Figure4. It is <code>projectorAccuracyComparisonCVPPaper2021_Fig4_top_1x1x5_center.tar.gz</code>, <code>projectorAccuracyComparisonCVPPaper2021_Fig4_middle_1x1x1_shifted20-20-20.tar.gz</code> and <code>projectorAccuracyComparisonCVPPaper2021_Fig4_bottom_Long.tar.gz</code>.</p>
+<p>These files were split using unix split utility to individual parts, which can be downloaded separatelly from the <a href="https://data.stimulate.ovgu.de/d/e413281d4b86410a9f2a/">this data directory</a>.</p>
+<p>Then to extract them the best is to run the following commands</p>
+<pre class="code literal-block"><span></span><code>cat projectorAccuracyComparisonCVPPaper2021_Fig4_top_1x1x5_center.tar.gz* | tar -xz
+cat projectorAccuracyComparisonCVPPaper2021_Fig4_middle_1x1x1_shifted20-20-20.tar.gz* | tar -xz
+cat pprojectorAccuracyComparisonCVPPaper2021_Fig4_bottom_Long.tar.gz* | tar -xz
+</code></pre>
+
+
+<h3>Generating the graphs</h3>
+<p>To compare accuracy of the projectors and to generate the figure 4 in the paper, we first take a single voxel with attenuation 1. To do so we use <code>dentk-empty</code> from <a href="https://github.com/kulvait/KCT_dentk">dentk toolbox</a>.</p>
+<pre class="code literal-block"><span></span><code>dentk-empty 1 1 1 singleUnitVoxel.den --value 1.0
+</code></pre>
+
+
+<p>This can be also done using the script </p>
+<pre class="code literal-block"><span></span><code>./01createUnitVoxel
+</code></pre>
+
+
+<p>Next part, which produced the projections and differences is calling the script </p>
+<pre class="code literal-block"><span></span><code>./02createProjections
+</code></pre>
+
+
+<p>It is a bash script to run the reconstructions and create the projections and differences. Beware that to generate Siddon512 might take relatively long even for single voxel.</p>
+<p>Finally the graphs can be generated using the command </p>
+<pre class="code literal-block"><span></span><code>./03compareProjections.py projectorComparison.csv
+</code></pre>
+
+
+<p>These commands are present and shall be run in the folders of individual figures.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-3-benchmarks-to-compare-projectors-speed.html" class="u-url">CVP paper 2021: Benchmarks to compare projectors speed</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="cvp-paper-2021-3-benchmarks-to-compare-projectors-speed.html" rel="bookmark">
+            <time class="published dt-published" datetime="2021-10-05T16:06:54+02:00" itemprop="datePublished" title="2021-10-05 16:06">2021-10-05 16:06</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>We have made the following statement in the publication that will be sent for peer review to the <a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=42">IEEE Transactions on Medical Imaging</a>:</p>
+<pre style="white-space: pre-wrap;">
+Transparency and reproducibility of the results
+
+We believe in the concept of open science. Therefore, not only the software developed by the first author is published under an open source license, we are also publishing all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
+
+This is also important for the users of the software, because in the future we can disclose how the run times of the projectors change with new versions of the software or with new hardware.
+</pre>
+
+<h2>Comparion of the speed</h2>
+<p>Here we describe precisely how we perform comparsion of the projector and backprojector speeds.</p>
+<p>Link to the log files of the speed comparison can be found <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">here</a>.</p>
+<p>From the tests we performed were prepared the following deterministic benchmarks. The tests can be run with the reproducible setup using precisely defined <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">input data</a>, camera matrices representing geometries and projection data. Aim of both benchmarks is to run an itterative reconstruction process and precisely measure the speeds of projectors and bacprojector during it. The data reconstructed is deterministically generated noise from uniform distribution [0,1]. These data are disclosed for each benchmark.</p>
+<p>For given setup 40 itterations of an CT reconstruction technique shall be used, which performs exactly 40 projections and 40 backprojections. After the initialization, that might be after the data are loaded into the GPU memmory, before the first backprojection start, starts the time measurement. Between the backprojection and consecutive projection is reported the difference time as the time of backprojection. It is not possible to exclude time between backprojection and consecutive projection from the measurement. Exact placement of the measured point is on the implementation. Time can be stopped after the last projection is executed, before writing the data to the disk. Then the average time of projection and backprojection is computed.</p>
+<p>In our tests we used CGLS, because it does not perform intensive operations but projections and backprojections. </p>
+<p>The tests use the <code>createCameraMatricesForCircularScanTrajectory.py</code> script for creating geometry setup of circular scan. Details of the implementation and derivation can be found in this <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">blog post</a>.</p>
+<h3>Benchmark YL</h3>
+<p>Based on the setup from the paper http://doi.org/10.1109/TMI.2010.2050898</p>
+<p>Data to reconstruct were prepared using the command <code>dentk-empty</code> from <a href="https://github.com/kulvait/KCT_dentk">dentk toolbox</a>. It simulates 720 views of the $512 \times 512$ detector matrix.</p>
+<pre class="code literal-block"><span></span><code>dentk-empty --noise 512 512 720 noise512x512x720.den
+</code></pre>
+
+
+<p>Even through the current implementation of <code>dentk-empty</code> shall produce deterministic noise, we include the file <code>noise512x512x720.den</code> into the <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">data disclosed</a>.</p>
+<p>The camera matrices, which define given geometry was created using the command <code>createCameraMatricesForCircularScanTrajectory.py</code> from <a href="https://github.com/kulvait/KCT_scripts">scripts repository</a>.</p>
+<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 512 --projection-sizey 512 --pixel-sizex 1.0 --pixel-sizey 1.0 --source-to-detector 949 --source-to-isocenter 541 --number-of-angles 720 YLBenchmarkInputData/CMLong720_512x512.den
+</code></pre>
+
+
+<p>These input files define the input setup of the test. </p>
+<h3>Benchmark TP</h3>
+<p>Based on the setup from T.  Pfeiffer,  R.  Frysch,  and  G.  Rose,  “Two  extensions  of  the  separablefootprint  forward  projector,”  16th International Meeting on FullyThree-Dimensional Image Reconstruction in Radiology and NuclearMedicine, 2021.</p>
+<p>Data to reconstruct were prepared using the command <code>dentk-empty</code> from <a href="https://github.com/kulvait/KCT_dentk">dentk toolbox</a>. It simulates 100 views of the $1280 \times 960$ detector matrix.</p>
+<pre class="code literal-block"><span></span><code>dentk-empty --noise 1280 960 100 noise1280x960x100.den
+</code></pre>
+
+
+<p>Even through the current implementation of <code>dentk-empty</code> shall produce deterministic noise, we include the file <code>noise1280x960x100.den</code> into the <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">data disclosed</a>.</p>
+<p>The camera matrices, which define given geometry was created using the command <code>createCameraMatricesForCircularScanTrajectory.py</code> from <a href="https://github.com/kulvait/KCT_scripts">scripts repository</a>.</p>
+<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 1280 --projection-sizey 960 --pixel-sizex 0.25 --pixel-sizey 0.25 --omega-zero 0 --omega-angular-range 198 --source-to-detector 1000 --source-to-isocenter 750 --number-of-angles 100 shortScanTP100_1280x960.den
+</code></pre>
+
+
+<p>These input files define the input setup of the test. </p>
+<h2>Results of the benchmarks for CVP paper</h2>
+<p>Log files and input files are disclosed <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">here</a>.
+The <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">results logs</a> can be parsed and the average projection and backprojection times obtained by running the script</p>
+<pre class="code literal-block"><span></span><code>averageTimes log_file
+</code></pre>
+
+
+<p>from the https://github.com/kulvait/KCT_scripts/tree/master/reconstruction</p>
+<p>The structure of the data is as follows:</p>
+<p>In the speedComparison folders there are the log files from which the resulting speeds of corresponding projectors/backprojectors were generated, commit of KCT and the full command is also disclosed in each log file. Particular input projection matrices and projection data can be found at TPBenchmarkInputData and YLBenchmarkInputData.</p>
+<p>YL=Table I from the paper, TP= Table II from the paper</p>
+<p>Logs are from several CVP projector/backprojector settings. Only few are refered in the tables of the paper. There is the mapping of projectors/backprojectors to the log files:</p>
+<p>CVP=nobar_norel_elv.log</p>
+<p>CVP relaxed=bar_rel_elv.log</p>
+<p>TT=tt.log</p>
+<p>Siddon8=siddon8.log</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-2-adjoint-product-test.html" class="u-url">CVP paper 2021: Adjoint product test</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="cvp-paper-2021-2-adjoint-product-test.html" rel="bookmark">
             <time class="published dt-published" datetime="2021-10-04T17:29:06+02:00" itemprop="datePublished" title="2021-10-04 17:29">2021-10-04 17:29</time></a>
             </p>
         </div>
@@ -84,9 +215,9 @@ bg-dark
 <pre style="white-space: pre-wrap;">
 Transparency and reproducibility of the results
 
-We believe in the concept of open science. Therefore, we are not only publishing the software we used to achieve these results under an open source license, but we are also publishing with this paper all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
+We believe in the concept of open science. Therefore, not only the software developed by the first author is published under an open source license, we are also publishing all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
 
-This is also important for us and for the users of our software, because in the future we can publish how, for example, the run times of the projectors change with new versions of the software or with new hardware.
+This is also important for the users of the software, because in the future we can disclose how the run times of the projectors change with new versions of the software or with new hardware.
 </pre>
 
 <p>Here I show how to perform adjoint product test using KCT CBCT and what are the results on individual platforms.</p>
@@ -438,13 +569,13 @@ is far from optimal value 1.0. The results follow executed with the git commit <
 </code></pre>
 </div>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2020-1-the-platforms.html" class="u-url">CVP paper 2020: The platforms</a></h1>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-1-the-platforms.html" class="u-url">CVP paper 2021: The platforms</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Vojtěch Kulvait
             </span></p>
             <p class="dateline">
-            <a href="cvp-paper-2020-1-the-platforms.html" rel="bookmark">
+            <a href="cvp-paper-2021-1-the-platforms.html" rel="bookmark">
             <time class="published dt-published" datetime="2021-10-04T16:07:05+02:00" itemprop="datePublished" title="2021-10-04 16:07">2021-10-04 16:07</time></a>
             </p>
         </div>
@@ -454,9 +585,9 @@ is far from optimal value 1.0. The results follow executed with the git commit <
 <pre style="white-space: pre-wrap;">
 Transparency and reproducibility of the results
 
-We believe in the concept of open science. Therefore, we are not only publishing the software we used to achieve these results under an open source license, but we are also publishing with this paper all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
+We believe in the concept of open science. Therefore, not only the software developed by the first author is published under an open source license, we are also publishing all the procedures, scripts, input data and log files, including implementation details, that were used to produce the graphs and tables in the results section. This way, anyone can reproduce our steps on their hardware and compare the results, or use our logs and scripts to compare the results with the underlying data. The files and protocols are published on the website https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html.
 
-This is also important for us and for the users of our software, because in the future we can publish how, for example, the run times of the projectors change with new versions of the software or with new hardware.
+This is also important for the users of the software, because in the future we can disclose how the run times of the projectors change with new versions of the software or with new hardware.
 </pre>
 
 <p>Here I describe the platforms we use to produce the results in more details.</p>

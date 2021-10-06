@@ -15,23 +15,35 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/archive.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/</loc>
-  <lastmod>2021-10-04T14:13:00Z</lastmod>
+  <lastmod>2021-10-06T17:21:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020-cvp-paper-2021.html</loc>
+  <lastmod>2021-10-06T17:20:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2021-cvp-paper-2020.html</loc>
+  <lastmod>2021-10-06T17:20:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2021.html</loc>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/galleries/</loc>
@@ -39,11 +51,11 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/geometry-model.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/license-tcga-gbm.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/listings/</loc>
@@ -51,38 +63,54 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/</loc>
-  <lastmod>2021-10-04T17:04:00Z</lastmod>
+  <lastmod>2021-10-06T20:42:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2020-1-the-platforms.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T17:13:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2020-2-adjoint-product-test.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T17:13:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2020-describing-the-platforms.html</loc>
-  <lastmod>2021-10-04T14:54:00Z</lastmod>
+  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2020-benchmarks-to-compare-projectors-speed.html</loc>
+  <lastmod>2021-10-06T17:13:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-1-the-platforms.html</loc>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-2-adjoint-product-test.html</loc>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-3-benchmarks-to-compare-projectors-speed.html</loc>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-4-comparing-projectors-accuracy.html</loc>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/kct-framework.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</loc>
-  <lastmod>2021-10-06T12:48:00Z</lastmod>
+  <lastmod>2021-10-06T20:50:00Z</lastmod>
  </url>
 </urlset>
