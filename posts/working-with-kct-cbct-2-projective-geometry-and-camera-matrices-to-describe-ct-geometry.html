@@ -94,8 +94,7 @@ bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.</p>
+    <p>Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.</p>
 <h3>CT projections geometry</h3>
 <p>In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of the X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.</p>
 <h3>Projective geometry</h3>
@@ -117,13 +116,11 @@ bg-dark
 <h4>Camera matrix to describe FDCT setup</h4>
 <p>By the camera matrix we describe the mapping from the point $\mathbb{x} = (x_1, x_2, x_3)$ to the point on the detector given by $\mathbb{P}=(p^1, p^2)$. The point $\mathbb{x}$ will be projected onto the point $\chi^{(0,0)} + p^1 * \chi^1 + p^2 * \chi^2$. Interestingly, we don't need to know precise values of vectors $\chi^{(0,0)}, \chi^1, \chi^2$ as when we place the vector $\chi^{(0,0)}$ anywhere on the ray from the source to that vector, and scale accordingly also the vectors $\chi^1$ and $\chi^2$, we obtain obtain the same mapping between $\mathbb{x} = (x_1, x_2, x_3)$ and $\mathbb{P}=(P^1, P^2)$. In the normal detector we can not change size of the pixels, so this is just a theoretical consideration. However this has an implication that when having camera matrix in the sense of beeing a linear mapping between projective space of dimension 3 and projective space of dimension 2, we can not tell how far from the source the detector is or how far the pixels are spaced from each other. When to the camera metrix adding information of one pixel dimension or distance from projector to source, system is fully defined. </p>
 <p>Why talking about abstract projective elements? Camera matrix is at the end of the day matrix from $\mathbf{R}^{3x4}$. Scaling by nonzero constant do not change its properties as a projective element. Therefore using this fact we can encode source to detector distance into the matrix. On the other hand we don't need this information in order to make CT projection or reconstruction anyway. Camera matrix does not tell us, what is the size of the detector and this information must be provided to the reconstruction software by other means. For example to do a projection using KCT framework, we need to specify</p>
-<pre class="code literal-block"><span></span><code>    --projection-sizex UINT Needs: --projection-sizey
+<pre class="code literal-block">    --projection-sizex UINT Needs: --projection-sizey
                                 X dimension of detector in pixel count, defaults to 616.
     --projection-sizey UINT Needs: --projection-sizex
                                 Y dimension of detector in pixel count, defaults to 480.
-</code></pre>
-
-
+</pre>
 <h4>Creating camera matrices for particular setup</h4>
 <p>The <a href="https://en.wikipedia.org/wiki/Camera_matrix">Camera matrix</a> is relatively well described on Wikipedia. So let's construct set of camera matrices to be used in the KCT framework. To store them, we use <a href="../den-format.html">DEN file</a> format of the size float64 with $(dimx, dimy, dimz)=(4,3,n)$, where n is number of the configurations in given FDCT trajectory.</p>
 <p>Let's have the following setup. Zero of the world coordinates coincide with the volume center. Source and detector rotate along $x_3$ axis and $\chi_2$ is parallel with $x_3$. Principal ray at every position of the trajectory hits the detector. The  distance  from  the source  to  theisocenter  is $I = 749mm$ and  the  distance  from  source to the detector is $A=1198mm$. Trajectory consist of $360$ views and in the view $\omega$ the normal to the detector pointing towards the source forms the polar angle with respect to $x_1$ and $x_2$ axes so that $n_\omega = (cos(\omega), sin(\omega))$. Finally let's have $PX\times PY$ = $0.616mmx0.616mm$ pixels and $M\times N = 616x480$ grid.</p>
@@ -212,7 +209,6 @@ $$
 $$</p>
 <h3>Next post</h3>
 <p>In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the <a href="../den-format.html">DEN file</a>.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
@@ -237,7 +233,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2021         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 
@@ -255,3 +251,4 @@ Any data provided on this site or within the KCT framework may be subject to dif
     </script>
 </body>
 </html>
+

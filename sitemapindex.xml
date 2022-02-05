@@ -6,35 +6,27 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020-cvp-paper-2021.xml</loc>
-  <lastmod>2021-10-06T17:20:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.xml</loc>
-  <lastmod>2021-10-06T20:48:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2021-cvp-paper-2020.xml</loc>
-  <lastmod>2021-10-06T17:20:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2021.xml</loc>
-  <lastmod>2021-10-06T20:48:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml</loc>
-  <lastmod>2021-10-04T14:13:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/galleries/rss.xml</loc>
-  <lastmod>2021-10-06T20:50:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/rss.xml</loc>
-  <lastmod>2021-10-06T20:48:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/sitemap.xml</loc>
-  <lastmod>2021-10-06T20:50:00Z</lastmod>
+  <lastmod>2022-02-05T00:49:00Z</lastmod>
  </sitemap>
 </sitemapindex>

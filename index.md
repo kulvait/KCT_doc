@@ -32,3 +32,8 @@ C++ library with input output routines for asynchronous thread safe reading/writ
 ## [KCT ctmal](https://github.com/kulvait/KCT_ctmal)
 
 C++ library with mathematic/algebraic algorithms for supporting CT data manipulation. This library is typically a dependency/submodule of other C++ tools in KCT.
+
+## File formats
+
+Commonly used file formats are legacy DEN files and extended DEN files, see [DEN format](link://slug/den-format).
+

@@ -80,22 +80,18 @@ bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>We expect the setup, where the center of the volume of interest is a reference point, normally identified with the zero of the world coordinates. </p>
+    <p>We expect the setup, where the center of the volume of interest is a reference point, normally identified with the zero of the world coordinates. </p>
 <p>In the situation, where user needs a setup, where the zero of word coordinates is not at the center of volume, he or she needs to specify the coordinates of the center of the volume in the world coordinates.</p>
-<pre class="code literal-block"><span></span><code>    --volume-centerx FLOAT:FLOAT in [-10000 - 10000] Needs: --volume-centery --volume-centerz
+<pre class="code literal-block">    --volume-centerx FLOAT:FLOAT in [-10000 - 10000] Needs: --volume-centery --volume-centerz
                                 `X coordinate of the volume center in mm, defaults to 0.00.
     --volume-centery FLOAT:FLOAT in [-10000 - 10000] Needs: --volume-centerx --volume-centerz
                                 `Y coordinate of the volume center in mm, defaults to 0.00.
     --volume-centerz FLOAT:FLOAT in [-10000 - 10000] Needs: --volume-centerx --volume-centery
                                 `Z coordinate of the volume center in mm, defaults to 0.00.
-</code></pre>
-
-
+</pre>
 <p>By this mechanism it is possible to reconstruct the volume outside the zero of the world coordinates, that is usually connected with the center of rotation.</p>
 <p>The geometry model of the most of the projectors expects that the rotation axis is parallel with the $x_3$ axis of the world coordinates, that the detector cells are rectangle shaped with the dimensions $\chi_1$ and $\chi_2$ and $\chi_2$ is parallel wit the $x_2$.</p>
 <p>For the details how to create DEN volume from DICOM series have a look to <a href="posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html">this tutorial</a></p>
-</div>
     </div>
     
         
@@ -112,7 +108,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2021         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 
@@ -130,3 +126,4 @@ Any data provided on this site or within the KCT framework may be subject to dif
     </script>
 </body>
 </html>
+

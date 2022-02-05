@@ -99,8 +99,7 @@ bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>We have made the following statement in the publication that will be sent for peer review to the <a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=42">IEEE Transactions on Medical Imaging</a>:</p>
+    <p>We have made the following statement in the publication that will be sent for peer review to the <a href="https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=42">IEEE Transactions on Medical Imaging</a>:</p>
 <pre style="white-space: pre-wrap;">
 Transparency and reproducibility of the results
 
@@ -119,38 +118,28 @@ This is also important for the users of the software, because in the future we c
 <h3>Benchmark YL</h3>
 <p>Based on the setup from the paper http://doi.org/10.1109/TMI.2010.2050898</p>
 <p>Data to reconstruct were prepared using the command <code>dentk-empty</code> from <a href="https://github.com/kulvait/KCT_dentk">dentk toolbox</a>. It simulates 720 views of the $512 \times 512$ detector matrix.</p>
-<pre class="code literal-block"><span></span><code>dentk-empty --noise 512 512 720 noise512x512x720.den
-</code></pre>
-
-
+<pre class="code literal-block">dentk-empty --noise 512 512 720 noise512x512x720.den
+</pre>
 <p>Even through the current implementation of <code>dentk-empty</code> shall produce deterministic noise, we include the file <code>noise512x512x720.den</code> into the <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">data disclosed</a>.</p>
 <p>The camera matrices, which define given geometry was created using the command <code>createCameraMatricesForCircularScanTrajectory.py</code> from <a href="https://github.com/kulvait/KCT_scripts">scripts repository</a>.</p>
-<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 512 --projection-sizey 512 --pixel-sizex 1.0 --pixel-sizey 1.0 --source-to-detector 949 --source-to-isocenter 541 --number-of-angles 720 YLBenchmarkInputData/CMLong720_512x512.den
-</code></pre>
-
-
+<pre class="code literal-block">createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 512 --projection-sizey 512 --pixel-sizex 1.0 --pixel-sizey 1.0 --source-to-detector 949 --source-to-isocenter 541 --number-of-angles 720 YLBenchmarkInputData/CMLong720_512x512.den
+</pre>
 <p>These input files define the input setup of the test. </p>
 <h3>Benchmark TP</h3>
 <p>Based on the setup from T.  Pfeiffer,  R.  Frysch,  and  G.  Rose,  “Two  extensions  of  the  separablefootprint  forward  projector,”  16th International Meeting on FullyThree-Dimensional Image Reconstruction in Radiology and NuclearMedicine, 2021.</p>
 <p>Data to reconstruct were prepared using the command <code>dentk-empty</code> from <a href="https://github.com/kulvait/KCT_dentk">dentk toolbox</a>. It simulates 100 views of the $1280 \times 960$ detector matrix.</p>
-<pre class="code literal-block"><span></span><code>dentk-empty --noise 1280 960 100 noise1280x960x100.den
-</code></pre>
-
-
+<pre class="code literal-block">dentk-empty --noise 1280 960 100 noise1280x960x100.den
+</pre>
 <p>Even through the current implementation of <code>dentk-empty</code> shall produce deterministic noise, we include the file <code>noise1280x960x100.den</code> into the <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">data disclosed</a>.</p>
 <p>The camera matrices, which define given geometry was created using the command <code>createCameraMatricesForCircularScanTrajectory.py</code> from <a href="https://github.com/kulvait/KCT_scripts">scripts repository</a>.</p>
-<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 1280 --projection-sizey 960 --pixel-sizex 0.25 --pixel-sizey 0.25 --omega-zero 0 --omega-angular-range 198 --source-to-detector 1000 --source-to-isocenter 750 --number-of-angles 100 shortScanTP100_1280x960.den
-</code></pre>
-
-
+<pre class="code literal-block">createCameraMatricesForCircularScanTrajectory.py --write-params-file --projection-sizex 1280 --projection-sizey 960 --pixel-sizex 0.25 --pixel-sizey 0.25 --omega-zero 0 --omega-angular-range 198 --source-to-detector 1000 --source-to-isocenter 750 --number-of-angles 100 shortScanTP100_1280x960.den
+</pre>
 <p>These input files define the input setup of the test. </p>
 <h2>Results of the benchmarks for CVP paper</h2>
 <p>Log files and input files are disclosed <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">here</a>.
 The <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">results logs</a> can be parsed and the average projection and backprojection times obtained by running the script</p>
-<pre class="code literal-block"><span></span><code>averageTimes log_file
-</code></pre>
-
-
+<pre class="code literal-block">averageTimes log_file
+</pre>
 <p>from the https://github.com/kulvait/KCT_scripts/tree/master/reconstruction</p>
 <p>The structure of the data is as follows:</p>
 <p>In the speedComparison folders there are the log files from which the resulting speeds of corresponding projectors/backprojectors were generated, commit of KCT and the full command is also disclosed in each log file. Particular input projection matrices and projection data can be found at TPBenchmarkInputData and YLBenchmarkInputData.</p>
@@ -160,7 +149,6 @@ The <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">result
 <p>CVP relaxed=bar_rel_elv.log</p>
 <p>TT=tt.log</p>
 <p>Siddon8=siddon8.log</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../categories/cvp-paper-2020.html" rel="tag">cvp-paper-2020</a></li>
@@ -186,7 +174,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2021         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 
@@ -204,3 +192,4 @@ Any data provided on this site or within the KCT framework may be subject to dif
     </script>
 </body>
 </html>
+

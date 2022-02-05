@@ -94,49 +94,36 @@ bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.</p>
+    <p>In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.</p>
 <h3>System setup</h3>
 <p>We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
 I have put a script that implements what has been said <a href="https://github.com/kulvait/KCT_scripts/blob/master/createCameraMatricesForCircularScanTrajectory.py">to github</a>.
 Version of <a href="https://github.com/kulvait/KCT_denpy">denpy</a> package must be at least 1.1.2 to have function for storing double DEN <code>storeNdarrayAsDoubleDEN</code>.</p>
 <p>For this demonstration to run on your computer you first need to install <code>denpy</code> package and clone <a href="https://github.com/kulvait/KCT_scripts">DEN scripts</a> package. Let's suppose you are running Debian 11. </p>
 <p>You can create a folder <code>KCT</code> and <code>KCT_bin</code> in your home directory. Go into this folder and clone KCT scripts into the folder scripts.</p>
-<pre class="code literal-block"><span></span><code>git clone https://github.com/kulvait/KCT_scripts.git scripts
-</code></pre>
-
-
+<pre class="code literal-block">git clone https://github.com/kulvait/KCT_scripts.git scripts
+</pre>
 <p>Then into your .bashrc you can add the following</p>
-<pre class="code literal-block"><span></span><code><span class="k">export</span> <span class="n">PATH</span><span class="o">=$</span><span class="n">PATH</span><span class="p">:</span><span class="o">~/</span><span class="n">KCT_bin</span><span class="p">::</span><span class="o">~/</span><span class="n">KCT_scripts</span>
-</code></pre>
-
-
+<pre class="code literal-block"><span class="k">export</span><span class="w"> </span><span class="n">PATH</span><span class="o">=$</span><span class="n">PATH</span><span class="p">:</span><span class="o">~/</span><span class="n">KCT_bin</span><span class="p">::</span><span class="o">~/</span><span class="n">KCT_scripts</span><span class="w"></span>
+</pre>
 <p>Then you shall also install <a href="https://github.com/kulvait/KCT_denpy">denpy</a></p>
-<pre class="code literal-block"><span></span><code>pip3 install --user git+https://github.com/kulvait/KCT_denpy.git
-</code></pre>
-
-
+<pre class="code literal-block">pip3 install --user git+https://github.com/kulvait/KCT_denpy.git
+</pre>
 <p>if you need to upgrade run</p>
-<pre class="code literal-block"><span></span><code>pip3 install --user --upgrade git+https://github.com/kulvait/KCT_denpy.git
-</code></pre>
-
-
+<pre class="code literal-block">pip3 install --user --upgrade git+https://github.com/kulvait/KCT_denpy.git
+</pre>
 <p>Now you have installed everything to produce the camera matrices. Optionally you might need to install KCT dentk package, that will be very useful for working with the files in <a href="../den-format.html">DEN format</a>.</p>
 <p>Go to the KCT folder and clone it</p>
-<pre class="code literal-block"><span></span><code>git clone https://github.com/kulvait/KCT_dentk dentk
-</code></pre>
-
-
+<pre class="code literal-block">git clone https://github.com/kulvait/KCT_dentk dentk
+</pre>
 <p>Then follow the instructions in README file at https://github.com/kulvait/KCT_dentk to build the package.</p>
 <h3>Python implementation</h3>
 <p>When the system is set up, we can just run</p>
-<pre class="code literal-block"><span></span><code>createCameraMatricesForCircularScanTrajectory.py --force --write-params-file CM.den
-</code></pre>
-
-
+<pre class="code literal-block">createCameraMatricesForCircularScanTrajectory.py --force --write-params-file CM.den
+</pre>
 <p>as I set all the default parameters of this script according to <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">last post</a>. You can see that the den file <code>CM.den</code> and the text file <code>CM.den.params</code> were produced. Params file is not apriori needed for working with KCT but it is a good practice to know how your files were created.</p>
 <p>Let's have a look to the main part of the script</p>
-<pre class="code literal-block"><span></span><code><span class="n">I</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">source_to_isocenter</span>
+<pre class="code literal-block"><span class="n">I</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">source_to_isocenter</span>
 <span class="n">A</span><span class="o">=</span><span class="n">ARG</span><span class="o">.</span><span class="n">source_to_detector</span>
 <span class="n">M</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">projection_sizey</span><span class="p">)</span>
 <span class="n">N</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">projection_sizex</span><span class="p">)</span>
@@ -162,40 +149,34 @@ Version of <a href="https://github.com/kulvait/KCT_denpy">denpy</a> package must
     <span class="n">OMEGA</span> <span class="o">+=</span> <span class="n">OMEGAINCREMENT</span>
 
 <span class="n">DEN</span><span class="o">.</span><span class="n">storeNdarrayAsDoubleDEN</span><span class="p">(</span><span class="n">ARG</span><span class="o">.</span><span class="n">outputMatrixFile</span><span class="p">,</span> <span class="n">CameraMatrices</span><span class="p">,</span> <span class="n">ARG</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
-</code></pre>
-
-
+</pre>
 <p>First we initialize the parameters.</p>
 <p>Then we prepare the numpy matrices according to <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">the last post</a> and finally we do the multiplication and concatenate the matrices.</p>
 <p>On the last line you can see how easy is to convert <code>numpy.ndarray</code> into the DEN by one call. </p>
 <p>Using the script, we produce the camera matrices we need for given trajectory setup.
 To remind you the parameters let's have a look to the <code>CM.den.params</code> file</p>
-<pre class="code literal-block"><span></span><code><span class="p">{</span>
-  <span class="nt">"_json_message"</span><span class="p">:</span> <span class="s2">"Created using KCT script createCameraMatricesForCircularScanTrajectory.py"</span><span class="p">,</span>
-  <span class="nt">"force"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nt">"number_of_angles"</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span>
-  <span class="nt">"omega_zero"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-  <span class="nt">"outputMatrixFile"</span><span class="p">:</span> <span class="s2">"CM.den"</span><span class="p">,</span>
-  <span class="nt">"pixel_offsetx"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-  <span class="nt">"pixel_offsety"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-  <span class="nt">"pixel_sizex"</span><span class="p">:</span> <span class="mf">0.616</span><span class="p">,</span>
-  <span class="nt">"pixel_sizey"</span><span class="p">:</span> <span class="mf">0.616</span><span class="p">,</span>
-  <span class="nt">"projection_sizex"</span><span class="p">:</span> <span class="mi">616</span><span class="p">,</span>
-  <span class="nt">"projection_sizey"</span><span class="p">:</span> <span class="mi">480</span><span class="p">,</span>
-  <span class="nt">"source_to_detector"</span><span class="p">:</span> <span class="mf">1198.0</span><span class="p">,</span>
-  <span class="nt">"source_to_isocenter"</span><span class="p">:</span> <span class="mf">749.0</span><span class="p">,</span>
-  <span class="nt">"write_params_file"</span><span class="p">:</span> <span class="kc">true</span>
-<span class="p">}</span>
-</code></pre>
-
-
+<pre class="code literal-block"><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"_json_message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Created using KCT script createCameraMatricesForCircularScanTrajectory.py"</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"force"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"number_of_angles"</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"omega_zero"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"outputMatrixFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CM.den"</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"pixel_offsetx"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"pixel_offsety"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"pixel_sizex"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.616</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"pixel_sizey"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.616</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"projection_sizex"</span><span class="p">:</span><span class="w"> </span><span class="mi">616</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"projection_sizey"</span><span class="p">:</span><span class="w"> </span><span class="mi">480</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"source_to_detector"</span><span class="p">:</span><span class="w"> </span><span class="mf">1198.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"source_to_isocenter"</span><span class="p">:</span><span class="w"> </span><span class="mf">749.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="nt">"write_params_file"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre>
 <p>So that we can check which particular parameters were used to create our trajectory. To dig deeper, I have written <code>dentk-mathinfo</code> as part of the dentk package. We can check decompose our matrices and check properties such as source position of first few frames by running </p>
-<pre class="code literal-block"><span></span><code>dentk-matinfo CM.den -f <span class="m">0</span>-5
-</code></pre>
-
-
+<pre class="code literal-block">dentk-matinfo CM.den -f <span class="m">0</span>-5
+</pre>
 <p>with the following output</p>
-<pre class="code literal-block"><span></span><code>Camera matrix from 0-th frame:
+<pre class="code literal-block">Camera matrix from 0-th frame:
     |   -0.200     1.623     0.000   149.737|                     | 1944.805    -0.000   239.500| |    0.000     1.000     0.000|    0.000|
 P = |   -0.257     0.000    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|   -0.000    -0.000    -1.000|    0.000|
     |   -0.001     0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -1.000     0.000    -0.000|  749.000|
@@ -225,13 +206,10 @@ Camera matrix from 5-th frame:
 P = |   -0.256    -0.022    -1.623   192.252| = C[Q|u] =    1198.0|    0.000  1944.805   307.500|.|    0.000     0.000    -1.000|    0.000|
     |   -0.001    -0.000     0.000     0.625|                     |    0.000     0.000     1.000| |   -0.996    -0.087    -0.000|  749.000|
 S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
-</code></pre>
-
-
+</pre>
 <p>Here we can see that it was among other things able to show us source positions $S$ for the first views. This seems reasonable when looking to the image of the geometry and how we describe the trajectory. First the source is aligned with $x_1$ axis and it rotates towards $x_2$ axis.</p>
 <h3>Next post</h3>
 <p>In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.</p>
-</div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
@@ -256,7 +234,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2021         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 
@@ -274,3 +252,4 @@ Any data provided on this site or within the KCT framework may be subject to dif
     </script>
 </body>
 </html>
+
