@@ -1,0 +1,138 @@
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.2" viewBox="0 0 17005 1953.0001" preserveAspectRatio="xMidYMid" xml:space="preserve" id="svg246" sodipodi:docname="DENEXT_header2.svg" style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round" inkscape:version="0.92.4 (5da689c313, 2019-01-14)" viewport="0 0 1600px 178px"><metadata id="metadata250"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="1864" inkscape:window-height="911" id="namedview248" showgrid="false" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:zoom="0.2102413" inkscape:cx="509.93001" inkscape:cy="34.280313" inkscape:window-x="0" inkscape:window-y="31" inkscape:window-maximized="1" inkscape:current-layer="svg246"/>
+ <defs class="ClipPathGroup" id="defs8">
+  <clipPath id="presentation_clip_path" clipPathUnits="userSpaceOnUse">
+   <rect x="0" y="0" width="21000" height="29700" id="rect2"/>
+  </clipPath>
+  <clipPath id="presentation_clip_path_shrink" clipPathUnits="userSpaceOnUse">
+   <rect x="21" y="29" width="20958" height="29641" id="rect5"/>
+  </clipPath>
+ </defs>
+ <defs id="defs51">
+  <font id="EmbeddedFont_1" horiz-adv-x="2048" horiz-origin-x="0" horiz-origin-y="0" vert-origin-x="45" vert-origin-y="90" vert-adv-y="90">
+   <font-face font-family="Liberation Sans embedded" units-per-em="2048" font-weight="bold" font-style="normal" ascent="1852" descent="423" id="font-face10"/>
+   <missing-glyph horiz-adv-x="2048" d="M 0,0 L 2047,0 2047,2047 0,2047 0,0 Z" id="missing-glyph12"/>
+   <glyph unicode="z" horiz-adv-x="875" d="M 82,0 L 82,199 591,879 123,879 123,1082 901,1082 901,881 395,205 950,205 950,0 82,0 Z" id="glyph14"/>
+   <glyph unicode="y" horiz-adv-x="1139" d="M 283,-425 C 216,-425 157,-421 106,-412 L 106,-212 C 141,-217 174,-220 203,-220 243,-220 276,-214 303,-201 329,-188 353,-167 374,-138 395,-109 418,-59 444,11 L 16,1082 313,1082 483,575 C 510,502 543,391 584,241 L 609,336 674,571 834,1082 1128,1082 700,-57 C 643,-196 583,-292 522,-345 460,-398 380,-425 283,-425 Z" id="glyph16"/>
+   <glyph unicode="x" horiz-adv-x="1139" d="M 819,0 L 567,392 313,0 14,0 410,559 33,1082 336,1082 567,728 797,1082 1102,1082 725,562 1124,0 819,0 Z" id="glyph18"/>
+   <glyph unicode="u" horiz-adv-x="1006" d="M 408,1082 L 408,475 C 408,285 472,190 600,190 668,190 723,219 765,278 806,336 827,411 827,502 L 827,1082 1108,1082 1108,242 C 1108,150 1111,69 1116,0 L 848,0 C 840,96 836,168 836,215 L 831,215 C 794,133 746,73 689,36 631,-1 562,-20 483,-20 368,-20 280,15 219,86 158,156 127,259 127,395 L 127,1082 408,1082 Z" id="glyph20"/>
+   <glyph unicode="t" horiz-adv-x="662" d="M 420,-18 C 337,-18 274,5 229,50 184,95 162,163 162,254 L 162,892 25,892 25,1082 176,1082 264,1336 440,1336 440,1082 645,1082 645,892 440,892 440,330 C 440,277 450,239 470,214 490,189 521,176 563,176 585,176 616,181 657,190 L 657,16 C 588,-7 509,-18 420,-18 Z" id="glyph22"/>
+   <glyph unicode="n" horiz-adv-x="1007" d="M 844,0 L 844,607 C 844,797 780,892 651,892 583,892 528,863 487,805 445,746 424,671 424,580 L 424,0 143,0 143,840 C 143,898 142,946 141,983 139,1020 137,1053 135,1082 L 403,1082 C 405,1069 408,1036 411,981 414,926 416,888 416,867 L 420,867 C 458,950 506,1010 563,1047 620,1084 689,1103 768,1103 883,1103 971,1068 1032,997 1093,926 1124,823 1124,687 L 1124,0 844,0 Z" id="glyph24"/>
+   <glyph unicode="m" horiz-adv-x="1562" d="M 780,0 L 780,607 C 780,797 725,892 616,892 559,892 513,863 478,805 442,747 424,672 424,580 L 424,0 143,0 143,840 C 143,898 142,946 141,983 139,1020 137,1053 135,1082 L 403,1082 C 405,1069 408,1036 411,981 414,926 416,888 416,867 L 420,867 C 455,950 498,1010 550,1047 601,1084 663,1103 735,1103 900,1103 1001,1024 1036,867 L 1042,867 C 1079,951 1123,1011 1174,1048 1225,1085 1291,1103 1370,1103 1475,1103 1556,1067 1611,996 1666,924 1694,821 1694,687 L 1694,0 1415,0 1415,607 C 1415,797 1360,892 1251,892 1196,892 1152,866 1117,813 1082,760 1062,686 1059,593 L 1059,0 780,0 Z" id="glyph26"/>
+   <glyph unicode="i" horiz-adv-x="292" d="M 143,1277 L 143,1484 424,1484 424,1277 143,1277 Z M 143,0 L 143,1082 424,1082 424,0 143,0 Z" id="glyph28"/>
+   <glyph unicode="d" horiz-adv-x="1033" d="M 844,0 C 841,10 838,35 835,76 831,116 829,149 829,176 L 825,176 C 764,45 649,-20 479,-20 353,-20 256,29 187,128 118,226 84,363 84,540 84,719 120,858 193,956 265,1053 367,1102 500,1102 577,1102 643,1086 699,1054 754,1022 797,974 827,911 L 829,911 827,1089 827,1484 1108,1484 1108,236 C 1108,169 1111,91 1116,0 L 844,0 Z M 831,547 C 831,664 812,754 773,817 734,880 676,911 600,911 525,911 469,881 432,820 395,759 377,665 377,540 377,295 451,172 598,172 672,172 729,205 770,270 811,335 831,427 831,547 Z" id="glyph30"/>
+   <glyph unicode="_" horiz-adv-x="1191" d="M -20,-250 L -20,-172 1157,-172 1157,-250 -20,-250 Z" id="glyph32"/>
+   <glyph unicode="6" horiz-adv-x="1033" d="M 1065,461 C 1065,311 1023,193 939,108 855,23 739,-20 591,-20 425,-20 298,38 209,155 120,271 75,443 75,672 75,923 120,1113 211,1240 301,1367 430,1430 598,1430 717,1430 812,1404 881,1351 950,1298 998,1217 1027,1106 L 762,1069 C 737,1162 680,1208 592,1208 517,1208 458,1170 415,1095 372,1020 350,905 350,752 380,802 422,840 475,867 528,894 589,907 656,907 782,907 882,867 955,787 1028,707 1065,598 1065,461 Z M 783,453 C 783,533 765,594 728,637 691,679 640,700 575,700 513,700 463,680 426,641 389,601 370,548 370,483 370,401 390,333 429,280 468,226 519,199 582,199 645,199 695,222 730,267 765,312 783,374 783,453 Z" id="glyph34"/>
+   <glyph unicode="3" horiz-adv-x="1060" d="M 1065,391 C 1065,259 1022,157 935,85 848,13 725,-23 565,-23 414,-23 293,12 204,82 115,151 62,252 47,383 L 333,408 C 351,273 428,205 564,205 631,205 684,222 721,255 758,288 777,339 777,408 777,471 754,519 709,552 664,585 596,602 507,602 L 409,602 409,829 501,829 C 582,829 642,846 683,879 724,912 744,959 744,1020 744,1078 728,1124 696,1157 663,1190 616,1206 554,1206 496,1206 449,1190 414,1158 378,1126 357,1081 352,1022 L 71,1042 C 86,1163 136,1258 222,1327 308,1396 420,1430 559,1430 706,1430 822,1397 905,1331 988,1264 1029,1172 1029,1055 1029,967 1003,895 952,838 900,781 825,744 728,725 L 728,721 C 836,708 919,673 978,615 1036,556 1065,482 1065,391 Z" id="glyph36"/>
+   <glyph unicode="2" horiz-adv-x="1006" d="M 71,0 L 71,195 C 108,276 160,354 228,431 295,508 380,588 483,671 582,751 651,817 691,869 730,921 750,972 750,1022 750,1145 688,1206 565,1206 505,1206 459,1190 428,1158 396,1125 375,1077 366,1012 L 83,1028 C 99,1159 148,1258 230,1327 311,1396 422,1430 563,1430 715,1430 832,1395 913,1326 994,1257 1035,1159 1035,1034 1035,968 1022,908 996,855 970,802 937,753 896,708 855,663 810,620 761,581 711,542 663,503 616,466 569,429 527,391 489,353 450,315 422,274 403,231 L 1057,231 1057,0 71,0 Z" id="glyph38"/>
+   <glyph unicode="1" horiz-adv-x="980" d="M 129,0 L 129,209 478,209 478,1170 140,959 140,1180 493,1409 759,1409 759,209 1082,209 1082,0 129,0 Z" id="glyph40"/>
+   <glyph unicode="." horiz-adv-x="319" d="M 139,0 L 139,305 428,305 428,0 139,0 Z" id="glyph42"/>
+   <glyph unicode=")" horiz-adv-x="583" d="M 2,-425 C 109,-269 186,-116 233,33 280,182 303,347 303,530 303,713 279,881 231,1032 183,1183 107,1333 2,1484 L 283,1484 C 388,1333 464,1182 511,1032 557,882 580,715 580,531 580,346 557,178 511,28 464,-122 388,-273 283,-425 L 2,-425 Z" id="glyph44"/>
+   <glyph unicode="(" horiz-adv-x="610" d="M 399,-425 C 294,-274 219,-124 172,26 125,176 102,344 102,531 102,717 125,885 172,1035 219,1184 294,1334 399,1484 L 680,1484 C 575,1332 498,1181 451,1030 403,879 379,713 379,530 379,348 403,182 450,33 497,-117 574,-270 680,-425 L 399,-425 Z" id="glyph46"/>
+   <glyph unicode=" " horiz-adv-x="556" id="glyph48"/>
+  </font>
+ </defs>
+ <defs class="TextShapeIndex" id="defs53"/>
+ <defs class="EmbeddedBulletChars" id="defs85">
+  <g id="bullet-char-template-57356" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 580,1141 1163,571 580,0 -4,571 Z" id="path55" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-57354" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 8,1128 H 1137 V 0 H 8 Z" id="path58" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-10146" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 174,0 602,739 174,1481 1456,739 Z M 1358,739 309,1346 659,739 Z" id="path61" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-10132" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 2015,739 1276,0 H 717 l 543,543 H 174 v 393 h 1086 l -543,545 h 557 z" id="path64" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-10007" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="m 0,-2 c -7,16 -16,29 -25,39 l 381,530 c -94,256 -141,385 -141,387 0,25 13,38 40,38 9,0 21,-2 34,-5 21,4 42,12 65,25 l 27,-13 111,-251 280,301 64,-25 24,25 c 21,-10 41,-24 62,-43 C 886,937 835,863 770,784 769,783 710,716 594,584 L 774,223 c 0,-27 -21,-55 -63,-84 l 16,-20 C 717,90 699,76 672,76 641,76 570,178 457,381 L 164,-76 c -22,-34 -53,-51 -92,-51 -42,0 -63,17 -64,51 -7,9 -10,24 -10,44 0,9 1,19 2,30 z" id="path67" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-10004" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 285,-33 C 182,-33 111,30 74,156 52,228 41,333 41,471 c 0,78 14,145 41,201 34,71 87,106 158,106 53,0 88,-31 106,-94 l 23,-176 c 8,-64 28,-97 59,-98 l 735,706 c 11,11 33,17 66,17 42,0 63,-15 63,-46 V 965 c 0,-36 -10,-64 -30,-84 L 442,47 C 390,-6 338,-33 285,-33 Z" id="path70" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-9679" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M 813,0 C 632,0 489,54 383,161 276,268 223,411 223,592 c 0,181 53,324 160,431 106,107 249,161 430,161 179,0 323,-54 432,-161 108,-107 162,-251 162,-431 0,-180 -54,-324 -162,-431 C 1136,54 992,0 813,0 Z" id="path73" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-8226" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="m 346,457 c -73,0 -137,26 -191,78 -54,51 -81,114 -81,188 0,73 27,136 81,188 54,52 118,78 191,78 73,0 134,-26 185,-79 51,-51 77,-114 77,-187 0,-75 -25,-137 -76,-188 -50,-52 -112,-78 -186,-78 z" id="path76" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-8211" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="M -4,459 H 1135 V 606 H -4 Z" id="path79" inkscape:connector-curvature="0"/>
+  </g>
+  <g id="bullet-char-template-61548" transform="matrix(4.8828125e-4,0,0,-4.8828125e-4,0,0)">
+   <path d="m 173,740 c 0,163 58,303 173,419 116,115 255,173 419,173 163,0 302,-58 418,-173 116,-116 174,-256 174,-419 0,-163 -58,-303 -174,-418 C 1067,206 928,148 765,148 601,148 462,206 346,322 231,437 173,577 173,740 Z" id="path82" inkscape:connector-curvature="0"/>
+  </g>
+ </defs>
+ <defs class="TextEmbeddedBitmaps" id="defs87"/>
+ <g id="g92" transform="translate(-2042,-13804)">
+  <g id="id2" class="Master_Slide">
+   <g id="bg-id2" class="Background"/>
+   <g id="bo-id2" class="BackgroundObjects"/>
+  </g>
+ </g>
+ <g class="SlideGroup" id="g244" transform="translate(-2042,-13804)">
+  <g id="g242">
+   <g id="container-id1">
+    <g id="id1" class="Slide" clip-path="url(#presentation_clip_path)">
+     <g class="Page" id="g238">
+      <g class="com.sun.star.drawing.TableShape" id="g236">
+       <g id="g234">
+        <rect class="BoundingBox" x="2042" y="13804" width="17005" height="1953" id="rect94" style="fill:none;stroke:none"/>
+        <path d="m 2044,13806 h 3401 v 965 H 2044 Z" id="path96" inkscape:connector-curvature="0" style="fill:#9999cc;stroke:none"/>
+        <text class="TextShape" id="text104"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan102" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="3120" y="14321" id="tspan100"><tspan id="tspan98" style="fill:#ffffff;stroke:none">uint32</tspan></tspan></tspan></text>
+
+        <path d="m 5445,13806 h 3399 v 965 H 5445 Z" id="path106" inkscape:connector-curvature="0" style="fill:#9999cc;stroke:none"/>
+        <text class="TextShape" id="text114"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan112" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="6520" y="14321" id="tspan110"><tspan id="tspan108" style="fill:#ffffff;stroke:none">uint32</tspan></tspan></tspan></text>
+
+        <path d="m 8844,13806 h 3401 v 965 H 8844 Z" id="path116" inkscape:connector-curvature="0" style="fill:#9999cc;stroke:none"/>
+        <text class="TextShape" id="text124"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan122" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="9920" y="14321" id="tspan120"><tspan id="tspan118" style="fill:#ffffff;stroke:none">uint32</tspan></tspan></tspan></text>
+
+        <path d="m 12245,13806 h 3399 v 965 h -3399 z" id="path126" inkscape:connector-curvature="0" style="fill:#9999cc;stroke:none"/>
+        <text class="TextShape" id="text134"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan132" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="13767" y="14321" id="tspan130"><tspan id="tspan128" style="fill:#ffffff;stroke:none">...</tspan></tspan></tspan></text>
+
+        <path d="m 15644,13806 h 3400 v 965 h -3400 z" id="path136" inkscape:connector-curvature="0" style="fill:#9999cc;stroke:none"/>
+        <text class="TextShape" id="text144"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan142" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="16720" y="14321" id="tspan140"><tspan id="tspan138" style="fill:#ffffff;stroke:none">uint32</tspan></tspan></tspan></text>
+
+        <path d="m 2044,14771 h 3401 v 983 H 2044 Z" id="path146" inkscape:connector-curvature="0" style="fill:#e6e6ff;stroke:none"/>
+        <text class="TextShape" id="text154"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan152" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="2813" y="15286" id="tspan150"><tspan id="tspan148" style="fill:#000000;stroke:none">dim_1 (x)</tspan></tspan></tspan></text>
+
+        <path d="m 5445,14771 h 3399 v 983 H 5445 Z" id="path156" inkscape:connector-curvature="0" style="fill:#e6e6ff;stroke:none"/>
+        <text class="TextShape" id="text164"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan162" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="6213" y="15286" id="tspan160"><tspan id="tspan158" style="fill:#000000;stroke:none">dim_2 (y)</tspan></tspan></tspan></text>
+
+        <path d="m 8844,14771 h 3401 v 983 H 8844 Z" id="path166" inkscape:connector-curvature="0" style="fill:#e6e6ff;stroke:none"/>
+        <text class="TextShape" id="text174"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan172" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="9626" y="15286" id="tspan170"><tspan id="tspan168" style="fill:#000000;stroke:none">dim_3 (z)</tspan></tspan></tspan></text>
+
+        <path d="m 12245,14771 h 3399 v 983 h -3399 z" id="path176" inkscape:connector-curvature="0" style="fill:#e6e6ff;stroke:none"/>
+        <text class="TextShape" id="text184"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan182" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="13767" y="15286" id="tspan180"><tspan id="tspan178" style="fill:#000000;stroke:none">...</tspan></tspan></tspan></text>
+
+        <path d="m 15644,14771 h 3400 v 983 h -3400 z" id="path186" inkscape:connector-curvature="0" style="fill:#e6e6ff;stroke:none"/>
+        <text class="TextShape" id="text194"><tspan class="TextParagraph" font-size="423px" font-weight="700" id="tspan192" style="font-weight:700;font-size:423px;font-family:'Liberation Sans', sans-serif"><tspan class="TextPosition" x="16612" y="15286" id="tspan190"><tspan id="tspan188" style="fill:#000000;stroke:none">dim_16</tspan></tspan></tspan></text>
+
+        <path d="M 2043,13806 H 19045" id="path196" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="M 2043,14771 H 5446" id="path198" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="M 2043,15754 H 5446" id="path200" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="M 5444,14771 H 8845" id="path202" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="M 5444,15754 H 8845" id="path204" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 8843,14771 h 3403" id="path206" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 8843,15754 h 3403" id="path208" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 12244,14771 h 3401" id="path210" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 12244,15754 h 3401" id="path212" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 15643,14771 h 3402" id="path214" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 15643,15754 h 3402" id="path216" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 2044,13805 v 1950" id="path218" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 5445,13805 v 1950" id="path220" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 8844,13805 v 1950" id="path222" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 12245,13805 v 1950" id="path224" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 15644,13805 v 967" id="path226" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 19044,13805 v 967" id="path228" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 15644,14770 v 985" id="path230" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+        <path d="m 19044,14770 v 985" id="path232" inkscape:connector-curvature="0" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round"/>
+       </g>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

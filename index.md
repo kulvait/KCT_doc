@@ -9,7 +9,7 @@
 .. type: text
 -->
 
-KCT framework is a set of sotware tools to process computer tomography data. It was founded by Vojtěch Kulvait to support his PostDoc research at University of Magdeburg 2018-2021. Work is focused on processing, manipulating and reconstructing the data from the C-Arm CT systems with a flat panel detector, FDCT. It consists of multiple packages described below.
+KCT framework is a set of sotware tools to process computer tomography data. It was founded by Vojtěch Kulvait to support his PostDoc research. Work is focused on processing, manipulating and reconstructing the data from the C-Arm CT systems with a flat panel detector, FDCT. It consists of multiple packages described below.
 
 These tools are tested and the compatibility will be maintained towards Debian 11 bullseye with AMD64 CPU. After the compilation, command line programs are built, which use command line parser [CLI11](https://github.com/CLIUtils/CLI11) to specify inputs, outputs and parameters. BASH scripting is a common practice to put these programs into the CT data processing functional pipelines. 
 
