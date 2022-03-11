@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Working with KCT CBCT 5 Parallel beam geometry | KCT framework</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
+<link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="Vojtěch Kulvait">
+<link rel="prev" href="cvp-paper-2021-4-comparing-projectors-accuracy.html" title="CVP paper 2021: Comparing projectors accuracy" type="text/html">
+<meta property="og:site_name" content="KCT framework">
+<meta property="og:title" content="Working with KCT CBCT 5 Parallel beam geometry">
+<meta property="og:url" content="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html">
+<meta property="og:description" content="In the previous chapter we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concep">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2022-03-11T11:09:24+01:00">
+<meta property="article:tag" content="using_kct_blog">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../">
+
+            <span id="blog-title">KCT framework</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../categories/using_kct_blog.html" class="nav-link">Using KCT blog</a>
+                </li>
+<li class="nav-item">
+<a href="../posts" class="nav-link">Blog posts</a>
+                </li>
+<li class="nav-item">
+<a href="../archive.html" class="nav-link">Blog Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="working-with-kct-cbct-5-parallel-beam-geometry.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Working with KCT CBCT 5 Parallel beam geometry</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="#" rel="bookmark">
+            <time class="published dt-published" datetime="2022-03-11T11:09:24+01:00" itemprop="datePublished" title="2022-03-11 11:09">2022-03-11 11:09</time></a>
+            </p>
+            
+        <p class="sourceline"><a href="working-with-kct-cbct-5-parallel-beam-geometry.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>In the <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html">previous chapter</a> we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.</p>
+<h2>Defining parallel rays geometry</h2>
+<p>In <a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries">ASTRA toolbox</a> parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.</p>
+<table>
+<thead><tr>
+<th>Vector</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>ray</td>
+<td>ray direction</td>
+</tr>
+<tr>
+<td>d</td>
+<td>the center of the detector</td>
+</tr>
+<tr>
+<td>u</td>
+<td>the vector from detector pixel (0,0) to (0,1)</td>
+</tr>
+<tr>
+<td>v</td>
+<td>the vector from detector pixel (0,0) to (1,0)</td>
+</tr>
+</tbody>
+</table>
+<p>Additional two integers need to be supplied representing detector size</p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>projection-sizex</td>
+<td>X dimension of detector in pixel count.</td>
+</tr>
+<tr>
+<td>projection-sizey</td>
+<td>Y dimension of detector in pixel count.</td>
+</tr>
+</tbody>
+</table>
+<p>It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.</p>
+<p>$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ </p>
+<p>Now we have to project center of the detector onto the projector</p>
+<p>$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$</p>
+<p>We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read</p>
+<p>$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.</p>
+<p>You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.</p>
+<p>Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. </p>
+<h2>Projection matrices</h2>
+<p>It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.</p>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="cvp-paper-2021-4-comparing-projectors-accuracy.html" rel="prev" title="CVP paper 2021: Comparing projectors accuracy">Previous post</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script></article><!--End of body content--><footer id="footer">
+            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
+Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
+
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
+

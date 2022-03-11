@@ -7,15 +7,19 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://kulvait.github.io/KCT_doc/</loc>
-  <lastmod>2022-02-05T22:50:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/2021/</loc>
   <lastmod>2022-02-05T00:08:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kulvait.github.io/KCT_doc/2022/</loc>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kulvait.github.io/KCT_doc/archive.html</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/</loc>
@@ -31,11 +35,11 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.html</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
-  <lastmod>2022-03-11T09:27:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/galleries/</loc>
@@ -55,7 +59,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/</loc>
-  <lastmod>2022-02-05T22:51:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-1-the-platforms.html</loc>
@@ -71,7 +75,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-4-comparing-projectors-accuracy.html</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/kct-framework.html</loc>
@@ -83,7 +87,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</loc>
@@ -92,5 +96,9 @@
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</loc>
   <lastmod>2022-02-05T00:49:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</loc>
+  <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
 </urlset>

@@ -3,7 +3,390 @@
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Sat, 05 Feb 2022 00:49:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 4 First cone beam CT projection</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the last post Working with KCT CBCT 1 we converted DICOM data to the DEN format and explained how volumes are encoded. Today we create a CT trajectory setup and encode it in the format that can be recognized in KCT. Finally, we use KCT to reproject the volume from the last post using this trajectory.&lt;/p&gt;
+</copyright><lastBuildDate>Fri, 11 Mar 2022 15:00:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
+&lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
+&lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Vector&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ray&lt;/td&gt;
+&lt;td&gt;ray direction&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;the center of the detector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Additional two integers need to be supplied representing detector size&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
+&lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Vector&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ray&lt;/td&gt;
+&lt;td&gt;ray direction&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;the center of the detector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Additional two integers need to be supplied representing detector size&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Vector&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ray&lt;/td&gt;
+&lt;td&gt;ray direction&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;the center of the detector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Additional two integers need to be supplied representing detector size&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Vector&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ray&lt;/td&gt;
+&lt;td&gt;ray direction&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;the center of the detector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Additional two integers need to be supplied representing detector size&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;Additional two integers need to be supplied representing detector size&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup but it might not be as straightforward what is the simplest way how to project point onto the detector. Because for given point $x$ all the $x + t ray$ points shall be projected to the same point, we have to orthogonalize $u$ and $v$ with respect to $ray$.&lt;/p&gt;
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;$uo = u - (u, ray)/(ray,ray) ray$ 
+$vo = u - (u, ray)/(ray,ray) ray$ &lt;/p&gt;
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;Now we have to project center of the detector onto the projector&lt;/p&gt;
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;$PXd0 = (d, u0)$
+$PYd0 = (d, v0)$&lt;/p&gt;
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;$PX = (x, u0)-PXd0+0.5projection-sizex$
+$PY = (x, v0)-PYd0+0.5projection-sizey$.&lt;/p&gt;
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</guid><pubDate>Fri, 11 Mar 2022 10:09:24 GMT</pubDate></item><item><title>Working with KCT CBCT 4 First cone beam CT projection</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the last post Working with KCT CBCT 1 we converted DICOM data to the DEN format and explained how volumes are encoded. Today we create a CT trajectory setup and encode it in the format that can be recognized in KCT. Finally, we use KCT to reproject the volume from the last post using this trajectory.&lt;/p&gt;
 &lt;h3&gt;Theoretical scanning trajectory&lt;/h3&gt;
 &lt;p&gt;Let's reproject the volume we have using theoretical C-Arm FDCT trajectory. Let's say that our device rotates along the axis parallel to the z axis. By angle $\omega$ we denote polar angle between normal to detector that is pointing towards the source and x axis. Let's fix source to isocenter and source to detector lengths and create a setup in which patient is irradiated from 360 different angles corresponding to integer $\omega$ values. Let's create (camera matrices)[https://en.wikipedia.org/wiki/Camera_matrix], which encode this setup. We create them as float64 DEN files, where z dimension will represent number of angles. So that we produce file of dimensions (dimx, dimy, dimz)=(3,4,360).&lt;/p&gt;
 &lt;h3&gt;Volume reprojection&lt;/h3&gt;
@@ -2736,7 +3119,7 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -2851,7 +3234,7 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -2965,7 +3348,7 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -3078,7 +3461,7 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -3190,7 +3573,7 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -3301,7 +3684,7 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
@@ -3409,7 +3792,7 @@ $$&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We constract "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;

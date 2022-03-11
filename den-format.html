@@ -93,6 +93,25 @@ bg-dark
 <p><img src="images/DENEXT_header1.svg"></p>
 <p>They are followed by up to 16 dimension specification values.</p>
 <p><img src="images/DENEXT_header2.svg"></p>
+<p>Supported element types and byte sizes are listed in the following Java code from DEN file opener, where the element type ids are in comments:</p>
+<pre class="code literal-block"><span class="kd">public</span> <span class="kd">enum</span> <span class="n">DenDataType</span> <span class="p">{</span>
+    <span class="c1">// Ordinal num is the position in the enum</span>
+    <span class="c1">// thus for this enum is the ordinal important as its the code in DEX file</span>
+    <span class="n">UINT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="c1">// 0</span>
+    <span class="n">INT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="c1">// 1</span>
+    <span class="n">UINT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 2</span>
+    <span class="n">INT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 3</span>
+    <span class="n">UINT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 4</span>
+    <span class="n">INT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 5</span>
+    <span class="n">FLOAT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 6</span>
+    <span class="n">FLOAT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 7</span>
+    <span class="n">UINT8</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// 8</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">byteSize</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="nf">DenDataType</span><span class="p">(</span><span class="kt">int</span> <span class="n">byteSize</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">byteSize</span> <span class="o">=</span> <span class="n">byteSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byteSize</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre>
 <h3>Deprecated extended DEN</h3>
 <p>The original implementation of extended format was simpler and is deprecated.</p>
 <p>Extended version implemented in KCT is able to represent data with each dimension up to the uint32_t_max. The header in this format is 18bytes and it starts with (0,0,0) or (0,0,1) and continues by (dimy, dimx, dimz) of uint32_t values. Format with initial part of header (0,0,0) has the same row major alignment of the remaining sequence of data, while in the format with initial part of header (0,0,1) the value representing the position (ix,iy,iz) will have a flat index $iy + ix * dimy + iz * dimx * dimy$
