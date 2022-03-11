@@ -38,6 +38,8 @@ They are followed by up to 16 dimension specification values.
 
 <img src="/images/DENEXT_header2.svg"/>
 
+> Note that when converting DEN files into the numpy arrays, then for 5D file DEN.shape=(dim_5, dim_4, dim_3, dim_2, dim_1) and the dim_5 will correspond to the axis0. This way however from 3D DEN file we get particular frame with dim_3 index k just by using DEN[k] in numpy. Still keep in mind that numpy index convention might also be contraintuitive.
+
 Supported element types and byte sizes are listed in the following Java code from DEN file opener, where the element type ids are in comments:
 
 ```java
