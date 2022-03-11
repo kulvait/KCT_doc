@@ -38,6 +38,31 @@ They are followed by up to 16 dimension specification values.
 
 <img src="/images/DENEXT_header2.svg"/>
 
+Supported element types and byte sizes are listed in the following Java code from DEN file opener, where the element type ids are in comments:
+
+```java
+public enum DenDataType {
+    // Ordinal num is the position in the enum
+    // thus for this enum is the ordinal important as its the code in DEX file
+    UINT16(2), // 0
+    INT16(2), // 1
+    UINT32(4), // 2
+    INT32(4), // 3
+    UINT64(8), // 4
+    INT64(8), // 5
+    FLOAT32(4), // 6
+    FLOAT64(8), // 7
+    UINT8(1); // 8
+
+    private final int byteSize;
+    private DenDataType(int byteSize) { this.byteSize = byteSize; }
+    public int getSize() { return byteSize; }
+}
+```
+
+
+
+
 ## Deprecated extended DEN
 The original implementation of extended format was simpler and is deprecated.
 
