@@ -66,7 +66,7 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$
 
 You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.
 
-Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. 
+Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosinus of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.
 
 
 # Projection matrices
