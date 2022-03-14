@@ -115,11 +115,11 @@ bg-dark
 </tr></thead>
 <tbody>
 <tr>
-<td>projection-sizex</td>
+<td>NX</td>
 <td>X dimension of detector in pixel count.</td>
 </tr>
 <tr>
-<td>projection-sizey</td>
+<td>NY</td>
 <td>Y dimension of detector in pixel count.</td>
 </tr>
 </tbody>
@@ -133,15 +133,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ </p>
 <p>In particular</p>
 <p>$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$</p>
-<p>When we project center of the detector onto the projector</p>
-<p>$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$</p>
+<p>When we project center of the detector $d$ onto the detector obviously we shall obtain center of it</p>
+<p>$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$</p>
 <p>therefore </p>
-<p>$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$</p>
-<p>We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read</p>
-<p>$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$</p>
+<p>$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$</p>
+<p>Therefore the formula to get PX and PY for arbitrary point x will read</p>
+<p>$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
 <p>You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.</p>
 <p>Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. </p>
 <h2>Projection matrices</h2>

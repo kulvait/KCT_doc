@@ -3,7 +3,7 @@
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Mon, 14 Mar 2022 10:52:14 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
+</copyright><lastBuildDate>Mon, 14 Mar 2022 11:06:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
 &lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
 &lt;p&gt;Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.&lt;/p&gt;
 &lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
@@ -43,11 +43,11 @@ Any data provided on this site or within the KCT framework may be subject to dif
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -61,15 +61,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -114,11 +114,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -132,15 +132,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -184,11 +184,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -202,15 +202,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -253,11 +253,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -271,15 +271,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -321,11 +321,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -339,15 +339,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -363,11 +363,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -381,15 +381,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -404,11 +404,11 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizex&lt;/td&gt;
+&lt;td&gt;NX&lt;/td&gt;
 &lt;td&gt;X dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;projection-sizey&lt;/td&gt;
+&lt;td&gt;NY&lt;/td&gt;
 &lt;td&gt;Y dimension of detector in pixel count.&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -422,15 +422,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -445,15 +445,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -467,15 +467,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -487,15 +487,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -506,15 +506,15 @@ $$v_0 = v - (v, ray)/(ray,ray) ray.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -523,15 +523,15 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
@@ -539,78 +539,78 @@ $$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
 
 &lt;p&gt;$$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$&lt;/p&gt;
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;When we project center of the detector onto the projector&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$&lt;/p&gt;
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;
 &lt;p&gt;It is tempting to use projection matrices as they provide full correspondence between 3D and 2D objects. We use just afine projection of 3D space into 2D. On the other hand in this formalism is not possible to encode tilt of the detector and it is therefore needed to expect either that there is no tilt or to provide this information by different means.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $u$ and $v$ from the projection matrix or the transformation $PX$. The reason is that the matrix is based on vectors $u0$ and $v0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. &lt;/p&gt;
 &lt;h2&gt;Projection matrices&lt;/h2&gt;

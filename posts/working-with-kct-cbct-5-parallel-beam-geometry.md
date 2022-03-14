@@ -30,8 +30,8 @@ Additional two integers need to be supplied representing detector size
 
 |Parameter                   | Description|
 |----------------------------|----------------------------------------------|
-|projection-sizex            |  X dimension of detector in pixel count.|
-|projection-sizey            |  Y dimension of detector in pixel count.|
+|NX            |  X dimension of detector in pixel count.|
+|NY            |  Y dimension of detector in pixel count.|
 
 
 It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot ray$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform
@@ -49,20 +49,20 @@ In particular
 $$a = u_0/(u_0,u_0),$$
 $$b = v_0/(v_0,v_0).$$
 
-When we project center of the detector onto the projector
+When we project center of the detector $d$ onto the detector obviously we shall obtain center of it
 
-$$PX(d) = px_0 + (d, a) = 0.5projection-sizex,$$
-$$PY(d) = py_0 + (d, b) = 0.5projection-sizey$$
+$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
+$$PY(d) = py_0 + (d, b) = 0.5 NY$$
 
 therefore 
 
-$$px_0 = 0.5projection-sizex - (d,a),$$
-$$py_0 = 0.5projection-sizey - (d,b).$$
+$$px_0 = 0.5 NX - (d,a),$$
+$$py_0 = 0.5 NY - (d,b).$$
 
-We know that $PXd0$ shall correspond to the $PX=0.5projection-sizex$ and $PYd0$ shall correspond to the $PY=0.5projection-sizey$. Therefore the formula to get PX and PY for arbitrary point x will read
+Therefore the formula to get PX and PY for arbitrary point x will read
 
-$$PX = (x, a)-(d, a)+0.5projection-sizex,$$
-$$PY = (x, b)-(d, b)+0.5projection-sizey.$$
+$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$
 
 You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. Moreover when instead of center of the detector we use zero of the detector, the projection matrix will be independent of projector dimensions.
 
