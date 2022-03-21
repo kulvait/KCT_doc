@@ -3,7 +3,7 @@
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Tue, 15 Mar 2022 14:41:34 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
+</copyright><lastBuildDate>Mon, 21 Mar 2022 15:47:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
 &lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
 &lt;p&gt;Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.&lt;/p&gt;
 &lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
@@ -5487,16 +5487,18 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 &lt;p&gt;In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</guid><pubDate>Wed, 15 Sep 2021 10:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.&lt;/p&gt;
 &lt;h3&gt;CT projections geometry&lt;/h3&gt;
-&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of the X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
+&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of CBCT X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
 &lt;h3&gt;Projective geometry&lt;/h3&gt;
 &lt;p&gt;Projective space is a structure on top of an Vector space $\mathbf{V}$ that is not a vector space itself. For an introduction into the projective geometry, see &lt;a href="http://math.unife.it/insegnamenti/geometria-differenziale/materiale-didattico/projective.pdf"&gt;class notes of Nigel Hitchin&lt;/a&gt;. I will follow some of its definitions&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5520,7 +5522,7 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -5530,7 +5532,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -5545,10 +5547,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -5602,16 +5604,18 @@ $$&lt;/p&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;h3&gt;CT projections geometry&lt;/h3&gt;
-&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of the X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
+&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of CBCT X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
 &lt;h3&gt;Projective geometry&lt;/h3&gt;
 &lt;p&gt;Projective space is a structure on top of an Vector space $\mathbf{V}$ that is not a vector space itself. For an introduction into the projective geometry, see &lt;a href="http://math.unife.it/insegnamenti/geometria-differenziale/materiale-didattico/projective.pdf"&gt;class notes of Nigel Hitchin&lt;/a&gt;. I will follow some of its definitions&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5635,7 +5639,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -5645,7 +5649,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -5660,10 +5664,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -5716,16 +5720,18 @@ $$&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of the X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
+&lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of CBCT X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
 &lt;h3&gt;Projective geometry&lt;/h3&gt;
 &lt;p&gt;Projective space is a structure on top of an Vector space $\mathbf{V}$ that is not a vector space itself. For an introduction into the projective geometry, see &lt;a href="http://math.unife.it/insegnamenti/geometria-differenziale/materiale-didattico/projective.pdf"&gt;class notes of Nigel Hitchin&lt;/a&gt;. I will follow some of its definitions&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5749,7 +5755,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -5759,7 +5765,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -5774,10 +5780,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -5835,10 +5841,12 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5862,7 +5870,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -5872,7 +5880,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -5887,10 +5895,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -5947,10 +5955,12 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5974,7 +5984,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -5984,7 +5994,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -5999,10 +6009,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6058,10 +6068,12 @@ $$&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6085,7 +6097,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6095,7 +6107,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6110,10 +6122,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6166,10 +6178,12 @@ $$&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
+&lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6193,7 +6207,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6203,7 +6217,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6218,10 +6232,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6276,7 +6290,9 @@ $$&lt;/p&gt;
 
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6300,7 +6316,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6310,7 +6326,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6325,10 +6341,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6382,7 +6398,9 @@ $$&lt;/p&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6406,7 +6424,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6416,7 +6434,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6431,10 +6449,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6487,7 +6505,9 @@ $$&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/FDCTProjectionGeometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+with 2D scatch 
+&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6511,7 +6531,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6521,7 +6541,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6536,10 +6556,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6615,7 +6635,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6625,7 +6645,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6640,10 +6660,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6718,7 +6738,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6728,7 +6748,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6743,10 +6763,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6820,7 +6840,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6830,7 +6850,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6845,10 +6865,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -6921,7 +6941,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -6931,7 +6951,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -6946,10 +6966,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7021,7 +7041,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7031,7 +7051,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7046,10 +7066,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7120,7 +7140,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7130,7 +7150,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7145,10 +7165,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7218,7 +7238,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7228,7 +7248,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7243,10 +7263,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7315,7 +7335,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7325,7 +7345,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7340,10 +7360,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7411,7 +7431,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7421,7 +7441,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7436,10 +7456,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7506,7 +7526,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7516,7 +7536,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7531,10 +7551,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7600,7 +7620,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7610,7 +7630,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7625,10 +7645,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7689,7 +7709,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7699,7 +7719,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7714,10 +7734,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7777,7 +7797,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7787,7 +7807,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7802,10 +7822,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7864,7 +7884,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7874,7 +7894,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7889,10 +7909,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -7950,7 +7970,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -7960,7 +7980,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -7975,10 +7995,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -8035,7 +8055,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}&amp;amp; \cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
 \cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
 0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
 0&amp;amp;0&amp;amp;0&amp;amp;1 
@@ -8045,7 +8065,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -8060,10 +8080,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -8120,7 +8140,7 @@ $$&lt;/p&gt;
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
-0&amp;amp;1&amp;amp;0&amp;amp;-\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
 0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
 0&amp;amp;0&amp;amp;0&amp;amp;1
 \end{pmatrix}
@@ -8135,10 +8155,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -8201,10 +8221,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
@@ -8263,10 +8283,10 @@ $$
 \begin{pmatrix}
 1&amp;amp;0&amp;amp;0&amp;amp;0\\
 0&amp;amp;0&amp;amp;1&amp;amp;0\\
-0&amp;amp;-\frac{1}{A}&amp;amp;0&amp;amp;0
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}
