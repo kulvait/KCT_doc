@@ -13,7 +13,7 @@
 Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.
 
 ## CT projections geometry
-In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of the X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.
+In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of CBCT X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.
 
 ## Projective geometry
 
@@ -21,13 +21,15 @@ Projective space is a structure on top of an Vector space $\mathbf{V}$ that is n
 
 > The projective space $\mathcal{P}(\mathbf{V})$ of a vector space $\mathbf{V}$ is a set of one dimensional subspaces of $\mathbf{V}$. The dimension of $\mathcal{P}(\mathbf{V})$ is $dim(\mathbf{V}) - 1$. Projective space of dimension $1$ is called projective line and projective space of dimension $2$ is called projective plane.
 
-It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. 
+It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. 
 
 ## FDCT projection setup
 
 Let's have the following FDCT setup
 
-<img src="/images/FDCTProjectionGeometry.png">
+<img src="/images/CTGeometryConstraints.png">
+with 2D scatch 
+<img src="/images/CTGeometryProjection.png">
 
 There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.
 
@@ -68,7 +70,7 @@ First we just perform a rotation of the axes $x_1,x_2,x_3$ so that $x_1',x_2',x_
 $$
 \mathbf{X}_1 =
 \begin{pmatrix} 
--\sin{\omega}& \cos{\omega} &0 &0 \\\
+\sin{\omega}& -\cos{\omega} &0 &0 \\\
 \cos{\omega}& \sin{\omega}&0 &0 \\\ 
 0&0&-1&0 \\\
 0&0&0&1 
@@ -80,7 +82,7 @@ Now the $\mathbf{X}_1$ took us into a new coordinate system, let's live in it an
 $$
 \mathbf{X}_2 = \begin{pmatrix} 
 1&0&0&0\\\
-0&1&0&-\sqrt{s_1^2+s_2^2}\\\
+0&1&0&\sqrt{s_1^2+s_2^2}\\\
 0&0&1&s_3\\\
 0&0&0&1
 \end{pmatrix}
@@ -97,10 +99,10 @@ $$
 \begin{pmatrix}
 1&0&0&0\\\
 0&0&1&0\\\
-0&-\frac{1}{A}&0&0
+0&\frac{1}{A}&0&0
 \end{pmatrix}
 $$
-Notice sign to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
 $$
 \mathbf{A}_1 =
 \begin{pmatrix}

@@ -111,3 +111,5 @@
 'render_pages:output/posts/working-with-kct-cbct-5-parallel-beam-geometry.html', (195584, 4569)
 'render_posts:cache/posts/working-with-kct-cbct-5-parallel-beam-geometry.html', (200192, 465)
 'render_sources:output/posts/working-with-kct-cbct-5-parallel-beam-geometry.md', (200704, 316)
+'scale_images:output/images/CTGeometryProjection.png', (216064, 241)
+'scale_images:output/images/CTGeometryConstraints.png', (216576, 243)
