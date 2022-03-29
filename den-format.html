@@ -116,7 +116,8 @@ bg-dark
 <span class="p">}</span>
 </pre>
 <p>This extended format was implemented in DEN file openner from commit 9d5696, version 1.3.1.
-This extended format was implemented in denpy from commit 21ded7, version 1.2.1.</p>
+This extended format was implemented in denpy from commit 21ded7, version 1.2.1.
+This extended format was implemented in ctiol from commit 618aec3c0bf.</p>
 <h3>Deprecated extended implementation</h3>
 <p>There is one more implementation of extended format, which just change dimension describing parameter from uint16 to uint32 and adds possibility of y-majority. It is now deprecated and will not be used in the future.</p>
 <p>Extended version implemented in KCT is able to represent data with each dimension up to the uint32_t_max. The header in this format is 18bytes and it starts with (0,0,0) or (0,0,1) and continues by (dimy, dimx, dimz) of uint32_t values. Format with initial part of header (0,0,0) has the same row major alignment of the remaining sequence of data, while in the format with initial part of header (0,0,1) the value representing the position (ix,iy,iz) will have a flat index $iy + ix * dimy + iz * dimx * dimy$

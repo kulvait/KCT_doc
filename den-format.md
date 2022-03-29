@@ -63,6 +63,7 @@ public enum DenDataType {
 ```
 This extended format was implemented in DEN file openner from commit 9d5696, version 1.3.1.
 This extended format was implemented in denpy from commit 21ded7, version 1.2.1.
+This extended format was implemented in ctiol from commit 618aec3c0bf.
 
 ## Deprecated extended implementation
 There is one more implementation of extended format, which just change dimension describing parameter from uint16 to uint32 and adds possibility of y-majority. It is now deprecated and will not be used in the future.
