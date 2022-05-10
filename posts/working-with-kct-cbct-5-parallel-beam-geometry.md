@@ -26,7 +26,7 @@ In [ASTRA toolbox](https://www.astra-toolbox.com/docs/geom3d.html#projection-geo
 |$v_x$     | the vector from detector pixel (0,0) to (0,1)|
 |$v_y$     | the vector from detector pixel (0,0) to (1,0)|
 
-Additional two integers need to be supplied representing detector size
+Additional two integers need to be supplied representing number of pixels in each detector direction.
 
 |Parameter                   | Description                                  |
 |----------------------------|----------------------------------------------|
