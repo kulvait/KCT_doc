@@ -3,7 +3,7 @@
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Tue, 10 May 2022 14:19:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
+</copyright><lastBuildDate>Fri, 15 Jul 2022 09:27:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
 &lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
 &lt;p&gt;Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.&lt;/p&gt;
 &lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
@@ -5496,9 +5496,9 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5613,9 +5613,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5729,9 +5729,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5844,9 +5844,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -5958,9 +5958,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6071,9 +6071,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6181,9 +6181,9 @@ $$&lt;/p&gt;
 &lt;p&gt;It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. &lt;/p&gt;
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6290,9 +6290,9 @@ $$&lt;/p&gt;
 
 &lt;h3&gt;FDCT projection setup&lt;/h3&gt;
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6398,9 +6398,9 @@ $$&lt;/p&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;Let's have the following FDCT setup&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
@@ -6505,9 +6505,220 @@ $$&lt;/p&gt;
 &lt;h3&gt;Next post&lt;/h3&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
-with 2D scatch 
-&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;&lt;/p&gt;
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
+&lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
+&lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
+&lt;h4&gt;Common FDCT setup simplifications&lt;/h4&gt;
+&lt;p&gt;The setup described is too general for many projectors implemented in KCT package. The only exception is &lt;a href="https://doi.org/10.1118/1.595715"&gt;Siddon projector&lt;/a&gt;, which can be used with the geometries of this generality.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://doi.org/10.1109/TMI.2010.2050898"&gt;TR and TT projectors&lt;/a&gt; by design and CVP projector by current implementation use the following simplification of the geometry. They expect, that the vector $\mathbb{\chi^2}$ is always parallel to $\mathbb{x_3}$ cartesian vector. That implies then that the normal to the detector, which can be obtained e.g. as a normalized cross product $\mathbb{\chi^1} \times \mathbb{\chi^2}$ is orthogonal to $\mathbb{x_3}$. &lt;/p&gt;
+&lt;p&gt;This exclude trajectories, where the device rotates along axis not parallel with $\mathbb{x_3}$.&lt;/p&gt;
+&lt;h4&gt;Camera matrix to describe FDCT setup&lt;/h4&gt;
+&lt;p&gt;By the camera matrix we describe the mapping from the point $\mathbb{x} = (x_1, x_2, x_3)$ to the point on the detector given by $\mathbb{P}=(p^1, p^2)$. The point $\mathbb{x}$ will be projected onto the point $\chi^{(0,0)} + p^1 * \chi^1 + p^2 * \chi^2$. Interestingly, we don't need to know precise values of vectors $\chi^{(0,0)}, \chi^1, \chi^2$ as when we place the vector $\chi^{(0,0)}$ anywhere on the ray from the source to that vector, and scale accordingly also the vectors $\chi^1$ and $\chi^2$, we obtain obtain the same mapping between $\mathbb{x} = (x_1, x_2, x_3)$ and $\mathbb{P}=(P^1, P^2)$. In the normal detector we can not change size of the pixels, so this is just a theoretical consideration. However this has an implication that when having camera matrix in the sense of beeing a linear mapping between projective space of dimension 3 and projective space of dimension 2, we can not tell how far from the source the detector is or how far the pixels are spaced from each other. When to the camera metrix adding information of one pixel dimension or distance from projector to source, system is fully defined. &lt;/p&gt;
+&lt;p&gt;Why talking about abstract projective elements? Camera matrix is at the end of the day matrix from $\mathbf{R}^{3x4}$. Scaling by nonzero constant do not change its properties as a projective element. Therefore using this fact we can encode source to detector distance into the matrix. On the other hand we don't need this information in order to make CT projection or reconstruction anyway. Camera matrix does not tell us, what is the size of the detector and this information must be provided to the reconstruction software by other means. For example to do a projection using KCT framework, we need to specify&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;    --projection-sizex UINT Needs: --projection-sizey
+                                X dimension of detector in pixel count, defaults to 616.
+    --projection-sizey UINT Needs: --projection-sizex
+                                Y dimension of detector in pixel count, defaults to 480.
+&lt;/pre&gt;
+&lt;h4&gt;Creating camera matrices for particular setup&lt;/h4&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Camera_matrix"&gt;Camera matrix&lt;/a&gt; is relatively well described on Wikipedia. So let's construct set of camera matrices to be used in the KCT framework. To store them, we use &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt; format of the size float64 with $(dimx, dimy, dimz)=(4,3,n)$, where n is number of the configurations in given FDCT trajectory.&lt;/p&gt;
+&lt;p&gt;Let's have the following setup. Zero of the world coordinates coincide with the volume center. Source and detector rotate along $x_3$ axis and $\chi_2$ is parallel with $x_3$. Principal ray at every position of the trajectory hits the detector. The  distance  from  the source  to  theisocenter  is $I = 749mm$ and  the  distance  from  source to the detector is $A=1198mm$. Trajectory consist of $360$ views and in the view $\omega$ the normal to the detector pointing towards the source forms the polar angle with respect to $x_1$ and $x_2$ axes so that $n_\omega = (cos(\omega), sin(\omega))$. Finally let's have $PX\times PY$ = $0.616mmx0.616mm$ pixels and $M\times N = 616x480$ grid.&lt;/p&gt;
+&lt;p&gt;From this information we construct camera matrix for given projection setup. First we perform a transformation to the local coordinate system related to the given view $\omega$ that will be more convenient to work with. In the terminology of projection matrices, we understand the point in 3D as a point of projective space of dimension 3, which can be represented by the vector $(x_1, x_2, x_3, 1)$. We use this just as a vehicle to encode source position into the projection matrix not to exploit some topological properties of $\mathbb{R}^4$, but let's respect this usual way how to construct projection matrices. So that linear transformations in this kind of space will be transformations between $\mathbb{R}^4$ encoded by means of matrices from $\mathbb{R}^{4\times4}$.&lt;/p&gt;
+&lt;p&gt;First we just perform a rotation of the axes $x_1,x_2,x_3$ so that $x_1',x_2',x_3'$ will again form Cartesian coordinate system but rotated towards our setup. Let's identify positive direction of $x_3'$ with positive direction of $\chi^2$ by $x_3'=-x_3$. We rotate remaining two axes in the way that $x_2'$ unit vector will be the normal vector $n_\omega$ and $x_1'$ will be colinear with $\chi^1$ on the detector. So we use the following projective element 
+$$
+\mathbf{X}_1 =
+\begin{pmatrix} 
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
+0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
+0&amp;amp;0&amp;amp;0&amp;amp;1 
+\end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;Now the $\mathbf{X}_1$ took us into a new coordinate system, let's live in it and shift its origin to $S'$. First let's relize that coordinates of $S' = (0, -\sqrt{s_1^2+s_2^2}, -s_3, 1)$. Now we can do a shift by means of the next projective element
+$$
+\mathbf{X}_2 = \begin{pmatrix} 
+1&amp;amp;0&amp;amp;0&amp;amp;0\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
+0&amp;amp;0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$&lt;/p&gt;
+&lt;p&gt;So we constructed projective element such that
+$$
+\begin{pmatrix} x_1'' \\ x_2''\\x_3''\\1 \end{pmatrix} = \mathbf{X}_2 \mathbf{X}_1 \begin{pmatrix} x_1\\x_2\\x_3\\1 \end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;Now let's construct the projective element from 3D transformed space to the detector. But simpler detector with the same orientation as our flat panel but with the zero positioned at principal point and moreover detector such, that unit vector $x_3''$ from principal point projects to 1 in $\chi^2$ direction and unit vector $x_2''$ project to 1 in $\chi_1$ direction. This detector must have focal length $A$ so that we can construct the following projective element
+$$
+\mathbf{E} =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;0&amp;amp;0\\
+0&amp;amp;0&amp;amp;1&amp;amp;0\\
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
+\end{pmatrix}
+$$
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+$$
+\mathbf{A}_1 =
+\begin{pmatrix}
+\frac{1}{PX}&amp;amp;0&amp;amp;0\\
+0&amp;amp;\frac{1}{PY}&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$&lt;/p&gt;
+&lt;p&gt;Here is obvious that the operation of cutting pixels into $kxk$ subpixels can be realized by matrix
+$$
+\begin{pmatrix}
+k&amp;amp;0&amp;amp;0\\
+0&amp;amp;k&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$
+and splitting is realized by inverse operation
+$$
+\begin{pmatrix}
+\frac{1}{k}&amp;amp;0&amp;amp;0\\
+0&amp;amp;\frac{1}{k}&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;To shift the $\chi^{(0,0)}$ to its intended position let's do this
+\begin{equation}
+\mathbf{A}_2 =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;\frac{N-1}{2}\\
+0&amp;amp;1&amp;amp;\frac{M-1}{2}\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+\end{equation}&lt;/p&gt;
+&lt;p&gt;In the KCT we use the convention that integer projection coordinates denote center of given pixel.
+Therefore zero is achieved at the center of corner pixel.
+Now the principal point has coordinates $(PX,PY)=((N-1)/2, (M-1)/2)$ we may need to shift it further. We might want to do something fancy as &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;. Or we might just want to adjust the positioning to the real device we are trying to model. &lt;/p&gt;
+&lt;p&gt;\begin{equation}
+\mathbf{A}_3 =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;PX_o\\
+0&amp;amp;1&amp;amp;PY_o\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+\end{equation}&lt;/p&gt;
+&lt;p&gt;Is a projective element, which does this final offsetting with $(PX_o,PY_o)=(0,0)$ in our demonstration example. &lt;/p&gt;
+&lt;p&gt;Finally we obtain camera matrix, sometimes in this context also called projection matrix, that for given position in the volume provides the position on the projector
+$$
+\mathbf{P} = \mathbf{A}_3 \mathbf{A}_2 \mathbf{A}_1 \mathbf{E} \mathbf{X}_2 \mathbf{X}_1.
+$$&lt;/p&gt;
+&lt;h3&gt;Next post&lt;/h3&gt;
+&lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;with 2D scatch &lt;/p&gt;
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
+&lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
+&lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
+&lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;
+&lt;h4&gt;Common FDCT setup simplifications&lt;/h4&gt;
+&lt;p&gt;The setup described is too general for many projectors implemented in KCT package. The only exception is &lt;a href="https://doi.org/10.1118/1.595715"&gt;Siddon projector&lt;/a&gt;, which can be used with the geometries of this generality.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://doi.org/10.1109/TMI.2010.2050898"&gt;TR and TT projectors&lt;/a&gt; by design and CVP projector by current implementation use the following simplification of the geometry. They expect, that the vector $\mathbb{\chi^2}$ is always parallel to $\mathbb{x_3}$ cartesian vector. That implies then that the normal to the detector, which can be obtained e.g. as a normalized cross product $\mathbb{\chi^1} \times \mathbb{\chi^2}$ is orthogonal to $\mathbb{x_3}$. &lt;/p&gt;
+&lt;p&gt;This exclude trajectories, where the device rotates along axis not parallel with $\mathbb{x_3}$.&lt;/p&gt;
+&lt;h4&gt;Camera matrix to describe FDCT setup&lt;/h4&gt;
+&lt;p&gt;By the camera matrix we describe the mapping from the point $\mathbb{x} = (x_1, x_2, x_3)$ to the point on the detector given by $\mathbb{P}=(p^1, p^2)$. The point $\mathbb{x}$ will be projected onto the point $\chi^{(0,0)} + p^1 * \chi^1 + p^2 * \chi^2$. Interestingly, we don't need to know precise values of vectors $\chi^{(0,0)}, \chi^1, \chi^2$ as when we place the vector $\chi^{(0,0)}$ anywhere on the ray from the source to that vector, and scale accordingly also the vectors $\chi^1$ and $\chi^2$, we obtain obtain the same mapping between $\mathbb{x} = (x_1, x_2, x_3)$ and $\mathbb{P}=(P^1, P^2)$. In the normal detector we can not change size of the pixels, so this is just a theoretical consideration. However this has an implication that when having camera matrix in the sense of beeing a linear mapping between projective space of dimension 3 and projective space of dimension 2, we can not tell how far from the source the detector is or how far the pixels are spaced from each other. When to the camera metrix adding information of one pixel dimension or distance from projector to source, system is fully defined. &lt;/p&gt;
+&lt;p&gt;Why talking about abstract projective elements? Camera matrix is at the end of the day matrix from $\mathbf{R}^{3x4}$. Scaling by nonzero constant do not change its properties as a projective element. Therefore using this fact we can encode source to detector distance into the matrix. On the other hand we don't need this information in order to make CT projection or reconstruction anyway. Camera matrix does not tell us, what is the size of the detector and this information must be provided to the reconstruction software by other means. For example to do a projection using KCT framework, we need to specify&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;    --projection-sizex UINT Needs: --projection-sizey
+                                X dimension of detector in pixel count, defaults to 616.
+    --projection-sizey UINT Needs: --projection-sizex
+                                Y dimension of detector in pixel count, defaults to 480.
+&lt;/pre&gt;
+&lt;h4&gt;Creating camera matrices for particular setup&lt;/h4&gt;
+&lt;p&gt;The &lt;a href="https://en.wikipedia.org/wiki/Camera_matrix"&gt;Camera matrix&lt;/a&gt; is relatively well described on Wikipedia. So let's construct set of camera matrices to be used in the KCT framework. To store them, we use &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt; format of the size float64 with $(dimx, dimy, dimz)=(4,3,n)$, where n is number of the configurations in given FDCT trajectory.&lt;/p&gt;
+&lt;p&gt;Let's have the following setup. Zero of the world coordinates coincide with the volume center. Source and detector rotate along $x_3$ axis and $\chi_2$ is parallel with $x_3$. Principal ray at every position of the trajectory hits the detector. The  distance  from  the source  to  theisocenter  is $I = 749mm$ and  the  distance  from  source to the detector is $A=1198mm$. Trajectory consist of $360$ views and in the view $\omega$ the normal to the detector pointing towards the source forms the polar angle with respect to $x_1$ and $x_2$ axes so that $n_\omega = (cos(\omega), sin(\omega))$. Finally let's have $PX\times PY$ = $0.616mmx0.616mm$ pixels and $M\times N = 616x480$ grid.&lt;/p&gt;
+&lt;p&gt;From this information we construct camera matrix for given projection setup. First we perform a transformation to the local coordinate system related to the given view $\omega$ that will be more convenient to work with. In the terminology of projection matrices, we understand the point in 3D as a point of projective space of dimension 3, which can be represented by the vector $(x_1, x_2, x_3, 1)$. We use this just as a vehicle to encode source position into the projection matrix not to exploit some topological properties of $\mathbb{R}^4$, but let's respect this usual way how to construct projection matrices. So that linear transformations in this kind of space will be transformations between $\mathbb{R}^4$ encoded by means of matrices from $\mathbb{R}^{4\times4}$.&lt;/p&gt;
+&lt;p&gt;First we just perform a rotation of the axes $x_1,x_2,x_3$ so that $x_1',x_2',x_3'$ will again form Cartesian coordinate system but rotated towards our setup. Let's identify positive direction of $x_3'$ with positive direction of $\chi^2$ by $x_3'=-x_3$. We rotate remaining two axes in the way that $x_2'$ unit vector will be the normal vector $n_\omega$ and $x_1'$ will be colinear with $\chi^1$ on the detector. So we use the following projective element 
+$$
+\mathbf{X}_1 =
+\begin{pmatrix} 
+\sin{\omega}&amp;amp; -\cos{\omega} &amp;amp;0 &amp;amp;0 \\
+\cos{\omega}&amp;amp; \sin{\omega}&amp;amp;0 &amp;amp;0 \\ 
+0&amp;amp;0&amp;amp;-1&amp;amp;0 \\
+0&amp;amp;0&amp;amp;0&amp;amp;1 
+\end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;Now the $\mathbf{X}_1$ took us into a new coordinate system, let's live in it and shift its origin to $S'$. First let's relize that coordinates of $S' = (0, -\sqrt{s_1^2+s_2^2}, -s_3, 1)$. Now we can do a shift by means of the next projective element
+$$
+\mathbf{X}_2 = \begin{pmatrix} 
+1&amp;amp;0&amp;amp;0&amp;amp;0\\
+0&amp;amp;1&amp;amp;0&amp;amp;\sqrt{s_1^2+s_2^2}\\
+0&amp;amp;0&amp;amp;1&amp;amp;s_3\\
+0&amp;amp;0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$&lt;/p&gt;
+&lt;p&gt;So we constructed projective element such that
+$$
+\begin{pmatrix} x_1'' \\ x_2''\\x_3''\\1 \end{pmatrix} = \mathbf{X}_2 \mathbf{X}_1 \begin{pmatrix} x_1\\x_2\\x_3\\1 \end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;Now let's construct the projective element from 3D transformed space to the detector. But simpler detector with the same orientation as our flat panel but with the zero positioned at principal point and moreover detector such, that unit vector $x_3''$ from principal point projects to 1 in $\chi^2$ direction and unit vector $x_2''$ project to 1 in $\chi_1$ direction. This detector must have focal length $A$ so that we can construct the following projective element
+$$
+\mathbf{E} =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;0&amp;amp;0\\
+0&amp;amp;0&amp;amp;1&amp;amp;0\\
+0&amp;amp;\frac{1}{A}&amp;amp;0&amp;amp;0
+\end{pmatrix}
+$$
+Notice that prior to Git commit f7baa25 of https://github.com/kulvait/KCT_scripts the meaning of $\omega$ were different, it was the angle between positive $x_1$ in the word geometry and detector to source vector, there wea in turn different sign convention to correct for the fact that $x_2''$ points from detector to source and not vice versa. We know, that the unit vectors project to the distance $1/PX$ or $1/PY$ respectivelly. Let's add another projective element to correct for the pixel sizes
+$$
+\mathbf{A}_1 =
+\begin{pmatrix}
+\frac{1}{PX}&amp;amp;0&amp;amp;0\\
+0&amp;amp;\frac{1}{PY}&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$&lt;/p&gt;
+&lt;p&gt;Here is obvious that the operation of cutting pixels into $kxk$ subpixels can be realized by matrix
+$$
+\begin{pmatrix}
+k&amp;amp;0&amp;amp;0\\
+0&amp;amp;k&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+$$
+and splitting is realized by inverse operation
+$$
+\begin{pmatrix}
+\frac{1}{k}&amp;amp;0&amp;amp;0\\
+0&amp;amp;\frac{1}{k}&amp;amp;0\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}.
+$$&lt;/p&gt;
+&lt;p&gt;To shift the $\chi^{(0,0)}$ to its intended position let's do this
+\begin{equation}
+\mathbf{A}_2 =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;\frac{N-1}{2}\\
+0&amp;amp;1&amp;amp;\frac{M-1}{2}\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+\end{equation}&lt;/p&gt;
+&lt;p&gt;In the KCT we use the convention that integer projection coordinates denote center of given pixel.
+Therefore zero is achieved at the center of corner pixel.
+Now the principal point has coordinates $(PX,PY)=((N-1)/2, (M-1)/2)$ we may need to shift it further. We might want to do something fancy as &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;. Or we might just want to adjust the positioning to the real device we are trying to model. &lt;/p&gt;
+&lt;p&gt;\begin{equation}
+\mathbf{A}_3 =
+\begin{pmatrix}
+1&amp;amp;0&amp;amp;PX_o\\
+0&amp;amp;1&amp;amp;PY_o\\
+0&amp;amp;0&amp;amp;1
+\end{pmatrix}
+\end{equation}&lt;/p&gt;
+&lt;p&gt;Is a projective element, which does this final offsetting with $(PX_o,PY_o)=(0,0)$ in our demonstration example. &lt;/p&gt;
+&lt;p&gt;Finally we obtain camera matrix, sometimes in this context also called projection matrix, that for given position in the volume provides the position on the projector
+$$
+\mathbf{P} = \mathbf{A}_3 \mathbf{A}_2 \mathbf{A}_1 \mathbf{E} \mathbf{X}_2 \mathbf{X}_1.
+$$&lt;/p&gt;
+&lt;h3&gt;Next post&lt;/h3&gt;
+&lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryProjection.png"&gt;&lt;/p&gt;
 &lt;p&gt;There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.&lt;/p&gt;
 &lt;p&gt;By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).&lt;/p&gt;
 &lt;p&gt;Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on &lt;a href="https://doi.org/10.1109/TMI.2004.826950"&gt;quarter detector offset shifting to improve resolution&lt;/a&gt;.&lt;/p&gt;

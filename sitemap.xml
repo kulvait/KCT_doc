@@ -19,11 +19,11 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/archive.html</loc>
-  <lastmod>2022-03-11T15:00:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/</loc>
-  <lastmod>2022-02-05T00:08:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.html</loc>
@@ -34,8 +34,12 @@
   <lastmod>2022-02-05T00:49:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kulvait.github.io/KCT_doc/categories/tomographic_notes.html</loc>
+  <lastmod>2022-07-15T12:53:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.html</loc>
-  <lastmod>2022-05-10T14:19:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
@@ -59,7 +63,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/</loc>
-  <lastmod>2022-05-10T14:19:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-1-the-platforms.html</loc>
@@ -78,8 +82,16 @@
   <lastmod>2022-03-11T15:00:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/index-1.html</loc>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/kct-framework.html</loc>
   <lastmod>2022-02-05T00:49:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/posts/tomographic-notes-1-geometric-conventions.html</loc>
+  <lastmod>2022-07-15T12:53:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</loc>
@@ -87,7 +99,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</loc>
-  <lastmod>2022-03-21T15:49:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</loc>
@@ -99,6 +111,6 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</loc>
-  <lastmod>2022-05-10T14:19:00Z</lastmod>
+  <lastmod>2022-07-15T09:27:00Z</lastmod>
  </url>
 </urlset>

@@ -11,6 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
 <link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/">
+<link rel="next" href="index-1.html" type="text/html">
 <!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]-->
 </head>
 <body>
@@ -68,7 +69,38 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-5-parallel-beam-geometry.html" class="u-url">Working with KCT CBCT 5 Parallel beam geometry</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="tomographic-notes-1-geometric-conventions.html" class="u-url">Tomographic notes 1 Geometric conventions</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Vojtěch Kulvait
+            </span></p>
+            <p class="dateline">
+            <a href="tomographic-notes-1-geometric-conventions.html" rel="bookmark">
+            <time class="published dt-published" datetime="2022-07-15T10:26:59+02:00" itemprop="datePublished" title="2022-07-15 10:26">2022-07-15 10:26</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <p>When having reconstruction problem, from the perspective of mathematican, you do not start thinking about geometric conventions. Why should we think about them when algorithms like FBP don't care about the initial position of the detector or whether the x-axis is aligned to the center of the Earth, orthogonal to it or otherwise? I usually start thinking about this when debugging the code and would like to figure out what the initial possition of the detector was, how the word coordinates in the volume are specified and how it comes that other tools produce the reconstruction that is 90 degrees rotated to my tool? Another situation where you need to think about the geometry is when you give your data to the physician or radiologist. They are used to interpret the data in the frame of reference, where the z axis goes from the foots of the patient to his head, where the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.</p>
+<h2>Radon transform</h2>
+<p>If you had basic tomography class in school, you probably first learned about 2D Radon transform and its inverse, filtered backprojection. Let's start our considerations about the geometric conventions here. We have $\mathbb{R}^2$ Carthesian system denoted by coordinates $(x,y)$ and some compactly supported function $\mu(x,y)$. We would like to transform $\mu(x,y)$ and create the function, which for each line through $\mathbb{R}^2$ gives us line integral of $\mu(x,y)$. Now the question is how to parametrize any line through $\mathbb{R}^2$ and here comes the first convention</p>
+<p><img alt="" src="../images/radonTransform.svg"><em>Radon transform geometry. Red ray denote the path of integration while $\theta$ and $s$ identify the position, where the ray hits the blue detector.</em></p>
+<p>When we subscribe to parametrizing lines through $\mathbb{R}^2$ by $(\theta, s)$ it is also natural to say $\theta \in [0, \pi)$ $s \in (-\inf, \inf)$. Then the normal to these lines will be $\vec{n} = (cos \theta, sin \theta)$ and the ray direction $\vec{t} = (sin \theta, -cos \theta)$. Now let's say $\vec{n}$ will be positive direction of the x axis of the detector, $\vec{t}$ will be direction of incomming rays and $\theta=0$ will be initial configuration when the detector is aligned with the x axis of the word coordinates, we have a convention!</p>
+<p>Now we can start interpreting Radon transform
+$$
+p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
+$$
+as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.</p>
+<h2>Physican convention</h2>
+<p>The orientation of the axes of the 3D patient volume tend to be</p>
+<p><img src="../images/CTGeometryConstraints.png"><em>Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.</em></p>
+<p>The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
+<img src="../images/imageCoordinates.svg"><em>Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. <a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system">Image source</a>.</em></p>
+<h2>Storing the projections</h2>
+<p>For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.</p>
+<p>In medical data, when we store it in a same way as in CT volume, then bottom of the patient goes first to the top of the image and his top goes down. So the visualization would be updside down. Therefore in medical praxis, the projections are stored from the top of the patient to the bottom, which is oposite to the direction of the z word coordinates axis.</p>
+<p>For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. </p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-5-parallel-beam-geometry.html" class="u-url">Working with KCT CBCT 5 Parallel beam geometry</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Vojtěch Kulvait
@@ -2691,9 +2723,9 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 <p>It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. </p>
 <h3>FDCT projection setup</h3>
 <p>Let's have the following FDCT setup</p>
-<p><img src="../images/CTGeometryConstraints.png">
-with 2D scatch 
-<img src="../images/CTGeometryProjection.png"></p>
+<p><img src="../images/CTGeometryConstraints.png"></p>
+<p>with 2D scatch </p>
+<p><img src="../images/CTGeometryProjection.png"></p>
 <p>There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.</p>
 <p>By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).</p>
 <p>Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on <a href="https://doi.org/10.1109/TMI.2004.826950">quarter detector offset shifting to improve resolution</a>.</p>
@@ -2846,41 +2878,13 @@ From the DICOM headers we can see that it is a scan on SIEMENS Sensation Cardiac
 <h3>Working with KCT CBCT 2</h3>
 <p>In the next post, I will explain what are the conventions for the projection geometry and how to describe the geometric setting of the flat detector CT. We define an example setup of a virtual flat detector CT machine when scannin the volume created in this post. We then use KCT framework to project the volume and create projections.</p>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="kct-framework.html" class="u-url">KCT framework</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
-            </span></p>
-            <p class="dateline">
-            <a href="kct-framework.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-13T12:04:57+02:00" itemprop="datePublished" title="2021-09-13 12:04">2021-09-13 12:04</time></a>
-            </p>
-        </div>
-    </header><div class="e-content entry-content">
-    <p>KCT framework is a set of sotware tools to process computer tomography data. It was founded by Vojtěch Kulvait to support his PostDoc research at University of Magdeburg 2018-2021. Work is focused on processing, manipulating and reconstructing the data from the C-Arm CT systems with a flat panel detector, FDCT. It consists of multiple packages described below.</p>
-<p>These tools are tested and the compatibility will be maintained towards Debian 11 bullseye with AMD64 CPU. After the compilation, command line programs are built, which use command line parser (CLI11)[https://github.com/CLIUtils/CLI11] to specify inputs, outputs and parameters. BASH scripting is a common practice to put these programs into the CT data processing functional pipelines. </p>
-<h3><a href="https://github.com/kulvait/KCT_cbct">KCT cbct</a></h3>
-<p>Contains C++ and OpenCL implementation of various methods for algebraic CT reconstruction.</p>
-<h3><a href="https://github.com/kulvait/KCT_dentk">KCT dentk</a></h3>
-<p>It contains tools written in C++ to process files in the <a href="DEN-format">DEN format</a> to store 3D volume data. Format is derived and compatible with the format reffered as Dennerlein or DEN format.</p>
-<h3><a href="https://github.com/kulvait/KCT_denpy">KCT denpy</a></h3>
-<p>Python package to manipulate filues in DEN format. It uses pydicom package to read DICOM data. Files in formats is possible to convert to numpy.ndarray. By this mechanism is possible to convert series of DICOM files into the DEN files that are used within the framework. </p>
-<h3><a href="https://github.com/kulvait/KCT_ctiol">KCT ctiol</a></h3>
-<p>C++ library with input output routines for asynchronous thread safe reading/writing CT data. This library is typically a dependency/submodule of other C++ tools in KCT.</p>
-<h3><a href="https://github.com/kulvait/KCT_ctmal">KCT ctmal</a></h3>
-<p>C++ library with mathematic/algebraic algorithms for supporting CT data manipulation. This library is typically a dependency/submodule of other C++ tools in KCT.</p>
-    </div>
     </article>
 </div>
 
-
-
-    
-
-
-
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        <ul class="pager postindexpager clearfix">
+<li class="next"><a href="index-1.html" rel="next">Older posts</a></li>
+        </ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
 MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [ ['$','$'], ["\\(","\\)"] ],

@@ -105,9 +105,9 @@ bg-dark
 <p>It is interesting to see in this definitions, that when we take the space $\mathbb{R}^3$, where the source is placed in its origin. We construct "a set of one dimensional subspaces of $\mathbb{R}^3$", which are all the lines through the origin representing all the rays going from the source. The number of lines with this characteristic is (almost) the same as the number of the points on the unit half sphere and I use this property, for derivation of the 3D CBCT Cutting voxel projector. Here we first observe what uniquelly defines the flat detector CT (FDCT) setup and which properties can be described using projection matrices. </p>
 <h3>FDCT projection setup</h3>
 <p>Let's have the following FDCT setup</p>
-<p><img src="../images/CTGeometryConstraints.png">
-with 2D scatch 
-<img src="../images/CTGeometryProjection.png"></p>
+<p><img src="../images/CTGeometryConstraints.png"></p>
+<p>with 2D scatch </p>
+<p><img src="../images/CTGeometryProjection.png"></p>
 <p>There are world coordinates described by vectors $\mathbb{x} = (x_1, x_2, x_3)$. There is a source at the position $\mathbb{S} = (s_1, s_2, s_3)$. And there is a Flat panel detector which is described by the point $\chi^{(0,0)}$, where is the point $(0,0)$ at the detector and by two orthogonal vectors $\chi^1$ and $\chi^2$. Let's say that spacing of the detector pixels is determined by the length of the vectors $\chi^1$ and $\chi^2$ so that the size of the pixels is $|\chi^1| \times |\chi^2|$. Let's also say that pixel boundaries have zero thickness and where one pixel ends, another starts. We have to specify how many pixels is there in the directions $\chi^1$ and  $\chi^2$ and we have complete FDCT setup.</p>
 <p>By convention described also in previous post, the $x_3$ axis parallel with the axis of the rotation and $x_2$ axis goes from the top (above scanned subject) to bottom (under scanned object).</p>
 <p>Let's mention there is one special ray from the source, which is perpendicular to the detector. We usually call this ray principal ray and the point, where this ray hits the detector principal point. In some applications it might be convenient to shift the principal ray outside the center of the detector, see for example work on <a href="https://doi.org/10.1109/TMI.2004.826950">quarter detector offset shifting to improve resolution</a>.</p>
