@@ -3,7 +3,7 @@
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Fri, 15 Jul 2022 12:53:44 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tomographic notes 1 Geometric conventions</title><link>https://kulvait.github.io/KCT_doc/posts/tomographic-notes-1-geometric-conventions.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;When having reconstruction problem, from the perspective of mathematican, you do not start thinking about geometric conventions. Why should we think about them when algorithms like FBP don't care about the initial position of the detector or whether the x-axis is aligned to the center of the Earth, orthogonal to it or otherwise? I usually start thinking about this when debugging the code and would like to figure out what the initial possition of the detector was, how the word coordinates in the volume are specified and how it comes that other tools produce the reconstruction that is 90 degrees rotated to my tool? Another situation where you need to think about the geometry is when you give your data to the physician or radiologist. They are used to interpret the data in the frame of reference, where the z axis goes from the foots of the patient to his head, where the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/p&gt;
+</copyright><lastBuildDate>Fri, 15 Jul 2022 14:35:11 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tomographic notes 1 Geometric conventions</title><link>https://kulvait.github.io/KCT_doc/posts/tomographic-notes-1-geometric-conventions.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;When having reconstruction problem, from the perspective of mathematican, you do not start thinking about geometric conventions. Why should we think about them when algorithms like FBP don't care about the initial position of the detector or whether the x-axis is aligned to the center of the Earth, orthogonal to it or otherwise? I usually start thinking about this when debugging the code and would like to figure out what the initial possition of the detector was, how the word coordinates in the volume are specified and how it comes that other tools produce the reconstruction that is 90 degrees rotated to my tool? Another situation where you need to think about the geometry is when you give your data to the physician or radiologist. They are used to interpret the data in the frame of reference, where the z axis goes from the foots of the patient to his head, where the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/p&gt;
 &lt;h2&gt;Radon transform&lt;/h2&gt;
 &lt;p&gt;If you had basic tomography class in school, you probably first learned about 2D Radon transform and its inverse, filtered backprojection. Let's start our considerations about the geometric conventions here. We have $\mathbb{R}^2$ Carthesian system denoted by coordinates $(x,y)$ and some compactly supported function $\mu(x,y)$. We would like to transform $\mu(x,y)$ and create the function, which for each line through $\mathbb{R}^2$ gives us line integral of $\mu(x,y)$. Now the question is how to parametrize any line through $\mathbb{R}^2$ and here comes the first convention&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/radonTransform.svg"&gt;
@@ -14,12 +14,13 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -36,12 +37,13 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -57,12 +59,13 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -77,12 +80,13 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -95,12 +99,13 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -112,12 +117,26 @@ $$
 p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{-\infty}^{\infty} \mu( s \cos \theta + q \sin \theta, s  \sin \theta - q  \cos \theta) \, dq
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.&lt;/p&gt;
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;Storing the projections&lt;/h2&gt;
+&lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
+&lt;p&gt;In medical data, when we store it in a same way as in CT volume, then bottom of the patient goes first to the top of the image and his top goes down. So the visualization would be updside down. Therefore in medical praxis, the projections are stored from the top of the patient to the bottom, which is oposite to the direction of the z word coordinates axis.&lt;/p&gt;
+&lt;p&gt;For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.&lt;/p&gt;
+&lt;h2&gt;Physican convention&lt;/h2&gt;
+&lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -126,10 +145,10 @@ as a value of the extinction related to the position $p$ on the detector tilted 
 
 &lt;h2&gt;Physican convention&lt;/h2&gt;
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -137,20 +156,20 @@ as a value of the extinction related to the position $p$ on the detector tilted 
 &lt;p&gt;For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;The orientation of the axes of the 3D patient volume tend to be&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
 &lt;p&gt;In medical data, when we store it in a same way as in CT volume, then bottom of the patient goes first to the top of the image and his top goes down. So the visualization would be updside down. Therefore in medical praxis, the projections are stored from the top of the patient to the bottom, which is oposite to the direction of the z word coordinates axis.&lt;/p&gt;
 &lt;p&gt;For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;&lt;img src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
+&lt;p&gt;&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/CTGeometryConstraints.png"&gt;
 &lt;em&gt;Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
@@ -158,7 +177,7 @@ as a value of the extinction related to the position $p$ on the detector tilted 
 &lt;p&gt;For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-&lt;img src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
+&lt;img alt="" src="https://kulvait.github.io/KCT_doc/images/imageCoordinates.svg"&gt;
 &lt;em&gt;Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. &lt;a href="https://openclipart.org/detail/234446/small-computer-math-coordinate-system"&gt;Image source&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Storing the projections&lt;/h2&gt;
 &lt;p&gt;For 2D scanner we simply take the (x,y) and relate them to PX axis of the detector. Word coordinate z is related to PY but how? This is actually the tricky part.&lt;/p&gt;
