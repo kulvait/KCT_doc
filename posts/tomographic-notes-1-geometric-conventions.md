@@ -30,15 +30,17 @@ p_\theta(s) = \int_{-\infty}^{\infty} \mu( s \vec{n} + q \vec{t}) \, dq = \int_{
 $$
 as a value of the extinction related to the position $p$ on the detector tilted by $\theta$ from the $x$ axis. Note that the vector $\vec{n}$ is tangent to the detector and $\vec{t}$ is normal to the detector as these vectors were introduced to describe lines through $\mathbb{R}^2$, which are now interpretted as a rays orthogonal to the detector.
 
+In this package we sometimes use the angle $\omega$ related to the $\theta$ so that $\omega = \theta - \pi/2$.
+
 #Physican convention
 
 The orientation of the axes of the 3D patient volume tend to be
 
-<img src="/images/CTGeometryConstraints.png">
+![](/images/CTGeometryConstraints.png)
 *Usual CT/MRI word frame of reference for the volume, z axis goes from the foots of the patient to his head, the y axis has the same direction as the Earth gravity and xyz is right handed coordinate system.*
 
 The choice of (x,y) coordinates is in fact natural for visualizing on the monitor, where the convention is that coordinates start at top left corner and y axis goes from top to down.
-<img src="/images/imageCoordinates.svg">
+![](/images/imageCoordinates.svg)
 *Usual convence to index monitor pixels or pixels in the image. Zero is at top left corner, x goes to the right y goes to the bottom. [Image source](https://openclipart.org/detail/234446/small-computer-math-coordinate-system).*
 
 #Storing the projections
@@ -48,9 +50,4 @@ For 2D scanner we simply take the (x,y) and relate them to PX axis of the detect
 In medical data, when we store it in a same way as in CT volume, then bottom of the patient goes first to the top of the image and his top goes down. So the visualization would be updside down. Therefore in medical praxis, the projections are stored from the top of the patient to the bottom, which is oposite to the direction of the z word coordinates axis.
 
  For samples in material sciences and in industrial CT we actually do not have that strong feeling what is upside down and upside up. Sometimes we just prefer to relate word coordinates z direction directly to PY coordinate on the detector, namely when we do slice-wise reconstruction of parallel beam scan. In this situation we might prefer geometry where these directions are not opposite. 
-
-
-
-
-
 
