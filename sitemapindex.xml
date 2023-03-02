@@ -7,30 +7,34 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2020.xml</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/cvp-paper-2021.xml</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kulvait.github.io/KCT_doc/categories/synchrotron_blog.xml</loc>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/tomographic_notes.xml</loc>
-  <lastmod>2022-07-15T14:35:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml</loc>
-  <lastmod>2022-07-15T09:27:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/galleries/rss.xml</loc>
-  <lastmod>2022-02-05T00:49:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/rss.xml</loc>
-  <lastmod>2022-07-15T14:35:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kulvait.github.io/KCT_doc/sitemap.xml</loc>
-  <lastmod>2022-07-15T14:35:00Z</lastmod>
+  <lastmod>2023-03-02T14:43:00Z</lastmod>
  </sitemap>
 </sitemapindex>

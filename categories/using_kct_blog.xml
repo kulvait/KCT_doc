@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>KCT framework (Posts about using_kct_blog)</title><link>https://kulvait.github.io/KCT_doc/</link><description></description><atom:link href="https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2022 &lt;a href="mailto:kulvait at gmail dot com"&gt;Vojtěch Kulvait&lt;/a&gt; 
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>KCT framework (Posts about using_kct_blog)</title><link>https://kulvait.github.io/KCT_doc/</link><description></description><atom:link href="https://kulvait.github.io/KCT_doc/categories/using_kct_blog.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2023 &lt;a href="mailto:kulvait at gmail dot com"&gt;VK&lt;/a&gt; 
 &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/a&gt;&lt;span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"&gt;KCT framework wiki and blog&lt;/span&gt; by &lt;span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"&gt;Vojtěch Kulvait&lt;/span&gt; is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"&gt;Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License&lt;/a&gt;. &lt;br/&gt;
 KCT framework itself is licensed under the terms of GNU GPL3 license. &lt;br/&gt;
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
-</copyright><lastBuildDate>Fri, 15 Jul 2022 09:27:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
+</copyright><lastBuildDate>Thu, 02 Mar 2023 14:43:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Working with KCT CBCT 5 Parallel beam geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</link><dc:creator>VK</dc:creator><description>&lt;p&gt;In the &lt;a href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html"&gt;previous chapter&lt;/a&gt; we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.&lt;/p&gt;
 &lt;h2&gt;Defining parallel rays geometry&lt;/h2&gt;
 &lt;p&gt;Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.&lt;/p&gt;
 &lt;p&gt;In &lt;a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries"&gt;ASTRA toolbox&lt;/a&gt; parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.&lt;/p&gt;
@@ -52,25 +52,25 @@ Any data provided on this site or within the KCT framework may be subject to dif
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -99,9 +99,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -201,25 +201,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -248,9 +248,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -349,25 +349,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -396,9 +396,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -496,25 +496,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -543,9 +543,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -642,25 +642,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -689,9 +689,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -762,25 +762,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -809,9 +809,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -881,25 +881,25 @@ py_0
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -928,9 +928,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -982,25 +982,25 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform&lt;/p&gt;
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1029,9 +1029,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1083,24 +1083,24 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$&lt;/p&gt;
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1129,9 +1129,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1183,22 +1183,22 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.&lt;/p&gt;
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
 &lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;In particular&lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1227,9 +1227,106 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
+$$PX(x) = (x, a)-(o, a),$$
+$$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
+&lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
+&lt;h2&gt;Projection matrices&lt;/h2&gt;
+&lt;p&gt;For projection of the point x we use homogeneous coordinates, where we represent $x = (x_1, x_2, x_3, 1)$ and the 3D parallel projection matrix
+$$
+\mathbf{P} = \begin{pmatrix}
+a_1&amp;amp;a_2&amp;amp;a_3&amp;amp;px_0 \\
+b_1&amp;amp;b_2&amp;amp;b_3&amp;amp;py_0
+\end{pmatrix},
+$$
+which represents the projection onto the detector orthogonal to the incomming rays with particular origin. It is obvious that for each tilted detector there must be one virtual orthogonal detector to the incomming rays. Let's recover what are the vectors $v_x=v_x^0$, $v_y=v_y^0$, the ray direction $r$ and origin $o$ of the virtual detector corresponding to the matrix $\mathbf{P}$.&lt;/p&gt;
+&lt;p&gt;Vector $r$ or homogeneous $(r,0)$ needs to be orthogonal to the rows of matrix $\mathbf{P}$ since $\mathbf{P} (x,1)^\top$ = $\mathbf{P} (x,1)^\top + t (r,0)^\top$ for all $t \in \mathbb{R}$. Such vector is
+$$r = \frac{a \times b}{|a \times b|}.$$ &lt;/p&gt;
+&lt;p&gt;The vectors $v_x$ and $v_y$ have the property $(v_x, a) = 1$, $(v_x,b) = 0$, $(v_x,r)=0$, $(v_y,b) = 1$, $(v_y, a) = 0$, $(v_y, r)=0$. Therefore $v_x$ and $v_y$ are scaled vectors $a$ and $b$, namely
+$$v_x = \frac{a}{(a,a)},$$&lt;br&gt;
+$$v_y = \frac{b}{(b,b)}.$$  &lt;/p&gt;
+&lt;p&gt;Now remains to identify vector $o$ corresponding to the origin. In fact there is a line, which projects to (0,0) so that best will be to obtain minimum norm solution, which will be a linear combination of vectors a and b, whose linear span creates a subspace of dimension two, that in turn means that there exist unique decomposition of $o = \alpha a + \beta b$ for which it holds that
+$\mathbf{P} (o,1)^\top = (0,0)^\top$. For orthogonal $a$ and $b$ is the situation simplest but let's assume these vectors are not orthogonal we end up with the system
+$$ \begin{pmatrix}
+(a,a) &amp;amp; (a,b) \\
+(b,a) &amp;amp; (b,b)
+\end{pmatrix}
+\begin{pmatrix}
+\alpha \\
+\beta
+\end{pmatrix}
+=
+-\begin{pmatrix}
+px_0 \\
+py_0
+\end{pmatrix}
+$$
+and the solution
+$$ 
+\begin{pmatrix}
+\alpha \\
+\beta
+\end{pmatrix}
+=
+-\begin{pmatrix}
+(a,a) &amp;amp; (a,b) \\
+(b,a) &amp;amp; (b,b)
+\end{pmatrix}^{-1}
+\begin{pmatrix}
+px_0 \\
+py_0
+\end{pmatrix}
+.$$&lt;/p&gt;
+&lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+
+&lt;p&gt;Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors&lt;/p&gt;
+&lt;p&gt;$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
+$$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
+&lt;p&gt;In particular&lt;/p&gt;
+&lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
+$$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
+&lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;therefore &lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
+&lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
+&lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Vector&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;r&lt;/td&gt;
+&lt;td&gt;ray direction&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;o&lt;/td&gt;
+&lt;td&gt;the origin of the detector, point (0,0) by convention at the center of (0,0) pixel&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;u&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;v&lt;/td&gt;
+&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;It holds that&lt;/p&gt;
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1287,15 +1384,14 @@ $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ &lt;/p&gt;
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1324,9 +1420,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1382,15 +1478,14 @@ py_0
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1419,9 +1514,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1476,15 +1571,14 @@ py_0
 &lt;p&gt;$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$&lt;/p&gt;
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1513,9 +1607,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1568,15 +1662,14 @@ py_0
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;When we project center of the detector $d$ onto the detector obviously we shall obtain center of it&lt;/p&gt;
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1605,9 +1698,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1659,15 +1752,14 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$&lt;/p&gt;
+&lt;p&gt;$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$&lt;/p&gt;
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1696,9 +1788,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1751,12 +1843,11 @@ py_0
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;therefore &lt;/p&gt;
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1785,9 +1876,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1839,12 +1930,11 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$&lt;/p&gt;
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1873,9 +1963,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -1927,10 +2017,9 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x will read&lt;/p&gt;
+&lt;p&gt;Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be&lt;/p&gt;
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -1959,9 +2048,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2015,7 +2104,6 @@ py_0
 
 &lt;p&gt;$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
 &lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -2044,92 +2132,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$&lt;/p&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
-$$PX(x) = (x, a)-(o, a),$$
-$$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
-&lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
-&lt;h2&gt;Projection matrices&lt;/h2&gt;
-&lt;p&gt;For projection of the point x we use homogeneous coordinates, where we represent $x = (x_1, x_2, x_3, 1)$ and the 3D parallel projection matrix
-$$
-\mathbf{P} = \begin{pmatrix}
-a_1&amp;amp;a_2&amp;amp;a_3&amp;amp;px_0 \\
-b_1&amp;amp;b_2&amp;amp;b_3&amp;amp;py_0
-\end{pmatrix},
-$$
-which represents the projection onto the detector orthogonal to the incomming rays with particular origin. It is obvious that for each tilted detector there must be one virtual orthogonal detector to the incomming rays. Let's recover what are the vectors $v_x=v_x^0$, $v_y=v_y^0$, the ray direction $r$ and origin $o$ of the virtual detector corresponding to the matrix $\mathbf{P}$.&lt;/p&gt;
-&lt;p&gt;Vector $r$ or homogeneous $(r,0)$ needs to be orthogonal to the rows of matrix $\mathbf{P}$ since $\mathbf{P} (x,1)^\top$ = $\mathbf{P} (x,1)^\top + t (r,0)^\top$ for all $t \in \mathbb{R}$. Such vector is
-$$r = \frac{a \times b}{|a \times b|}.$$ &lt;/p&gt;
-&lt;p&gt;The vectors $v_x$ and $v_y$ have the property $(v_x, a) = 1$, $(v_x,b) = 0$, $(v_x,r)=0$, $(v_y,b) = 1$, $(v_y, a) = 0$, $(v_y, r)=0$. Therefore $v_x$ and $v_y$ are scaled vectors $a$ and $b$, namely
-$$v_x = \frac{a}{(a,a)},$$&lt;br&gt;
-$$v_y = \frac{b}{(b,b)}.$$  &lt;/p&gt;
-&lt;p&gt;Now remains to identify vector $o$ corresponding to the origin. In fact there is a line, which projects to (0,0) so that best will be to obtain minimum norm solution, which will be a linear combination of vectors a and b, whose linear span creates a subspace of dimension two, that in turn means that there exist unique decomposition of $o = \alpha a + \beta b$ for which it holds that
-$\mathbf{P} (o,1)^\top = (0,0)^\top$. For orthogonal $a$ and $b$ is the situation simplest but let's assume these vectors are not orthogonal we end up with the system
-$$ \begin{pmatrix}
-(a,a) &amp;amp; (a,b) \\
-(b,a) &amp;amp; (b,b)
-\end{pmatrix}
-\begin{pmatrix}
-\alpha \\
-\beta
-\end{pmatrix}
-=
--\begin{pmatrix}
-px_0 \\
-py_0
-\end{pmatrix}
-$$
-and the solution
-$$ 
-\begin{pmatrix}
-\alpha \\
-\beta
-\end{pmatrix}
-=
--\begin{pmatrix}
-(a,a) &amp;amp; (a,b) \\
-(b,a) &amp;amp; (b,b)
-\end{pmatrix}^{-1}
-\begin{pmatrix}
-px_0 \\
-py_0
-\end{pmatrix}
-.$$&lt;/p&gt;
-&lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-
-&lt;p&gt;You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. &lt;/p&gt;
-&lt;p&gt;When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes &lt;code&gt;Geometry3DParallel&lt;/code&gt; and &lt;code&gt;Geometry3DParallelCameraMatrix&lt;/code&gt; have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Vector&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;r&lt;/td&gt;
-&lt;td&gt;ray direction&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;o&lt;/td&gt;
-&lt;td&gt;the origin of the detector, point (0,0) by convention at the center of (0,0) pixel&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;u&lt;/td&gt;
-&lt;td&gt;the vector from detector pixel (0,0) to (0,1)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;v&lt;/td&gt;
-&lt;td&gt;the vector from detector pixel (0,0) to (1,0)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2209,9 +2214,9 @@ py_0
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2290,9 +2295,9 @@ py_0
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2345,9 +2350,9 @@ py_0
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;It holds that&lt;/p&gt;
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2399,9 +2404,9 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$&lt;/p&gt;
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$&lt;/p&gt;
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2453,7 +2458,7 @@ py_0
 .$$&lt;/p&gt;
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
-&lt;p&gt;Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+&lt;p&gt;Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$&lt;/p&gt;
 &lt;p&gt;Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.&lt;/p&gt;
@@ -2760,7 +2765,7 @@ py_0
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</guid><pubDate>Fri, 11 Mar 2022 10:09:24 GMT</pubDate></item><item><title>Working with KCT CBCT 4 First cone beam CT projection</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the last post Working with KCT CBCT 1 we converted DICOM data to the DEN format and explained how volumes are encoded. Today we create a CT trajectory setup and encode it in the format that can be recognized in KCT. Finally, we use KCT to reproject the volume from the last post using this trajectory.&lt;/p&gt;
+</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html</guid><pubDate>Fri, 11 Mar 2022 10:09:24 GMT</pubDate></item><item><title>Working with KCT CBCT 4 First cone beam CT projection</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</link><dc:creator>VK</dc:creator><description>&lt;p&gt;In the last post Working with KCT CBCT 1 we converted DICOM data to the DEN format and explained how volumes are encoded. Today we create a CT trajectory setup and encode it in the format that can be recognized in KCT. Finally, we use KCT to reproject the volume from the last post using this trajectory.&lt;/p&gt;
 &lt;h3&gt;Theoretical scanning trajectory&lt;/h3&gt;
 &lt;p&gt;Let's reproject the volume we have using theoretical C-Arm FDCT trajectory. Let's say that our device rotates along the axis parallel to the z axis. By angle $\omega$ we denote polar angle between normal to detector that is pointing towards the source and x axis. Let's fix source to isocenter and source to detector lengths and create a setup in which patient is irradiated from 360 different angles corresponding to integer $\omega$ values. Let's create (camera matrices)[https://en.wikipedia.org/wiki/Camera_matrix], which encode this setup. We create them as float64 DEN files, where z dimension will represent number of angles. So that we produce file of dimensions (dimx, dimy, dimz)=(3,4,360).&lt;/p&gt;
 &lt;h3&gt;Volume reprojection&lt;/h3&gt;
@@ -2792,7 +2797,7 @@ py_0
 
 &lt;pre class="code literal-block"&gt;cllin-projector --cvp --voxel-sizex 0.64453125 --voxel-sizey 0.64453125 --voxel-sizez 1.5 --projection-sizex 616 --projection-sizey 480 DEN_RAW/Series_00.den CM.den Series_00.proj
 &lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;
-</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</guid><pubDate>Sun, 19 Sep 2021 12:28:24 GMT</pubDate></item><item><title>Working with KCT CBCT 3 Python implementation of circular CT trajectory</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.&lt;/p&gt;
+</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-4-first-cone-beam-ct-projection.html</guid><pubDate>Sun, 19 Sep 2021 12:28:24 GMT</pubDate></item><item><title>Working with KCT CBCT 3 Python implementation of circular CT trajectory</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</link><dc:creator>VK</dc:creator><description>&lt;p&gt;In the last post we build the mathematical foundation how to construct camera matrices for FDCT setup. Now we use this knowledge to create DEN file with a circular geometry and show how to work with it in the KCT package.&lt;/p&gt;
 &lt;h3&gt;System setup&lt;/h3&gt;
 &lt;p&gt;We have yet mastered the theory so let's produce the set of camera matrices for given trajectory.
 I have put a script that implements what has been said &lt;a href="https://github.com/kulvait/KCT_scripts/blob/master/createCameraMatricesForCircularScanTrajectory.py"&gt;to github&lt;/a&gt;.
@@ -5485,7 +5490,7 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
 &lt;p&gt;In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;In the next post we use created camera matrices, KCT cbct package and downloaded CT volume from public repository and we will show how to project the CT volumes using the FDCT trajectory, which we just created.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</guid><pubDate>Wed, 15 Sep 2021 10:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.&lt;/p&gt;
+</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html</guid><pubDate>Wed, 15 Sep 2021 10:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</link><dc:creator>VK</dc:creator><description>&lt;p&gt;Before we define particular geometry corresponding to the flat panel detector CT trajectory, we need to know some theory about projective geometry and camera matrices. This will be the content of this post.&lt;/p&gt;
 &lt;h3&gt;CT projections geometry&lt;/h3&gt;
 &lt;p&gt;In the computer tomography, we project 3D object in $ \mathbb{R}^3 $ to the projector grid. Let's say it is a two dimensional grid that consist of rectangular pixels. Coordinates on the detector can be naturally described as the vectors in $ \mathbb{R}^2 $ since the projections are 2D images. The process of CBCT X-ray projection is analogous to the pinhole camera model that projects the 3D scene onto the 2D plane. And therefore projective geometry is a good tool to study this correspondence.&lt;/p&gt;
 &lt;h3&gt;Projective geometry&lt;/h3&gt;
@@ -8676,7 +8681,7 @@ $$&lt;/p&gt;
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 
 &lt;p&gt;In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the &lt;a href="https://kulvait.github.io/KCT_doc/den-format.html"&gt;DEN file&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</guid><pubDate>Tue, 14 Sep 2021 19:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 1 Converting DICOM volume to DEN volume</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</link><dc:creator>Vojtěch Kulvait</dc:creator><description>&lt;p&gt;In this series of blog posts, I will describe how to work with the KCT framework from the first steps of importing data to the more advanced topics as a running reconstruction. &lt;/p&gt;
+</description><category>using_kct_blog</category><guid>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html</guid><pubDate>Tue, 14 Sep 2021 19:05:50 GMT</pubDate></item><item><title>Working with KCT CBCT 1 Converting DICOM volume to DEN volume</title><link>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</link><dc:creator>VK</dc:creator><description>&lt;p&gt;In this series of blog posts, I will describe how to work with the KCT framework from the first steps of importing data to the more advanced topics as a running reconstruction. &lt;/p&gt;
 &lt;p&gt;In the post today, I explain how to import files in DICOM into the DEN format that is used within the framework. I use the data from the public repository.&lt;/p&gt;
 &lt;h3&gt;Example dataset&lt;/h3&gt;
 &lt;p&gt;I have choosen a publicly available dataset from &lt;a href="https://public.cancerimagingarchive.net/"&gt;The Cancer Imaging Archive&lt;/a&gt; containing a brain CT scan, ID TCGA-19-1787. To download this dataset I followed the procedure described on &lt;a href="https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images"&gt;The Cancer Imaging Archive page&lt;/a&gt;. It is needed to instal their application NBIA Data Retriever and provide it with the information in the &lt;code&gt;manifest-1631446347856.tcia&lt;/code&gt; file, which must contain the following&lt;/p&gt;

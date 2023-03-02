@@ -69,14 +69,62 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="kct-framework.html" class="u-url">KCT framework</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" class="u-url">Working with KCT CBCT 1 Converting DICOM volume to DEN volume</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
+            </span></p>
+            <p class="dateline">
+            <a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" rel="bookmark">
+            <time class="published dt-published" datetime="2021-09-13T21:05:35+02:00" itemprop="datePublished" title="13.09.2021">13.09.2021</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <p>In this series of blog posts, I will describe how to work with the KCT framework from the first steps of importing data to the more advanced topics as a running reconstruction. </p>
+<p>In the post today, I explain how to import files in DICOM into the DEN format that is used within the framework. I use the data from the public repository.</p>
+<h3>Example dataset</h3>
+<p>I have choosen a publicly available dataset from <a href="https://public.cancerimagingarchive.net/">The Cancer Imaging Archive</a> containing a brain CT scan, ID TCGA-19-1787. To download this dataset I followed the procedure described on <a href="https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images">The Cancer Imaging Archive page</a>. It is needed to instal their application NBIA Data Retriever and provide it with the information in the <code>manifest-1631446347856.tcia</code> file, which must contain the following</p>
+<pre class="code literal-block"><span class="n">downloadServerUrl</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">public</span><span class="o">.</span><span class="n">cancerimagingarchive</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">nbia</span><span class="o">-</span><span class="n">download</span><span class="o">/</span><span class="n">servlet</span><span class="o">/</span><span class="n">DownloadServlet</span><span class="w"></span>
+<span class="n">includeAnnotation</span><span class="o">=</span><span class="bp">true</span><span class="w"></span>
+<span class="n">noOfrRetry</span><span class="o">=</span><span class="mi">4</span><span class="w"></span>
+<span class="n">databasketId</span><span class="o">=</span><span class="n">manifest</span><span class="o">-</span><span class="mf">1631446347856.</span><span class="n">tcia</span><span class="w"></span>
+<span class="n">manifestVersion</span><span class="o">=</span><span class="mf">3.0</span><span class="w"></span>
+<span class="n">ListOfSeriesToDownload</span><span class="o">=</span><span class="w"></span>
+<span class="mf">1.3</span><span class="o">.</span><span class="mf">6.1</span><span class="o">.</span><span class="mf">4.1</span><span class="o">.</span><span class="mf">14519.5</span><span class="o">.</span><span class="mf">2.1</span><span class="o">.</span><span class="mf">5826.4001</span><span class="o">.</span><span class="mi">312669389023517091391958251391</span><span class="w"></span>
+</pre>
+<p>Example dataset is published under the terms of <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> and the <a href="../license-tcga-gbm.html">following terms</a>. This licencing apply to any user even the user of the derived data, which I publish here in scope of this demonstration in <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>.</p>
+<p>When we unpack the data of example volume, we see that dicom files with the suffix dcm are in the directory <code>TCGA-19-1787/04-20-2002-NA-NR CT HEAD W CE-97133/2.000000-Head Vol.  1.5  H40s ST-51391</code>. For simplicity I rename this directory just to DICOM and remove parent subdirectories. 
+From the DICOM headers we can see that it is a scan on SIEMENS Sensation Cardiac 64 CT machine. It contains $124$ slices with the thickness of $1.5$mm of the dimension $512 \times 512$, the voxel sizes are ($0.64453125$mm, $0.64453125$mm, $1.5$mm).</p>
+<h3>Conversion of DICOM series to DEN format</h3>
+<p>For the purpose of this example, we have to transform the DICOM dataset into the <a href="../den-format.html">DEN format</a>, which is used by KCT framework. We do it using <a href="https://github.com/kulvait/KCT_denpy">KCT_denpy package</a>. This package allow us to convert between the representations of the volume data as numpy.ndarray, DEN file or DICOM series. Internally it uses the package pydicom to read DICOM data.</p>
+<p>For the conversion, I have created a simple script <code>[DICOMTODEN.py](https://github.com/kulvait/KCT_scripts/blob/master/DICOMTODEN.py)</code>. The command to convert the data to the DEN format will then be</p>
+<pre class="code literal-block">DICOMTODEN.py --force --dicom-file-suffix <span class="s2">"dcm"</span> DICOM DEN_HU
+</pre>
+<p>After you run this command, the new directory <code>DEN_HU</code> will be created, which contains file <code>Series_00.den</code>. This is a converted DICOM file into the DEN format. To vizualize the volume can be used <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/KCT_Den_File_Opener-1.1.1.jar">KCT Den file opener</a>, a plugin of <a href="https://imagej.nih.gov/ij/">ImageJ</a> viewer that works also with <a href="https://imagej.net/software/fiji/">Fiji</a>. It is sufficient to put a file KCT_Den_File_Opener-1.1.1.jar into the .imagej/plugins configuration directory of ImageJ. Then simpy select <code>File-&gt;Open DEN ..</code> and navigate to <code>Series_00.den</code>.</p>
+<p>You can notice that the values are integers starting from $-1024$ in the areas of the air up to values greater than $1000$ in the dense bone areas. These are in (Hounsfield units)[https://en.wikipedia.org/wiki/Hounsfield_scale], which are good for the physicans to compare tissue contrasts in a convenient scale, but they do not represent raw attenuation values. To do a projection of the data using KCT or reconstruction of these projections, we need raw attenuation values.</p>
+<p>Conversion between Hounsfield units and raw attenuation values is possible using (KCT dentk toolkit)[https://github.com/kulvait/KCT_dentk]. Install the tool <code>dentk-fromhu</code> to your path and then the conversion can be done either by calling</p>
+<pre class="code literal-block">dentk-fromhu Series_00.den Series_00.raw
+</pre>
+<p>or using the script <code>DICOMTODEN.py</code> to internally call <code>dentk-fromhu</code> and to produce raw attenuations</p>
+<pre class="code literal-block">DICOMTODEN.py --force --dicom-file-suffix <span class="s2">"dcm"</span> --convert-hu-to-raw --base2 DICOM DEN_RAW
+</pre>
+<p>There are two caveats. First for the conversion is important the attenuation value of the water, which in Hounsfield units is exactly $0$. By default the conversion will be performed in the same way as with the setting <code>--water-value 0.027</code>. If you know the exact attenuation value of the water for given scanner, feel free to change it.</p>
+<p>Second there is a problem that in <a href="https://en.wikipedia.org/wiki/Hounsfield_scale">wiki article about Hounsfield units</a> as well as in virtually every CT textbook, you can find that the minimum Hounsfield unit is 1000. DICOM data from SIEMENS scanners tend to have this minimum value $-1024$. It is due to the better data alignment with uint16 or uint32 representation of offsetted Hounsfield units. Standard conversion formula would however produce negative attenuation values. To correct for this undesired behavior we have to add <code>--base2</code> as a parameter either to <code>DICOMTODEN.py</code> or <code>dentk-fromhu</code> program.</p>
+<h3>Vizualizing DEN volume of raw attenuation values derived from DICOM series</h3>
+<p>When you did everything correct, in the directory <code>DEN_RAW</code> is the file <code>Series_00.den</code>, which represent raw attenuation values derived from given DICOM series. You can also download <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>, which contain also the converted DEN volume.</p>
+<p>When vizualizing in ImageJ, you can select an area of the soft tissue and press ALT+CTRL+C. Then you can adjust the contrast. </p>
+<p>Investigating the volume in more detail from the perspective of data alignment it is apparent that the convention described on the picture <a href="https://www.slicer.org/wiki/File:Coordinate_sytems.png">CT coordinates, image from the project slicer</a> is observed. So that z axis is the axis of the rotation. Y axis goes from the top (above scanned subject) to bottom (under scanned object). Note, that ImageJ places the (0,0) top left and the positive direction of the Y axis is also top to bottom so that the axial image is vizualized in a natural orientation.  </p>
+<h3>Working with KCT CBCT 2</h3>
+<p>In the next post, I will explain what are the conventions for the projection geometry and how to describe the geometric setting of the flat detector CT. We define an example setup of a virtual flat detector CT machine when scannin the volume created in this post. We then use KCT framework to project the volume and create projections.</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="kct-framework.html" class="u-url">KCT framework</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                VK
             </span></p>
             <p class="dateline">
             <a href="kct-framework.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-13T12:04:57+02:00" itemprop="datePublished" title="2021-09-13 12:04">2021-09-13 12:04</time></a>
+            <time class="published dt-published" datetime="2021-09-13T12:04:57+02:00" itemprop="datePublished" title="13.09.2021">13.09.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -112,7 +160,7 @@ MathJax.Hub.Config({
     }
 });
 </script><!--End of body content--><footer id="footer">
-            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 

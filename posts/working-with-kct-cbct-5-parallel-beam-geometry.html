@@ -10,7 +10,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
 <link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-5-parallel-beam-geometry.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="Vojtěch Kulvait">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="VK">
 <link rel="prev" href="cvp-paper-2021-4-comparing-projectors-accuracy.html" title="CVP paper 2021: Comparing projectors accuracy" type="text/html">
 <link rel="next" href="tomographic-notes-1-geometric-conventions.html" title="Tomographic notes 1 Geometric conventions" type="text/html">
 <meta property="og:site_name" content="KCT framework">
@@ -59,14 +59,7 @@ bg-dark
                 
             </li>
 </ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item">
-    <a href="working-with-kct-cbct-5-parallel-beam-geometry.md" id="sourcelink" class="nav-link">Source</a>
-    </li>
-
-
-                
-            </ul>
+<ul class="navbar-nav navbar-right"></ul>
 </div>
 <!-- /.navbar-collapse -->
     </div>
@@ -77,18 +70,12 @@ bg-dark
         
         
         
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Working with KCT CBCT 5 Parallel beam geometry</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h2 class="p-name entry-title" itemprop="headline name">Working with KCT CBCT 5 Parallel beam geometry</h2>
 
         <div class="metadata">
-            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
-                    Vojtěch Kulvait
-            </span></p>
             <p class="dateline">
-            <a href="#" rel="bookmark">
-            <time class="published dt-published" datetime="2022-03-11T11:09:24+01:00" itemprop="datePublished" title="2022-03-11 11:09">2022-03-11 11:09</time></a>
-            </p>
+            <time class="published dt-published" datetime="2022-03-11T11:09:24+01:00" itemprop="datePublished" title="11.03.2022">11.03.2022</time></p>
             
-        <p class="sourceline"><a href="working-with-kct-cbct-5-parallel-beam-geometry.md" class="sourcelink">Source</a></p>
 
         </div>
         
@@ -139,25 +126,25 @@ bg-dark
 </tr>
 </tbody>
 </table>
-<p>It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform</p>
-<p>$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$</p>
-<p>and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors</p>
+<p>It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be</p>
+<p>$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$</p>
+<p>where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.</p>
+<p>Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors</p>
 <p>$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ </p>
 <p>In particular</p>
 <p>$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$</p>
 <p>When we project center of the detector $d$ onto the detector obviously we shall obtain center of it</p>
-<p>$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$</p>
+<p>$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$</p>
 <p>therefore </p>
-<p>$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$</p>
-<p>Therefore the formula to get PX and PY for arbitrary point x will read</p>
+<p>$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$</p>
+<p>Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be</p>
 <p>$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
-<p>You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. </p>
 <p>When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes <code>Geometry3DParallel</code> and <code>Geometry3DParallelCameraMatrix</code> have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.</p>
 <table>
 <thead><tr>
@@ -184,9 +171,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
 </tbody>
 </table>
 <p>It holds that</p>
-<p>$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$</p>
-<p>Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+<p>$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$</p>
+<p>Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$</p>
 <p>Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.</p>
@@ -238,6 +225,11 @@ py_0
 .$$</p>
 <p>Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.</p>
     </div>
+	<div class="text-right">
+            <p class="byline author vcard p-author h-card"><span class="badge badge-primary" itemprop="author">
+                    VK
+            </span></p>
+	</div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
         </ul>
@@ -261,7 +253,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 

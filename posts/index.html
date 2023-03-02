@@ -69,14 +69,76 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="tomographic-notes-1-geometric-conventions.html" class="u-url">Tomographic notes 1 Geometric conventions</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="synchrotron-data-analysis-1-flat-field-correction.html" class="u-url">Synchrotron data analysis 1: Flat field correction</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
+            </span></p>
+            <p class="dateline">
+            <a href="synchrotron-data-analysis-1-flat-field-correction.html" rel="bookmark">
+            <time class="published dt-published" datetime="2022-08-25T21:05:35+02:00" itemprop="datePublished" title="25.08.2022">25.08.2022</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <p>My recent work deals with the analysis of synchrotron data for computed tomography. In this series of blog posts I intend to describe some important concepts of the analysis and the tools that can be used for dealing with related issues.</p>
+<p>First step when dealing with the synchrotron data is processing of the raw projection data. Typically it consists from pixel binning, current normalization and flat field correction. In this post I will explain how to use KCT for flat field correction. </p>
+<h3>Input data</h3>
+<p>To do standard flat field correction three sets of projection data are necessary. Let's say MxN are dimensions of the detector, then we need the following three datasets:</p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>X-rays</th>
+<th>File</th>
+<th>Dimensions</th>
+<th>Explanation</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Image data</td>
+<td>on</td>
+<td>img.den</td>
+<td>MxNx$n_img$</td>
+<td>Intensity data obtained from the detector when scanning object</td>
+</tr>
+<tr>
+<td>Flat field</td>
+<td>on</td>
+<td>flat.den</td>
+<td>MxNx$n_flat$</td>
+<td>Intensity data obtained from the detector without scanning object present, other parameters of the imaging system being the same</td>
+</tr>
+<tr>
+<td>Dark field</td>
+<td>off</td>
+<td>dark.den</td>
+<td>MxNx$n_dark$</td>
+<td>Intensity data obtained from the detector without scanning object present without incomming X-rays</td>
+</tr>
+</tbody>
+</table>
+<h4>Standard flat field correction</h4>
+<p>With the scalar quantity G the formula for the flat field correction is as follows
+<code>IMG_cor = G * (IMG - DARK)/(FLAT - DARK)</code> 
+Standard flat field correction of the image is pixel-wise, where we first average flat field and dark field to obtain.</p>
+<p><code>dentk-framecalc1 --avg flat.den flat_avg.den</code>
+<code>dentk-framecalc1 --avg dark.den dark_avg.den</code>
+Then we subtract dark from flat
+<code>dentk-calc --subtract flat_avg.den dark_avg.den flat_minus_dark.den</code>
+Then we want to subtract dark_avg.den from every img.den frame.
+<code>dentk-framecalc --subtract img.den dark_avg.den img_minus_dark.den</code>
+We can now compute the extinction using
+<code>dentk-framecalc --divide img_minus_dark.den flat_minus_dark.den cor.den</code>
+<code>dentk-calc1 --inv cor.den expext.den</code>
+<code>dentk-calc1 --log expext.den ext.den</code></p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="tomographic-notes-1-geometric-conventions.html" class="u-url">Tomographic notes 1 Geometric conventions</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                VK
             </span></p>
             <p class="dateline">
             <a href="tomographic-notes-1-geometric-conventions.html" rel="bookmark">
-            <time class="published dt-published" datetime="2022-07-15T10:26:59+02:00" itemprop="datePublished" title="2022-07-15 10:26">2022-07-15 10:26</time></a>
+            <time class="published dt-published" datetime="2022-07-15T10:26:59+02:00" itemprop="datePublished" title="15.07.2022">15.07.2022</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -104,11 +166,11 @@ as a value of the extinction related to the position $p$ on the detector tilted 
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-5-parallel-beam-geometry.html" class="u-url">Working with KCT CBCT 5 Parallel beam geometry</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-5-parallel-beam-geometry.html" rel="bookmark">
-            <time class="published dt-published" datetime="2022-03-11T11:09:24+01:00" itemprop="datePublished" title="2022-03-11 11:09">2022-03-11 11:09</time></a>
+            <time class="published dt-published" datetime="2022-03-11T11:09:24+01:00" itemprop="datePublished" title="11.03.2022">11.03.2022</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -157,25 +219,25 @@ as a value of the extinction related to the position $p$ on the detector tilted 
 </tr>
 </tbody>
 </table>
-<p>It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. It is natural to model $PX(x)$ and $PY(x)$ by means of affine transform</p>
-<p>$$PX(x) = px_0 + a_1 x_1 + a_2 x_2 + a_3 x_3$$
-$$PY(x) = py_0 + b_1 x_1 + b_2 x_2 + b_3 x_3$$</p>
-<p>and since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors</p>
+<p>It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be</p>
+<p>$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$</p>
+<p>where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.</p>
+<p>Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors</p>
 <p>$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
 $$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ </p>
 <p>In particular</p>
 <p>$$a = v_x^0/(v_x^0,v_x^0),$$
 $$b = v_y^0/(v_y^0,v_y^0).$$</p>
 <p>When we project center of the detector $d$ onto the detector obviously we shall obtain center of it</p>
-<p>$$PX(d) = px_0 + (d, a) = 0.5 NX,$$
-$$PY(d) = py_0 + (d, b) = 0.5 NY$$</p>
+<p>$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$</p>
 <p>therefore </p>
-<p>$$px_0 = 0.5 NX - (d,a),$$
-$$py_0 = 0.5 NY - (d,b).$$</p>
-<p>Therefore the formula to get PX and PY for arbitrary point x will read</p>
+<p>$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$</p>
+<p>Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be</p>
 <p>$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
 $$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
-<p>You can imediatelly see that we have affine transformation and that we can create $4 \times 2$ projection matrix, which for given x project it to the position on the detector. </p>
 <p>When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes <code>Geometry3DParallel</code> and <code>Geometry3DParallelCameraMatrix</code> have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.</p>
 <table>
 <thead><tr>
@@ -202,9 +264,9 @@ $$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
 </tbody>
 </table>
 <p>It holds that</p>
-<p>$$PX(o) = px_0 + (o, a) = 0,$$
-$$PY(o) = py_0 + (o, b) = 0.$$</p>
-<p>Therefore we have $px_0 = -(o,a)$, $py_0 = -(o,b)$ and
+<p>$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$</p>
+<p>Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
 $$PX(x) = (x, a)-(o, a),$$
 $$PY(x) = (x, b)-(o, b).$$</p>
 <p>Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.</p>
@@ -259,11 +321,11 @@ py_0
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-4-comparing-projectors-accuracy.html" class="u-url">CVP paper 2021: Comparing projectors accuracy</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="cvp-paper-2021-4-comparing-projectors-accuracy.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-10-05T22:15:32+02:00" itemprop="datePublished" title="2021-10-05 22:15">2021-10-05 22:15</time></a>
+            <time class="published dt-published" datetime="2021-10-05T22:15:32+02:00" itemprop="datePublished" title="05.10.2021">05.10.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -304,11 +366,11 @@ cat pprojectorAccuracyComparisonCVPPaper2021_Fig4_bottom_Long.tar.gz* | tar -xz
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-3-benchmarks-to-compare-projectors-speed.html" class="u-url">CVP paper 2021: Benchmarks to compare projectors speed</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="cvp-paper-2021-3-benchmarks-to-compare-projectors-speed.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-10-05T16:06:54+02:00" itemprop="datePublished" title="2021-10-05 16:06">2021-10-05 16:06</time></a>
+            <time class="published dt-published" datetime="2021-10-05T16:06:54+02:00" itemprop="datePublished" title="05.10.2021">05.10.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -366,11 +428,11 @@ The <a href="https://data.stimulate.ovgu.de/f/be84e799fd774deabeb5/?dl=1">result
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-2-adjoint-product-test.html" class="u-url">CVP paper 2021: Adjoint product test</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="cvp-paper-2021-2-adjoint-product-test.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-10-04T17:29:06+02:00" itemprop="datePublished" title="2021-10-04 17:29">2021-10-04 17:29</time></a>
+            <time class="published dt-published" datetime="2021-10-04T17:29:06+02:00" itemprop="datePublished" title="04.10.2021">04.10.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -732,11 +794,11 @@ is far from optimal value 1.0. The results follow executed with the git commit <
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="cvp-paper-2021-1-the-platforms.html" class="u-url">CVP paper 2021: The platforms</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="cvp-paper-2021-1-the-platforms.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-10-04T16:07:05+02:00" itemprop="datePublished" title="2021-10-04 16:07">2021-10-04 16:07</time></a>
+            <time class="published dt-published" datetime="2021-10-04T16:07:05+02:00" itemprop="datePublished" title="04.10.2021">04.10.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -2558,11 +2620,11 @@ NULL platform behavior
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-4-first-cone-beam-ct-projection.html" class="u-url">Working with KCT CBCT 4 First cone beam CT projection</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-4-first-cone-beam-ct-projection.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-19T14:28:24+02:00" itemprop="datePublished" title="2021-09-19 14:28">2021-09-19 14:28</time></a>
+            <time class="published dt-published" datetime="2021-09-19T14:28:24+02:00" itemprop="datePublished" title="19.09.2021">19.09.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -2577,11 +2639,11 @@ NULL platform behavior
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html" class="u-url">Working with KCT CBCT 3 Python implementation of circular CT trajectory</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-15T12:05:50+02:00" itemprop="datePublished" title="2021-09-15 12:05">2021-09-15 12:05</time></a>
+            <time class="published dt-published" datetime="2021-09-15T12:05:50+02:00" itemprop="datePublished" title="15.09.2021">15.09.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -2705,11 +2767,11 @@ S = [746.15, 65.28, -0.00], -Q^T u = [746.15, 65.28,  0.00].
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" class="u-url">Working with KCT CBCT 2 Projective geometry and camera matrices to describe CT geometry</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
+                VK
             </span></p>
             <p class="dateline">
             <a href="working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-14T21:05:50+02:00" itemprop="datePublished" title="2021-09-14 21:05">2021-09-14 21:05</time></a>
+            <time class="published dt-published" datetime="2021-09-14T21:05:50+02:00" itemprop="datePublished" title="14.09.2021">14.09.2021</time></a>
             </p>
         </div>
     </header><div class="e-content entry-content">
@@ -2831,54 +2893,6 @@ $$</p>
 <h3>Next post</h3>
 <p>In the next post we use our newly gained knowledge to create a Python implementation to write circular trajectory into the <a href="../den-format.html">DEN file</a>.</p>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" class="u-url">Working with KCT CBCT 1 Converting DICOM volume to DEN volume</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Vojtěch Kulvait
-            </span></p>
-            <p class="dateline">
-            <a href="working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html" rel="bookmark">
-            <time class="published dt-published" datetime="2021-09-13T21:05:35+02:00" itemprop="datePublished" title="2021-09-13 21:05">2021-09-13 21:05</time></a>
-            </p>
-        </div>
-    </header><div class="e-content entry-content">
-    <p>In this series of blog posts, I will describe how to work with the KCT framework from the first steps of importing data to the more advanced topics as a running reconstruction. </p>
-<p>In the post today, I explain how to import files in DICOM into the DEN format that is used within the framework. I use the data from the public repository.</p>
-<h3>Example dataset</h3>
-<p>I have choosen a publicly available dataset from <a href="https://public.cancerimagingarchive.net/">The Cancer Imaging Archive</a> containing a brain CT scan, ID TCGA-19-1787. To download this dataset I followed the procedure described on <a href="https://wiki.cancerimagingarchive.net/display/NBIA/Downloading+TCIA+Images">The Cancer Imaging Archive page</a>. It is needed to instal their application NBIA Data Retriever and provide it with the information in the <code>manifest-1631446347856.tcia</code> file, which must contain the following</p>
-<pre class="code literal-block"><span class="n">downloadServerUrl</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">public</span><span class="o">.</span><span class="n">cancerimagingarchive</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">nbia</span><span class="o">-</span><span class="n">download</span><span class="o">/</span><span class="n">servlet</span><span class="o">/</span><span class="n">DownloadServlet</span><span class="w"></span>
-<span class="n">includeAnnotation</span><span class="o">=</span><span class="bp">true</span><span class="w"></span>
-<span class="n">noOfrRetry</span><span class="o">=</span><span class="mi">4</span><span class="w"></span>
-<span class="n">databasketId</span><span class="o">=</span><span class="n">manifest</span><span class="o">-</span><span class="mf">1631446347856.</span><span class="n">tcia</span><span class="w"></span>
-<span class="n">manifestVersion</span><span class="o">=</span><span class="mf">3.0</span><span class="w"></span>
-<span class="n">ListOfSeriesToDownload</span><span class="o">=</span><span class="w"></span>
-<span class="mf">1.3</span><span class="o">.</span><span class="mf">6.1</span><span class="o">.</span><span class="mf">4.1</span><span class="o">.</span><span class="mf">14519.5</span><span class="o">.</span><span class="mf">2.1</span><span class="o">.</span><span class="mf">5826.4001</span><span class="o">.</span><span class="mi">312669389023517091391958251391</span><span class="w"></span>
-</pre>
-<p>Example dataset is published under the terms of <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> and the <a href="../license-tcga-gbm.html">following terms</a>. This licencing apply to any user even the user of the derived data, which I publish here in scope of this demonstration in <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>.</p>
-<p>When we unpack the data of example volume, we see that dicom files with the suffix dcm are in the directory <code>TCGA-19-1787/04-20-2002-NA-NR CT HEAD W CE-97133/2.000000-Head Vol.  1.5  H40s ST-51391</code>. For simplicity I rename this directory just to DICOM and remove parent subdirectories. 
-From the DICOM headers we can see that it is a scan on SIEMENS Sensation Cardiac 64 CT machine. It contains $124$ slices with the thickness of $1.5$mm of the dimension $512 \times 512$, the voxel sizes are ($0.64453125$mm, $0.64453125$mm, $1.5$mm).</p>
-<h3>Conversion of DICOM series to DEN format</h3>
-<p>For the purpose of this example, we have to transform the DICOM dataset into the <a href="../den-format.html">DEN format</a>, which is used by KCT framework. We do it using <a href="https://github.com/kulvait/KCT_denpy">KCT_denpy package</a>. This package allow us to convert between the representations of the volume data as numpy.ndarray, DEN file or DICOM series. Internally it uses the package pydicom to read DICOM data.</p>
-<p>For the conversion, I have created a simple script <code>[DICOMTODEN.py](https://github.com/kulvait/KCT_scripts/blob/master/DICOMTODEN.py)</code>. The command to convert the data to the DEN format will then be</p>
-<pre class="code literal-block">DICOMTODEN.py --force --dicom-file-suffix <span class="s2">"dcm"</span> DICOM DEN_HU
-</pre>
-<p>After you run this command, the new directory <code>DEN_HU</code> will be created, which contains file <code>Series_00.den</code>. This is a converted DICOM file into the DEN format. To vizualize the volume can be used <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/KCT_Den_File_Opener-1.1.1.jar">KCT Den file opener</a>, a plugin of <a href="https://imagej.nih.gov/ij/">ImageJ</a> viewer that works also with <a href="https://imagej.net/software/fiji/">Fiji</a>. It is sufficient to put a file KCT_Den_File_Opener-1.1.1.jar into the .imagej/plugins configuration directory of ImageJ. Then simpy select <code>File-&gt;Open DEN ..</code> and navigate to <code>Series_00.den</code>.</p>
-<p>You can notice that the values are integers starting from $-1024$ in the areas of the air up to values greater than $1000$ in the dense bone areas. These are in (Hounsfield units)[https://en.wikipedia.org/wiki/Hounsfield_scale], which are good for the physicans to compare tissue contrasts in a convenient scale, but they do not represent raw attenuation values. To do a projection of the data using KCT or reconstruction of these projections, we need raw attenuation values.</p>
-<p>Conversion between Hounsfield units and raw attenuation values is possible using (KCT dentk toolkit)[https://github.com/kulvait/KCT_dentk]. Install the tool <code>dentk-fromhu</code> to your path and then the conversion can be done either by calling</p>
-<pre class="code literal-block">dentk-fromhu Series_00.den Series_00.raw
-</pre>
-<p>or using the script <code>DICOMTODEN.py</code> to internally call <code>dentk-fromhu</code> and to produce raw attenuations</p>
-<pre class="code literal-block">DICOMTODEN.py --force --dicom-file-suffix <span class="s2">"dcm"</span> --convert-hu-to-raw --base2 DICOM DEN_RAW
-</pre>
-<p>There are two caveats. First for the conversion is important the attenuation value of the water, which in Hounsfield units is exactly $0$. By default the conversion will be performed in the same way as with the setting <code>--water-value 0.027</code>. If you know the exact attenuation value of the water for given scanner, feel free to change it.</p>
-<p>Second there is a problem that in <a href="https://en.wikipedia.org/wiki/Hounsfield_scale">wiki article about Hounsfield units</a> as well as in virtually every CT textbook, you can find that the minimum Hounsfield unit is 1000. DICOM data from SIEMENS scanners tend to have this minimum value $-1024$. It is due to the better data alignment with uint16 or uint32 representation of offsetted Hounsfield units. Standard conversion formula would however produce negative attenuation values. To correct for this undesired behavior we have to add <code>--base2</code> as a parameter either to <code>DICOMTODEN.py</code> or <code>dentk-fromhu</code> program.</p>
-<h3>Vizualizing DEN volume of raw attenuation values derived from DICOM series</h3>
-<p>When you did everything correct, in the directory <code>DEN_RAW</code> is the file <code>Series_00.den</code>, which represent raw attenuation values derived from given DICOM series. You can also download <a href="https://github.com/kulvait/KCT_den_file_opener/releases/download/v1.1.1/ExampleVolumeKCT_TCGA-19-1787.tar.xf">Example Volume TCGA-19-1787</a>, which contain also the converted DEN volume.</p>
-<p>When vizualizing in ImageJ, you can select an area of the soft tissue and press ALT+CTRL+C. Then you can adjust the contrast. </p>
-<p>Investigating the volume in more detail from the perspective of data alignment it is apparent that the convention described on the picture <a href="https://www.slicer.org/wiki/File:Coordinate_sytems.png">CT coordinates, image from the project slicer</a> is observed. So that z axis is the axis of the rotation. Y axis goes from the top (above scanned subject) to bottom (under scanned object). Note, that ImageJ places the (0,0) top left and the positive direction of the Y axis is also top to bottom so that the axial image is vizualized in a natural orientation.  </p>
-<h3>Working with KCT CBCT 2</h3>
-<p>In the next post, I will explain what are the conventions for the projection geometry and how to describe the geometric setting of the flat detector CT. We define an example setup of a virtual flat detector CT machine when scannin the volume created in this post. We then use KCT framework to project the volume and create projections.</p>
-    </div>
     </article>
 </div>
 
@@ -2898,7 +2912,7 @@ MathJax.Hub.Config({
     }
 });
 </script><!--End of body content--><footer id="footer">
-            Contents © 2022         <a href="mailto:kulvait%20at%20gmail%20dot%20com">Vojtěch Kulvait</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 

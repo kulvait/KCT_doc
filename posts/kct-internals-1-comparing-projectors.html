@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCT internals 1 comparing projectors | KCT framework</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
+<link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/kct-internals-1-comparing-projectors.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="VK">
+<meta name="robots" content="noindex">
+<meta property="og:site_name" content="KCT framework">
+<meta property="og:title" content="KCT internals 1 comparing projectors">
+<meta property="og:url" content="https://kulvait.github.io/KCT_doc/posts/kct-internals-1-comparing-projectors.html">
+<meta property="og:description" content="In this series of the blog posts I will go into the details of the KCT package, which actually do the computations. I would like to convince you that it is also important not to know only interface bu">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2021-09-20T09:14:20+02:00">
+<meta property="article:tag" content="kct_internals">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../">
+
+            <span id="blog-title">KCT framework</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../categories/using_kct_blog.html" class="nav-link">Using KCT blog</a>
+                </li>
+<li class="nav-item">
+<a href="../posts" class="nav-link">Blog posts</a>
+                </li>
+<li class="nav-item">
+<a href="../archive.html" class="nav-link">Blog Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h2 class="p-name entry-title" itemprop="headline name">KCT internals 1 comparing projectors</h2>
+
+        <div class="metadata">
+            <p class="dateline">
+            <time class="published dt-published" datetime="2021-09-20T09:14:20+02:00" itemprop="datePublished" title="20.09.2021">20.09.2021</time></p>
+            
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>In this series of the blog posts I will go into the details of the KCT package, which actually do the computations. I would like to convince you that it is also important not to know only interface but how the things work inside as well.</p>
+<p>Today I will discuss the issue how to compare different projectors. </p>
+<p>We will use well established class of projectors, so called ray tracers. In my opinion the best ray tracer is that based on the algorithm due to Siddon <a href="https://doi.org/10.1118/1.595715">Siddon projector</a> from 1984, which is computing exact paths through the voxelized objects. The algorithm is so simple and briliant, that noone else has come forward with something faster. There are simpler ray casting approaches, but they are more inexact and when trying to reach some level of exactness for example by means of increasing the increment step, they tend to be slower. Therefore in KCT, I decided to implement Siddon algorithm for ray casting in order to have the projector that computes attenuation along the rays in the package. Other projectors implamented are trying to somehow estimate what happens, when we cast infinite number of the rays towards each detector pixel.</p>
+<h3>Detector binning</h3>
+<p>Detector binning is common technique for flat panel detector. For example in $4 \times 4$ binning the adjacent goups of  $4 \times 4$ pixels are considered as one big pixel. This technique can be used to reduce the noise or reduce the amount of data transferred from the device to the computer.</p>
+<p>Let's first priepare camera matrices for the setup analogous to <a href="://slug//working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry">CBCT geometry post</a> and <a href="working-with-kct-cbct-3-python-implementation-of-circular-ct-trajectory">Python implementation post</a>. This time let's expect detector binning 4x4 was used.</p>
+<pre class="code literal-block">mkdir -p geometry
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 616 --projection-sizey 480 --pixel-sizex 0.616 --pixel-sizey 0.616"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM4x4_616x480_CIRCULAR.den
+</pre>
+<p>We can then decrease the size of pixels to produce matrices with different binnings. Note that when we keep the number of pixels constant, the detector size will decrease, but for the following demonstration this is not undesirable.</p>
+<pre class="code literal-block"><span class="c1">#Camera matrices relative to the different binning and different numbers of voxels on the detector</span>
+<span class="c1">#2x2 binning</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 1232 --projection-sizey 960 --pixel-sizex 0.308 --pixel-sizey 0.308"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM2x2_1232x960_CIRCULAR.den
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 616 --projection-sizey 480 --pixel-sizex 0.308 --pixel-sizey 0.308"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM2x2_616x480_CIRCULAR.den
+<span class="c1">#1x1 binning</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 2464 --projection-sizey 1920 --pixel-sizex 0.154 --pixel-sizey 0.154"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM1x1_2464x1920_CIRCULAR.den
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 1232 --projection-sizey 960 --pixel-sizex 0.154 --pixel-sizey 0.154"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM1x1_1232x960_CIRCULAR.den
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--projection-sizex 616 --projection-sizey 480 --pixel-sizex 0.154 --pixel-sizey 0.154"</span>
+createCameraMatricesForCircularScanTrajectory.py --force --write-params-file <span class="nv">$PARAMS</span> geometry/CM1x1_616x480_CIRCULAR.den
+</pre>
+<h3>Comparing projectors</h3>
+<p>We can compare different projectors by comparing the way how they project a single voxel on the projector during circular trajectory scan. Let's make the volume containing just single voxel with the attenuation value $1$. </p>
+<pre class="code literal-block">dentk-empty <span class="m">1</span> <span class="m">1</span> <span class="m">1</span> singleUnitVoxel.den --value <span class="m">1</span>.0
+</pre>
+<p>Let's suppose the voxel is centerred at $(0,0,0)$ and its dimensions are $1mm \times 1mm \times 1mm$. 
+Next, create the directory for working with this voxel and for projections to keep our working directory cleaner and export parameters we will be working with</p>
+<pre class="code literal-block">mkdir -p 1x1x1_center
+<span class="nb">cd</span> 1x1x1_center
+ln -s ../geometry/ geometry
+mkdir -p projections
+<span class="nb">export</span> <span class="nv">CM</span><span class="o">=</span><span class="s2">"geometry/CM1x1_616x480_CIRCULAR.den"</span>
+<span class="nb">export</span> <span class="nv">VPARAMS</span><span class="o">=</span><span class="s2">"--voxel-sizex 1.0 --voxel-sizey 1.0 --voxel-sizez 1.0"</span>
+</pre>
+<p>Let's do an initial testing projection using Siddon projector</p>
+<pre class="code literal-block"><span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 1 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon1"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+</pre>
+<p>When we visualize the file <code>projections/voxel.siddon1</code> in ImageJ, we can see the dot in the center of the projector surface that corresponds well with our geometric intuition.
+Casting one ray towards each pixel is a low number for actual comparison of the projectors. Therefore let's cast $512x512$ rays to get a baseline.</p>
+<pre class="code literal-block"><span class="nv">CM</span><span class="o">=</span><span class="s2">"geometry/CM1x1_616x480_CIRCULAR.den"</span>
+<span class="nv">VPARAMS</span><span class="o">=</span><span class="s2">"--voxel-sizex 1.0 --voxel-sizey 1.0 --voxel-sizez 1.0"</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 512 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon512"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+</pre>
+<p>You can see the projection gets slower. Its because towards each detector pixel is now casted $512 \times 512 = 262.144$ rays. And there is $616 \times 480$ pixels and $360$ views. So in total around 28 trilions (12 zeros, so that ~28,000,000,000,000) rays are casted. I'd like to mention that in <code>cllin-projector</code> the running time of the projections is slower than the running time of the projection in the reconstruction program <code>cllin-krylov</code>. The resason is that we typically need this for debugging or one time reprojection and it is written to allow me faster debugging. The place, where the projectors and backprojectors are optimized for the speed is the reconstruction by means of <code>cllin-krylov</code>.</p>
+<p>Now we have our very fine approximation of the actual shape of the voxel projection <code>voxel.sidon512</code>. However how do we compare it to <code>voxel.sidon1</code>? First make a difference </p>
+<pre class="code literal-block">dentk-calc --force --subtract projections/voxel.siddon1 projections/voxel.siddon512 voxel.siddon1_minus_siddon512
+</pre>
+<p>Of course we can conpute a L2 norm or RMSE of the file <code>voxel.siddon1_minus_siddon512</code></p>
+<pre class="code literal-block">dentk-info --l2norm voxel.siddon1_minus_siddon512
+<span class="c1">#17.1</span>
+</pre>
+<p>We can see that there are surely differences between projectors when the number of casted rays is higher. Let's systematically compare projectors for 1mm center voxels and compute view based statistics.</p>
+<pre class="code literal-block"><span class="nb">export</span> <span class="nv">CM</span><span class="o">=</span><span class="s2">"geometry/CM1x1_616x480_CIRCULAR.den"</span>
+<span class="nb">export</span> <span class="nv">VPARAMS</span><span class="o">=</span><span class="s2">"--voxel-sizex 1.0 --voxel-sizey 1.0 --voxel-sizez 1.0"</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 512 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon512"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 256 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon256"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 128 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon128"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 64 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon64"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 32 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon32"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 16 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon16"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 8 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon8"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 4 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon4"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 2 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon2"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--probes-per-edge 1 --siddon"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.siddon1"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--cvp"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.cvp"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--cvp --barrier --relaxed"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.cvb"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+<span class="nv">PARAMS</span><span class="o">=</span><span class="s2">"--tt"</span>
+<span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">"projections/voxel.tt"</span>
+cllin-projector --force <span class="nv">$VPARAMS</span> <span class="nv">$PARAMS</span> singleUnitVoxel.den <span class="nv">$CM</span> --projection-sizex <span class="m">616</span> --projection-sizey <span class="m">480</span> <span class="nv">$OUTPUT</span>
+</pre>
+<pre class="code literal-block">dentk-calc --force --subtract projections/voxel.siddon1 projections/voxel.siddon100 voxel.siddon1_minus_siddon100
+dentk-calc --force --subtract projections/voxel.siddon50 projections/voxel.siddon100 voxel.siddon50_minus_siddon100
+dentk-calc --force --subtract projections/voxel.cvp projections/voxel.siddon100 voxel.cvp_minus_siddon100
+dentk-calc --force --subtract projections/voxel.cvb projections/voxel.siddon100 voxel.cvb_minus_siddon100
+dentk-calc --force --subtract projections/voxel.tt projections/voxel.siddon100 voxel.tt_minus_siddon100
+<span class="c1">#siddon100_ctttk</span>
+dentk-calc --force --subtract projections/voxel.siddon1 projections/voxel.siddon100_ctttk voxel.siddon1_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.siddon50 projections/voxel.siddon100_ctttk voxel.siddon50_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.siddon100 projections/voxel.siddon100_ctttk voxel.siddon100_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.siddon512 projections/voxel.siddon100_ctttk voxel.siddon512_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.cvp projections/voxel.siddon100_ctttk voxel.cvp_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.cvb projections/voxel.siddon100_ctttk voxel.cvb_minus_siddon100_ctttk
+dentk-calc --force --subtract projections/voxel.tt projections/voxel.siddon100_ctttk voxel.tt_minus_siddon100_ctttk
+<span class="c1">#siddon512</span>
+dentk-calc --force --subtract projections/voxel.siddon128 projections/voxel.siddon512 voxel.siddon128_minus_siddon512
+dentk-calc --force --subtract projections/voxel.siddon64 projections/voxel.siddon512 voxel.siddon64_minus_siddon512
+dentk-calc --force --subtract projections/voxel.siddon1 projections/voxel.siddon512 voxel.siddon1_minus_siddon512
+dentk-calc --force --subtract projections/voxel.cvp projections/voxel.siddon512 voxel.cvp_minus_siddon512
+dentk-calc --force --subtract projections/voxel.cvb projections/voxel.siddon512 voxel.cvb_minus_siddon512
+dentk-calc --force --subtract projections/voxel.tt projections/voxel.siddon512 voxel.tt_minus_siddon512
+</pre>
+<p>Results</p>
+<pre class="code literal-block"><span class="c1">#--voxel-sizex 1.0 --voxel-sizey 1.0 --voxel-sizez 1.0</span>
+dentk-info --l2norm single1Voxel.siddon1_minus_siddon100
+<span class="c1">#17.0 RMSE 0.001651</span>
+dentk-info --l2norm single1Voxel.tt_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000009</span>
+dentk-info --l2norm single1Voxel.cvp_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000009</span>
+dentk-info --l2norm single1Voxel.cvb_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000010</span>
+</pre>
+<pre class="code literal-block"><span class="c1">#--voxel-sizex 1.0 --voxel-sizey 1.0 --voxel-sizez 5.0</span>
+dentk-info --l2norm single1Voxel.siddon1_minus_siddon100
+<span class="c1">#13.0</span>
+dentk-info --l2norm single1Voxel.tt_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000014</span>
+dentk-info --l2norm single1Voxel.cvp_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000006</span>
+dentk-info --l2norm single1Voxel.cvb_minus_siddon100
+<span class="c1">#0.1 RMSE=0.000009</span>
+</pre>
+<p>To get more complete statistic just run</p>
+<pre class="code literal-block"><span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100</span>.<span class="nv">log</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Angle</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">angles</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4}</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">angles</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Baseline</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddon</span>.<span class="mi">100</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">CVP</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">cvp</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">CVB</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">cvb</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">TT</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">tt</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Siddon1</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddon</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">projections</span><span class="o">/</span><span class="nv">single1Voxel</span>.<span class="nv">siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddon</span>.<span class="mi">100</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddon</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">cvb</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">cvp</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">tt</span>.<span class="nv">l2</span>
+<span class="nv">paste</span> <span class="nv">angles</span> <span class="nv">siddon</span>.<span class="mi">100</span> <span class="nv">cvp</span>.<span class="nv">l2</span> <span class="nv">cvb</span>.<span class="nv">l2</span> <span class="nv">tt</span>.<span class="nv">l2</span> <span class="nv">siddon</span>.<span class="nv">l2</span> <span class="o">&gt;</span> <span class="nv">projectorComparison</span>.<span class="nv">csv</span>
+</pre>
+<pre class="code literal-block"><span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon100_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon100_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon512_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4 "</span><span class="se">\t</span><span class="s">" $9 "</span><span class="se">\t</span><span class="s">" $11 }</span><span class="s1">'</span> <span class="o">&gt;</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon512_minus_siddon100_ctttk</span>.<span class="nv">log</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Angle</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">angles</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $4}</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">angles</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Baseline</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddonCTL</span>.<span class="mi">100</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Siddon1</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddon1</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Siddon100</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddon100</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">Siddon512</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">siddon512</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">CVP</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">cvp</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">CVB</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">cvb</span>.<span class="nv">l2</span>
+<span class="nv">echo</span> <span class="s2">"</span><span class="s">TT</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="nv">tt</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">projections</span><span class="o">/</span><span class="nv">single1Voxel</span>.<span class="nv">siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddonCTL</span>.<span class="mi">100</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon1_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddon1</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon100_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddon100</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">siddon512_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">siddon512</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvb_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">cvb</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">cvp_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span> <span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">cvp</span>.<span class="nv">l2</span>
+<span class="nv">dentk</span><span class="o">-</span><span class="nv">info</span> <span class="o">--</span><span class="nv">l2norm</span> <span class="nv">single1Voxel</span>.<span class="nv">tt_minus_siddon100_ctttk</span> <span class="o">--</span><span class="nv">frames</span> <span class="mi">0</span><span class="o">-</span><span class="k">end</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">RMSE</span> <span class="o">|</span> <span class="nv">grep</span> <span class="nv">frame</span> <span class="o">|</span><span class="nv">awk</span> <span class="o">-</span><span class="nv">F</span><span class="s1">'</span><span class="s">[|, ]</span><span class="s1">'</span> <span class="s1">'</span><span class="s">{print $9 }</span><span class="s1">'</span> <span class="o">&gt;&gt;</span> <span class="nv">tt</span>.<span class="nv">l2</span>
+<span class="nv">paste</span> <span class="nv">angles</span> <span class="nv">siddonCTL</span>.<span class="mi">100</span> <span class="nv">siddon1</span>.<span class="nv">l2</span> <span class="nv">siddon100</span>.<span class="nv">l2</span> <span class="nv">siddon512</span>.<span class="nv">l2</span> <span class="nv">cvp</span>.<span class="nv">l2</span> <span class="nv">cvb</span>.<span class="nv">l2</span> <span class="nv">tt</span>.<span class="nv">l2</span> <span class="o">&gt;</span> <span class="nv">projectorComparisonCTL</span>.<span class="nv">csv</span>
+</pre>
+<p>Now we see an interesting object, voxel of the cube with $10cm$ edge. Here are now seen even some cone beam effect on the projection data as can be shown in ImageJ.
+Let's say now that we shall cast more rays towards each pixel, let's say it will be 100 to have a good approximation </p>
+<p>but we get just some numbers without direct relevance. Better Approach would be to compare L2 norm of the difference to the L2 norm of our ground truth data represented by <code>single100Voxel.sidon100</code>.</p>
+<pre class="code literal-block">dentk-info --l2norm projections/single100Voxel.siddon100
+</pre>
+<p>Now from the fraction of L2 norms we can tell something about relative norm of error</p>
+<pre class="code literal-block"><span class="mf">805.5</span><span class="o">/</span><span class="mf">475233.8</span><span class="o">=</span><span class="mf">0.0017</span><span class="w"></span>
+</pre>
+<p>so there is a difference arount 2 promiles between the detectors. Now we would like to get better information. So let's compare L2 norms of individual views and plot it into the graph.</p>
+    </div>
+	<div class="text-right">
+            <p class="byline author vcard p-author h-card"><span class="badge badge-primary" itemprop="author">
+                    VK
+            </span></p>
+	</div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/kct_internals.html" rel="tag">kct_internals</a></li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script></article><!--End of body content--><footer id="footer">
+            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
+Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
+
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
+
