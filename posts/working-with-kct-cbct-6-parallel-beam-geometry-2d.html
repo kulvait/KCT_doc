@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Working with KCT CBCT 6 Parallel beam geometry 2D | KCT framework</title>
+<link href="../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../rss.xml">
+<link rel="canonical" href="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-6-parallel-beam-geometry-2d.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="VK">
+<meta property="og:site_name" content="KCT framework">
+<meta property="og:title" content="Working with KCT CBCT 6 Parallel beam geometry 2D">
+<meta property="og:url" content="https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-6-parallel-beam-geometry-2d.html">
+<meta property="og:description" content="In the last chapter I have introduced concept of afine transform represented by projection matrix for parallel beam geometry for 3D -&gt; 2D transform. Here I will deal with specific case of 2D -&gt; 1D tra">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2023-03-02T11:09:24+01:00">
+<meta property="article:tag" content="using_kct_blog">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../">
+
+            <span id="blog-title">KCT framework</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../categories/using_kct_blog.html" class="nav-link">Using KCT blog</a>
+                </li>
+<li class="nav-item">
+<a href="../posts" class="nav-link">Blog posts</a>
+                </li>
+<li class="nav-item">
+<a href="../archive.html" class="nav-link">Blog Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h2 class="p-name entry-title" itemprop="headline name">Working with KCT CBCT 6 Parallel beam geometry 2D</h2>
+
+        <div class="metadata">
+            <p class="dateline">
+            <time class="published dt-published" datetime="2023-03-02T11:09:24+01:00" itemprop="datePublished" title="02.03.2023">02.03.2023</time></p>
+            
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>In the <a href="working-with-kct-cbct-5-parallel-beam-geometry.html">last chapter</a> I have introduced concept of afine transform represented by projection matrix for parallel beam geometry for 3D -&gt; 2D transform. Here I will deal with specific case of 2D -&gt; 1D transform. It is just simplification of previous chapter, but because of its importance it is good to have it here.</p>
+<h2>When to use PBCT2D geometry</h2>
+<p>In many use cases, we have very aligned volume to the projector grid. So that the PX lines on the detector and VX, VY planes of the volume are both parallel to the incomming rays. Moreover, the detector pixel width is the same as the width of the volume slice and there is 1:1 correspondence between them. PBCT projector is not able to take speed advantage of simplified geometry setup. This is the case, where PBCT2D projector comes into the play. Projector is implemented in <code>opencl/pbct2d_cvp.cl</code> as an exact cutting voxel projector.</p>
+<h2>Defining parallel rays geometry</h2>
+<p>The affine transform, which takes 2D vector and project it into 1D line can be simply defined as
+$$P(x) = a_1 x_1 + a_2 x_2 + P0,$$
+where $P(0) = P0$. So in this case it is sufficient to describe geometry by three numbers. </p>
+<p>Let's take </p>
+<p>Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.</p>
+<p>In <a href="https://www.astra-toolbox.com/docs/geom3d.html#projection-geometries">ASTRA toolbox</a> parallel ray geometry in 3D is described by 12 numbers representing four 3D vectors.</p>
+<table>
+<thead><tr>
+<th>Vector</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>r</td>
+<td>ray direction</td>
+</tr>
+<tr>
+<td>d</td>
+<td>the center of the detector</td>
+</tr>
+<tr>
+<td>$v_x$</td>
+<td>the vector from detector pixel (0,0) to (0,1)</td>
+</tr>
+<tr>
+<td>$v_y$</td>
+<td>the vector from detector pixel (0,0) to (1,0)</td>
+</tr>
+</tbody>
+</table>
+<p>Additional two integers need to be supplied representing number of pixels in each detector direction.</p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>NX</td>
+<td>X dimension of detector in pixel count.</td>
+</tr>
+<tr>
+<td>NY</td>
+<td>Y dimension of detector in pixel count.</td>
+</tr>
+</tbody>
+</table>
+<p>It is straightforward to see that such description is sufficient to fully describe the setup. Now we need to use this description to project point $x = (x_1, x_2, x_3)$ onto the detector by means of transform $P(x) = (PX, PY)$. For a parameter $t$ we know that the projection of all points $x + t \cdot r$ shall be the same for all $t \in \mathbb{R}$. Let's try to model parallel beam projection in 3D to the 2D detector by means of afine transform so that the coordinates on the detector $PX(x)$ and $PY(x)$ will be</p>
+<p>$$PX(x) = PX0 + a_1 x_1 + a_2 x_2 + a_3 x_3,$$
+$$PY(x) = PY0 + b_1 x_1 + b_2 x_2 + b_3 x_3,$$</p>
+<p>where $PX(0) = PX0$ and $PY(0) = PY0$. This description requires to know 8 numbers represented by means of $4 \times 2$ projection matrix, which for given $x$ projects it to the position on the detector position $P(x) = (PX(x), PY(x))$.</p>
+<p>Now having Astra representation of the geometry, what the values defining afine transform shall be? Since $P(x + t \cdot r) = P (x)$ the vectors $a$ and $b$ must be orthogonal to $r$. We also know that $PX(v_x) - PX(0) = 1$ and $PY(v_y) - PY(0) = 1$ so from other algebraic consideration we conclude that $a$ and $b$ will be multiples of orthogonalized vectors</p>
+<p>$$v_x^0 = v_x - (v_x, r)/(r,r) r,$$ 
+$$v_y^0 = v_y - (v_y, r)/(r,r) r.$$ </p>
+<p>In particular</p>
+<p>$$a = v_x^0/(v_x^0,v_x^0),$$
+$$b = v_y^0/(v_y^0,v_y^0).$$</p>
+<p>When we project center of the detector $d$ onto the detector obviously we shall obtain center of it</p>
+<p>$$PX(d) = PX0 + (d, a) = 0.5 NX,$$
+$$PY(d) = PY0 + (d, b) = 0.5 NY$$</p>
+<p>therefore </p>
+<p>$$PX0 = 0.5 NX - (d,a),$$
+$$PY0 = 0.5 NY - (d,b).$$</p>
+<p>Therefore the formula to get PX and PY for arbitrary point x using Astra geometry will be</p>
+<p>$$PX(x) = (x, a)-(d, a)+0.5 NX,$$
+$$PY(x) = (x, b)-(d, b)+0.5 NY.$$</p>
+<p>When instead of center of the detector we use the origin of the detector, the projection matrix will be independent of projector dimensions, therefore the classes <code>Geometry3DParallel</code> and <code>Geometry3DParallelCameraMatrix</code> have the constructor analogous to ASTRA, where instead of the center of the detector there is detector origin. Detector origin is a point on the detector with coordinates PX=PY=0 and by convence it is in the center of corner pixel. We use the following initialization.</p>
+<table>
+<thead><tr>
+<th>Vector</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>r</td>
+<td>ray direction</td>
+</tr>
+<tr>
+<td>o</td>
+<td>the origin of the detector, point (0,0) by convention at the center of (0,0) pixel</td>
+</tr>
+<tr>
+<td>u</td>
+<td>the vector from detector pixel (0,0) to (0,1)</td>
+</tr>
+<tr>
+<td>v</td>
+<td>the vector from detector pixel (0,0) to (1,0)</td>
+</tr>
+</tbody>
+</table>
+<p>It holds that</p>
+<p>$$PX(o) = PX0 + (o, a) = 0,$$
+$$PY(o) = PY0 + (o, b) = 0.$$</p>
+<p>Therefore we have $PX0 = -(o,a)$, $PY0 = -(o,b)$ and
+$$PX(x) = (x, a)-(o, a),$$
+$$PY(x) = (x, b)-(o, b).$$</p>
+<p>Another observation is that we are not able to recover vectors $v_x$ and $v_y$ from the projection matrix or the transformation $P$. The reason is that the matrix is based on vectors $v_x^0$ and $v_y^0$, which are orthogonal to the incomming rays. Therefore if we need the information about the tilt of the detector, we need to provide it separatelly. For all applications shall be sufficent to know the cosine of the angle between the detector and surface orthogonal to incoming rays, which is usually 1.</p>
+<h2>Projection matrices</h2>
+<p>For projection of the point x we use homogeneous coordinates, where we represent $x = (x_1, x_2, x_3, 1)$ and the 3D parallel projection matrix
+$$
+\mathbf{P} = \begin{pmatrix}
+a_1&amp;a_2&amp;a_3&amp;px_0 \\
+b_1&amp;b_2&amp;b_3&amp;py_0
+\end{pmatrix},
+$$
+which represents the projection onto the detector orthogonal to the incomming rays with particular origin. It is obvious that for each tilted detector there must be one virtual orthogonal detector to the incomming rays. Let's recover what are the vectors $v_x=v_x^0$, $v_y=v_y^0$, the ray direction $r$ and origin $o$ of the virtual detector corresponding to the matrix $\mathbf{P}$.</p>
+<p>Vector $r$ or homogeneous $(r,0)$ needs to be orthogonal to the rows of matrix $\mathbf{P}$ since $\mathbf{P} (x,1)^\top$ = $\mathbf{P} (x,1)^\top + t (r,0)^\top$ for all $t \in \mathbb{R}$. Such vector is
+$$r = \frac{a \times b}{|a \times b|}.$$ </p>
+<p>The vectors $v_x$ and $v_y$ have the property $(v_x, a) = 1$, $(v_x,b) = 0$, $(v_x,r)=0$, $(v_y,b) = 1$, $(v_y, a) = 0$, $(v_y, r)=0$. Therefore $v_x$ and $v_y$ are scaled vectors $a$ and $b$, namely
+$$v_x = \frac{a}{(a,a)},$$<br>
+$$v_y = \frac{b}{(b,b)}.$$  </p>
+<p>Now remains to identify vector $o$ corresponding to the origin. In fact there is a line, which projects to (0,0) so that best will be to obtain minimum norm solution, which will be a linear combination of vectors a and b, whose linear span creates a subspace of dimension two, that in turn means that there exist unique decomposition of $o = \alpha a + \beta b$ for which it holds that
+$\mathbf{P} (o,1)^\top = (0,0)^\top$. For orthogonal $a$ and $b$ is the situation simplest but let's assume these vectors are not orthogonal we end up with the system
+$$ \begin{pmatrix}
+(a,a) &amp; (a,b) \\
+(b,a) &amp; (b,b)
+\end{pmatrix}
+\begin{pmatrix}
+\alpha \\
+\beta
+\end{pmatrix}
+=
+-\begin{pmatrix}
+px_0 \\
+py_0
+\end{pmatrix}
+$$
+and the solution
+$$ 
+\begin{pmatrix}
+\alpha \\
+\beta
+\end{pmatrix}
+=
+-\begin{pmatrix}
+(a,a) &amp; (a,b) \\
+(b,a) &amp; (b,b)
+\end{pmatrix}^{-1}
+\begin{pmatrix}
+px_0 \\
+py_0
+\end{pmatrix}
+.$$</p>
+<p>Finally we conclude $o = \alpha a + \beta b$, which completes the correspondence between projective operator given as matrix and explicit declaration of the geometry in ASTRA style. Note that previous equation can be also used for establishing inverse projective operator and its minimum norm solution. Instead of (0, 0) we can use any other point on the projection plane.</p>
+    </div>
+	<div class="text-right">
+            <p class="byline author vcard p-author h-card"><span class="badge badge-primary" itemprop="author">
+                    VK
+            </span></p>
+	</div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/using_kct_blog.html" rel="tag">using_kct_blog</a></li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script></article><!--End of body content--><footer id="footer">
+            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
+Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
+
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
+

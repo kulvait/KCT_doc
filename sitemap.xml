@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://kulvait.github.io/KCT_doc/</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <lastmod>2023-03-24T09:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/2021/</loc>
@@ -18,8 +18,12 @@
   <lastmod>2023-03-02T14:43:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kulvait.github.io/KCT_doc/2023/</loc>
+  <lastmod>2023-03-24T09:26:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kulvait.github.io/KCT_doc/archive.html</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <lastmod>2023-03-24T14:08:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/</loc>
@@ -43,7 +47,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/categories/using_kct_blog.html</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <lastmod>2023-03-24T14:08:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
@@ -67,7 +71,7 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <lastmod>2023-03-24T09:26:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/cvp-paper-2021-1-the-platforms.html</loc>
@@ -87,19 +91,19 @@
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/index-1.html</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <lastmod>2023-03-24T14:08:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/kct-framework.html</loc>
   <lastmod>2023-03-02T14:43:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kulvait.github.io/KCT_doc/posts/synchrotron-data-analysis-1-flat-field-correction.html</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <loc>https://kulvait.github.io/KCT_doc/posts/tomographic-notes-1-geometric-conventions.html</loc>
+  <lastmod>2023-03-24T14:08:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kulvait.github.io/KCT_doc/posts/tomographic-notes-1-geometric-conventions.html</loc>
-  <lastmod>2023-03-02T14:43:00Z</lastmod>
+  <loc>https://kulvait.github.io/KCT_doc/posts/using-kct_dentk-1-dentk-propagate.html</loc>
+  <lastmod>2023-03-24T14:08:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/posts/working-with-kct-cbct-1-converting-dicom-volume-to-den-volume-using-dicom-data-from-public-repository.html</loc>
