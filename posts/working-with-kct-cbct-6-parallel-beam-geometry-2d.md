@@ -1,18 +1,32 @@
 <!--
-.. title: Working with KCT CBCT 5 Parallel beam geometry
-.. slug: working-with-kct-cbct-5-parallel-beam-geometry
-.. date: 2022-03-11 11:09:24 UTC+01:00
+.. title: Working with KCT CBCT 6 Parallel beam geometry 2D
+.. slug: working-with-kct-cbct-6-parallel-beam-geometry-2d
+.. date: 2023-03-02 11:09:24 UTC+01:00
 .. tags: using_kct_blog
 .. category: 
 .. link: 
 .. description: 
 .. type: text
 .. has_math: true
+.. status: private
 -->
 
-In the [previous chapter](link://slug/working-with-kct-cbct-2-projective-geometry-and-camera-matrices-to-describe-ct-geometry) we learned about cone beam geometry and projective matrices. For synchrotron applications might be convenient to work also with parallel ray geometry. Here we review the concept of the projection matrices to define this type of geometry.
+
+In the [last chapter](link://slug/working-with-kct-cbct-5-parallel-beam-geometry) I have introduced concept of afine transform represented by projection matrix for parallel beam geometry for 3D -> 2D transform. Here I will deal with specific case of 2D -> 1D transform. It is just simplification of previous chapter, but because of its importance it is good to have it here.
+
+# When to use PBCT2D geometry
+
+In many use cases, we have very aligned volume to the projector grid. So that the PX lines on the detector and VX, VY planes of the volume are both parallel to the incomming rays. Moreover, the detector pixel width is the same as the width of the volume slice and there is 1:1 correspondence between them. PBCT projector is not able to take speed advantage of simplified geometry setup. This is the case, where PBCT2D projector comes into the play. Projector is implemented in `opencl/pbct2d_cvp.cl` as an exact cutting voxel projector.
+
 
 # Defining parallel rays geometry
+
+The affine transform, which takes 2D vector and project it into 1D line can be simply defined as
+$$P(x) = a_1 x_1 + a_2 x_2 + P0,$$
+where $P(0) = P0$. So in this case it is sufficient to describe geometry by three numbers. 
+
+Let's take 
+
 
 Parallel rays geometry is simply projecting 3D points onto 2D plane. Here we review how the parallel rays geometry is encoded in other tools and if we can use the idea of projection matrices to describe it.
 

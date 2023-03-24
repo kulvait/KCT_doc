@@ -1,6 +1,15 @@
 Source repository for [KCT framework wiki and blog github pages by Vojtěch Kulvait](https://kulvait.github.io/KCT_doc/).
 
-https://kulvait.github.io/KCT_doc/
+Purpose is to better document at least some aspects of relatively complex code of this framework.
+
+[https://kulvait.github.io/KCT_doc/](https://kulvait.github.io/KCT_doc/)
+
+### Pages
+
+Using Nikola static pages generator, bootstrap theme [hello word](https://hackerthemes.com/bootstrap-themes/demo/hello-world/), published on github pages site.
+
+`nikola subtheme -n helloworld -s hello-world`
+
 
 ## Licensing
 
