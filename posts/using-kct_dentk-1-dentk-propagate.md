@@ -99,13 +99,13 @@ At the beggining, I start implementing problem more according the Katkovnik2008 
 It is natural for me to understand how we can go from continuous to discrete space with the values of envelope. We just know the centers of the pixels are `--pixel-sizex` and `--pixel-sizey` apart. But what I am struggling with is a sampling in frequency space since $M \times N$ values will be transferred to $M \times N$ frequencies. But I have already precomputed continuous kernels $P_F$ and $P_H$, which I would like to use. Katkovnik2008 does the integration in a pixel space and not frequency space now the tricky part is the correspondence between continuous frequencies and discretized frequencies and possible scaling of the kernels. 
 
 For a moment, forget about the sampling errors and just relate definitions of the continuous and discrete Fourier transforms and their inversions and just assume we have function with the support on $[0,\delta N)$ that is constant on $[n\delta, (n+1)\delta)$ and zero elsewhere. Fourier transform of such function will look as follows 
-$$F(\xi) = \int_{-\inf}^{\inf} f(x) e^{-i 2 \pi x \xi} \mathrm{d}x \approx \delta \sum_{n=0}^{N-1} f(n \delta) e^{-i2 \pi n \delta \xi}.$$
+$$F(\xi) = \int_{-\infty}^{\infty} f(x) e^{-i 2 \pi x \xi} \mathrm{d}x \approx \delta \sum_{n=0}^{N-1} f(n \delta) e^{-i2 \pi n \delta \xi}.$$
 
 This is in a nutshell what we do when we approximate continuous Fourier transform by the discrete, note that the $\approx$ is in fact equality for pixelwise constant function, but we don't believe underlying function is really pixelwise constant. But wait, this formula looks simmilar as a formula for discrete Fourier transform
 
 $$F_k = \sum_{n=0}^{N-1} f_n e^{-i2 \pi n k/N},$$
 
-when we set $f_n = f(\delta n)$ we also have $F_k = \frac{1}{\delta} F(\frac{k}{n \delta})$.
+when we set $f_n = f(\delta n)$ we also have $F_k = \frac{1}{\delta} F(\frac{k}{N \delta})$, therefore $\delta$ sampling step induces $1/N\delta$ step in the frequency domain.
 
 Wow! This shall be recepy how to manipulate with kernel for the convolution! Now if you have a look to the actual implementation e.g. in CUDA kernel `cuda/diffractionPhysics.cu` [spectralMultiplicationFresnel](https://github.com/kulvait/KCT_dentk/blob/48199e8a8a65d534417f585c4351475055399f23/cuda/diffractionPhysics.cu#L143) you can see that there is no division by pixel area. Why? It is because of the convolution. If we do that integral, we have to multiply by the pixel area each discretized cell to obtain correct result. This is the reason why in eq (14) in Katkovnik2008 there is multiplication by pixel area. So instead of dividing and then multiplying, we just omit the operation.
 
