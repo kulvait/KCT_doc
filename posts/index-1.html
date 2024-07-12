@@ -96,7 +96,7 @@ bg-dark
 <p>When we unpack the data of example volume, we see that dicom files with the suffix dcm are in the directory <code>TCGA-19-1787/04-20-2002-NA-NR CT HEAD W CE-97133/2.000000-Head Vol.  1.5  H40s ST-51391</code>. For simplicity I rename this directory just to DICOM and remove parent subdirectories. 
 From the DICOM headers we can see that it is a scan on SIEMENS Sensation Cardiac 64 CT machine. It contains $124$ slices with the thickness of $1.5$mm of the dimension $512 \times 512$, the voxel sizes are ($0.64453125$mm, $0.64453125$mm, $1.5$mm).</p>
 <h3>Conversion of DICOM series to DEN format</h3>
-<p>For the purpose of this example, we have to transform the DICOM dataset into the <a href="../">DEN format</a>, which is used by KCT framework. We do it using <a href="https://github.com/kulvait/KCT_denpy">KCT_denpy package</a>. This package allow us to convert between the representations of the volume data as numpy.ndarray, DEN file or DICOM series. Internally it uses the package pydicom to read DICOM data.</p>
+<p>For the purpose of this example, we have to transform the DICOM dataset into the <a href="../den-format.html">DEN format</a>, which is used by KCT framework. We do it using <a href="https://github.com/kulvait/KCT_denpy">KCT_denpy package</a>. This package allow us to convert between the representations of the volume data as numpy.ndarray, DEN file or DICOM series. Internally it uses the package pydicom to read DICOM data.</p>
 <p>For the conversion, I have created a simple script <code>[DICOMTODEN.py](https://github.com/kulvait/KCT_scripts/blob/master/DICOMTODEN.py)</code>. The command to convert the data to the DEN format will then be</p>
 <pre class="code literal-block">DICOMTODEN.py --force --dicom-file-suffix <span class="s2">"dcm"</span> DICOM DEN_HU
 </pre>
@@ -160,9 +160,10 @@ MathJax.Hub.Config({
     }
 });
 </script><!--End of body content--><footer id="footer">
-            Contents © 2024         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2024         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - <a href="https://kulvait.github.io/donate/?amount=15&amp;currency=USD"> <img src="https://img.shields.io/badge/donate-%2415-blue.svg" alt="Thank you"></a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
+
 
             
             
