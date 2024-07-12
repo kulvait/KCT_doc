@@ -14,8 +14,7 @@
 <meta property="og:site_name" content="KCT framework">
 <meta property="og:title" content="DEN format">
 <meta property="og:url" content="https://kulvait.github.io/KCT_doc/den-format.html">
-<meta property="og:description" content="Legacy DEN
-Within this framework, the DEN format is used to store volume, projection and other types of data. This is a binary format for storing three-dimensional arrays of uint16, float32 or float64">
+<meta property="og:description" content="The DEN format is a versatile and powerful storage format for multidimensional (ND) stacks of data of various types. The dentk package provides a range of tools for manipulating this data, including s">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2021-09-13T12:06:01+02:00">
 </head>
@@ -73,48 +72,125 @@ bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <h3>Legacy DEN</h3>
-<p>Within this framework, the DEN format is used to store volume, projection and other types of data. This is a binary format for storing three-dimensional arrays of uint16, float32 or float64 values. It has a fixed header of 6 bytes representing three uint16 values corresponding to the dimensions of the array dimy, dimx, dimz, respectively. The data after the header is aligned in x-major order and all values are encoded little endian. The x-major alignment means that the value representing the position (ix,iy,iz) in the array has a flat index$ ix + iy * dimx + iz * dimx * dimy$. </p>
-<p>The DEN or Dennerlein format is named after the German CT researcher, Dr.Ing. Frank Dennerlein.</p>
-<h4>Problems with legacy format</h4>
-<p>The type of the data can only be derived from the file size and number of elements represented as given by header. Element size of uint16 is 2 bytes, float32 4 bytes and float64 8 bytes. Thus it is not possible to represent or distinguish two types with 4 bytes element size. Such element must ever be float. This is one limiting factor.</p>
-<p>The fact that the order of dimensions in the header is (dimy, dimx, dimz) instead of the more natural (dimx, dimy, dimz) is questionable. This is more common in matrix notation, where we first list the number of rows and then the number of columns. For multidimensional arrays, this is counterintuitive. There is no support for y-major alignment, where matrix data of dimensions (dimy, dimx) would be stored column by column. In addition, a single dimension can have a maximum of 65535 elements.</p>
-<p>Fixing number of dimensions to 3 also reduces flexibility of the format. In some situations would be nice to be able to represent 1D arrays or arrays of greater dimensions than 3D.</p>
-<h3>Extended DEN format</h3>
-<p>To address problems with legacy DEN format, KCT library implements also extended DEN, which is binary format to store multidimensional arrays of up to 16 dimensions. It follows a concept of small header followed by data entries. Extended DEN files with data are not valid legacy DEN files to be able to distinguish them by parsers. It is due to the fact, that the header of the extended file start with uint16(0). </p>
-<p>The extended format preserves the use of little endian encoding and also the concept of a fixed-length header followed by a data set. For the sake of data alignment in memory, we decided to use a header length of 4096 bytes. For now it uses just 74 bytes. First 5 uint16 values are the following. First is 0, then number of dimensions that needs to be less than 16, then byte size of the element, x-major or y-major specifier and type of the element specifier.</p>
-<p><img src="images/DENEXT_header1.svg"></p>
-<p>They are followed by up to 16 dimension specification values.</p>
-<p><img src="images/DENEXT_header2.svg"></p>
+    <p>The DEN format is a versatile and powerful storage format for multidimensional (ND) stacks of data of various types. The <code>dentk</code> package provides a range of tools for manipulating this data, including summing, slicing, and applying complex operations like Gaussian blur. Although the format is uncompressed, which is a trade-off for ease of access, it remains highly efficient for handling large datasets. The format is also highly flexible, allowing for the storage of different data types in up to 16 dimensions.</p>
+<h3>Overview of Extended DEN format</h3>
+<p>The extended DEN format is a binary format for storing multidimensional arrays of up to 16 dimensions. It is an extension of the legacy DEN format, which was limited to three dimensions. The extended DEN format is designed to address the limitations of the legacy format and provide a more flexible and versatile storage solution for multidimensional data.</p>
+<p>The header consists of 4096 bytes, but currently, only 74 bytes are utilized. The first five <code>uint16</code> values are as follows:
+- <code>0</code>
+- Number of dimensions (must be less than 16)
+- Byte size of the element
+- X-major or Y-major specifier
+- Type of the element specifier</p>
+<h4>Header Structure</h4>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Value Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1st <code>uint16</code>
+</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2nd <code>uint16</code>
+</td>
+<td>Number of dimensions (less than 16)</td>
+</tr>
+<tr>
+<td>3rd <code>uint16</code>
+</td>
+<td>Byte size of the element</td>
+</tr>
+<tr>
+<td>4th <code>uint16</code>
+</td>
+<td>X-major (0) or Y-major (1) specifier</td>
+</tr>
+<tr>
+<td>5th <code>uint16</code>
+</td>
+<td>Type of the element specifier</td>
+</tr>
+</tbody>
+</table>
+<p>Following these, there are up to 16 dimension specification values:</p>
+<table>
+<thead><tr>
+<th>Byte Field</th>
+<th>Value Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Each <code>uint32</code>
+</td>
+<td>Dimension size</td>
+</tr>
+<tr>
+<td>Dimension Names</td>
+<td>[dim_1(x), dim_2(y), ..., dim_16]</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>Note that when converting DEN files into the numpy arrays, then for 5D file DEN.shape=(dim_5, dim_4, dim_3, dim_2, dim_1) and the dim_5 will correspond to the axis0. This way however from 3D DEN file we get particular frame with dim_3 index k just by using DEN[k] in numpy. Still keep in mind that numpy index convention might also be contraintuitive.</p>
+<p>Note: When converting DEN files into NumPy arrays, for a 5D file, <code>DEN.shape = (dim_5, dim_4, dim_3, dim_2, dim_1)</code>, where <code>dim_5</code> corresponds to <code>axis 0</code>. Thus, for a 3D DEN file, a specific frame with <code>dim_3</code> index <code>k</code> can be accessed using <code>DEN[k]</code> in NumPy. Be aware that the NumPy index convention might also be counterintuitive.</p>
 </blockquote>
-<p>Supported element types and byte sizes are listed in the following Java code from DEN file opener, where the element type ids are in comments:</p>
-<pre class="code literal-block"><span class="kd">public</span> <span class="kd">enum</span> <span class="n">DenDataType</span> <span class="p">{</span>
-    <span class="c1">// Ordinal num is the position in the enum</span>
-    <span class="c1">// thus for this enum is the ordinal important as its the code in DEX file</span>
-    <span class="n">UINT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="c1">// 0</span>
-    <span class="n">INT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="c1">// 1</span>
-    <span class="n">UINT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 2</span>
-    <span class="n">INT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 3</span>
-    <span class="n">UINT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 4</span>
-    <span class="n">INT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 5</span>
-    <span class="n">FLOAT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="c1">// 6</span>
-    <span class="n">FLOAT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="c1">// 7</span>
-    <span class="n">UINT8</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// 8</span>
+<p>The header consists of 4096 bytes. Currently, 74 bytes are utilized and rest are reserved for future use or user specific information. The size of the header is fixed at 4096 bytes to ensure that the data starts at a 4096-byte boundary, which can be beneficial for memory alignment and performance reasons.</p>
+<h4>Supported Element Types and Byte Sizes</h4>
+<p>The supported element types and their corresponding byte sizes are listed below:</p>
+<pre class="code literal-block"><span></span><code><span class="n">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">DenDataType</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">UINT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="w">   </span><span class="o">//</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">INT16</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">UINT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w">   </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">INT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">UINT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="w">   </span><span class="o">//</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">INT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">FLOAT32</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">FLOAT64</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">UINT8</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">8</span>
 
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">byteSize</span><span class="p">;</span>
-    <span class="kd">private</span> <span class="nf">DenDataType</span><span class="p">(</span><span class="kt">int</span> <span class="n">byteSize</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">byteSize</span> <span class="o">=</span> <span class="n">byteSize</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byteSize</span><span class="p">;</span> <span class="p">}</span>
+<span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">byteSize</span><span class="p">;</span>
+<span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">DenDataType</span><span class="p">(</span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">byteSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">byteSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byteSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">getSize</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">byteSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
-</pre>
-<p>This extended format was implemented in DEN file openner from commit 9d5696, version 1.3.1.
-This extended format was implemented in denpy from commit 21ded7, version 1.2.1.
-This extended format was implemented in ctiol from commit 618aec3c0bf.</p>
-<h3>Deprecated extended implementation</h3>
-<p>There is one more implementation of extended format, which just change dimension describing parameter from uint16 to uint32 and adds possibility of y-majority. It is now deprecated and will not be used in the future.</p>
-<p>Extended version implemented in KCT is able to represent data with each dimension up to the uint32_t_max. The header in this format is 18bytes and it starts with (0,0,0) or (0,0,1) and continues by (dimy, dimx, dimz) of uint32_t values. Format with initial part of header (0,0,0) has the same row major alignment of the remaining sequence of data, while in the format with initial part of header (0,0,1) the value representing the position (ix,iy,iz) will have a flat index $iy + ix * dimy + iz * dimx * dimy$
-therefore the data are in column major order.</p>
+</code></pre>
+
+<p>The extended DEN format was implemented in the DEN file opener from commit <code>9d5696</code> (version 1.3.1), <code>denpy</code> from commit <code>21ded7</code> (version 1.2.1), and <code>ctiol</code> from commit <code>618aec3c0bf</code>.</p>
+<h3>Legacy DEN Format</h3>
+<p>Within this framework, the legacy DEN format was used to store volume, projection, and other types of data. It is a binary format for storing three-dimensional arrays of uint16, float32, or float64 values. The legacy format has a fixed header of 6 bytes, representing three uint16 values corresponding to the dimensions of the array dimy, dimx, dimz, respectively. The data after the header is aligned in x-major order, with all values encoded in little-endian. The x-major alignment means that the value representing the position (ix, iy, iz) in the array has a flat index ix + iy * dimx + iz * dimx * dimy.</p>
+<p>The DEN format is named after the German CT researcher, Dr. Ing. Frank Dennerlein.</p>
+<h4>Problems with the Legacy Format</h4>
+<p>The legacy format has several limitations:</p>
+<ul>
+<li>The data type can only be derived from the file size and number of elements indicated by the header. This limitation prevents the representation or distinction of two types with a 4-byte element size.</li>
+<li>The order of dimensions in the header is (dimy, dimx, dimz), which is counterintuitive for multidimensional arrays.</li>
+<li>There is no support for y-major alignment.</li>
+<li>A single dimension can have a maximum of 65,535 elements.</li>
+<li>Fixing the number of dimensions to 3 reduces the flexibility of the format, making it unsuitable for representing 1D arrays or arrays with more than 3 dimensions.</li>
+</ul>
+<h3>Use Cases and Tools for Manipulation</h3>
+<p>The Extended DEN format is supported by several tools for efficient manipulation and visualization of the data:</p>
+<h4>Tools</h4>
+<ul>
+<li>
+<strong>DENTK</strong>: <a href="https://github.com/kulvait/KCT_dentk">DENTK</a> is a collection of BASH command line programs written in C++ for manipulating DEN format data.</li>
+<li>
+<strong>CTIOL</strong>: <a href="https://github.com/kulvait/KCT_ctiol">CTIOL</a> is a C++ library dedicated to I/O operations with the DEN format.</li>
+<li>
+<strong>KCT denpy</strong>: The <a href="https://github.com/kulvait/KCT_denpy">KCT denpy</a> library, particularly its submodule DEN, provides extensive functionality for manipulating DEN format data in Python.</li>
+<li>
+<strong>KCT den file opener</strong>: <a href="https://github.com/kulvait/KCT_den_file_opener">KCT den file opener</a> is a tool for visualizing DEN data stacks in ImageJ. It also includes classes useful for implementing reading/writing the format in Java.</li>
+</ul>
+<h4>Use Cases</h4>
+<p>The DEN format is utilized in various applications for tomographic reconstruction, perfusion analysis, and more:</p>
+<ul>
+<li>
+<strong>KCT CBCT</strong>: <a href="https://github.com/kulvait/KCT_cbct">KCT cbct</a> is a tool for tomographic reconstruction that stores projection data and output volumes in DEN format.</li>
+<li>
+<strong>KPCT perfviz</strong>: <a href="https://github.com/kulvait/KPCT_perfviz">KPCT perfviz</a> is used for processing perfusion and brain perfusion CT datasets, leveraging the DEN format for efficient data handling.</li>
+</ul>
+<p>These tools and use cases demonstrate the flexibility and power of the Extended DEN format for storing and manipulating complex multidimensional datasets.</p>
     </div>
     
         
@@ -131,7 +207,7 @@ MathJax.Hub.Config({
     }
 });
 </script></article><!--End of body content--><footer id="footer">
-            Contents © 2023         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+            Contents © 2024         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
 KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
 Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
 
@@ -149,4 +225,3 @@ Any data provided on this site or within the KCT framework may be subject to dif
     </script>
 </body>
 </html>
-
