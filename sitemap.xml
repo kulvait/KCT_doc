@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://kulvait.github.io/KCT_doc/</loc>
-  <lastmod>2023-03-24T09:26:00Z</lastmod>
+  <lastmod>2024-07-16T18:37:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/2021/</loc>
@@ -52,6 +52,10 @@
  <url>
   <loc>https://kulvait.github.io/KCT_doc/den-format.html</loc>
   <lastmod>2024-07-12T09:23:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kulvait.github.io/KCT_doc/dentk-gauss.html</loc>
+  <lastmod>2024-07-16T22:56:00Z</lastmod>
  </url>
  <url>
   <loc>https://kulvait.github.io/KCT_doc/galleries/</loc>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DENTK dentk-gauss | KCT framework</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
+<link rel="canonical" href="https://kulvait.github.io/KCT_doc/dentk-gauss.html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><meta name="author" content="VK">
+<meta property="og:site_name" content="KCT framework">
+<meta property="og:title" content="DENTK dentk-gauss">
+<meta property="og:url" content="https://kulvait.github.io/KCT_doc/dentk-gauss.html">
+<meta property="og:description" content="dentk-gauss is a command-line tool designed to apply Gaussian blur in three dimensions to large 3D image stacks stored in the DEN format. The tool leverages CUDA for accelerated processing and perform">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2024-07-12T09:11:02+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href=".">
+
+            <span id="blog-title">KCT framework</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="categories/using_kct_blog.html" class="nav-link">Using KCT blog</a>
+                </li>
+<li class="nav-item">
+<a href="posts" class="nav-link">Blog posts</a>
+                </li>
+<li class="nav-item">
+<a href="archive.html" class="nav-link">Blog Archive</a>
+                </li>
+<li class="nav-item">
+<a href="categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h2 class="p-name entry-title" itemprop="headline name">DENTK dentk-gauss</h2>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p><code>dentk-gauss</code> is a command-line tool designed to apply Gaussian blur in three dimensions to large 3D image stacks stored in the DEN format. The tool leverages CUDA for accelerated processing and performs the Gaussian blur operation in the Fourier space for efficiency. By utilizing the separability property of the Gaussian filter, <code>dentk-gauss</code> applies the blur in two stages: a 2D Gaussian blur followed by a 1D Gaussian blur along the z dimension. This approach enhances data locality and speeds up processing for large datasets.</p>
+<h3>Gaussian Filter Separability</h3>
+<p>The Gaussian filter is separable, meaning a multi-dimensional Gaussian function can be decomposed into the product of one-dimensional Gaussian functions. This property allows the application of a 3D Gaussian blur to be split into three consecutive 1D Gaussian blurs along each dimension. Mathematically, a 3D Gaussian filter ( G(x, y, z) ) can be expressed as:</p>
+<p>[ G(x, y, z) = G(x) \cdot G(y) \cdot G(z) ]</p>
+<p>For more details on the Gaussian filter and its properties, you can refer to the <a href="https://en.wikipedia.org/wiki/Gaussian_blur">Wikipedia page on Gaussian blur</a>.</p>
+<h3>Convolution Theorem</h3>
+<p>The Convolution Theorem states that the Fourier transform of a convolution of two functions is the pointwise product of their Fourier transforms. This property allows us to apply Gaussian blur by:</p>
+<ol>
+<li>Taking the Fourier transform of the image.</li>
+<li>Taking the Fourier transform of the Gaussian kernel.</li>
+<li>Multiplying these two Fourier transforms together.</li>
+<li>Taking the inverse Fourier transform of the result to get the blurred image.</li>
+</ol>
+<h4>Applying Gaussian Blur in 2D with Different (\sigma_x) and (\sigma_y)</h4>
+<p>To apply a Gaussian blur in 2D with different standard deviations ((\sigma_x) and (\sigma_y)) for the x and y dimensions, follow these steps:</p>
+<ol>
+<li>
+<strong>Generate the 2D Gaussian Kernel</strong>: Create a Gaussian kernel in the spatial domain with the desired (\sigma_x) and (\sigma_y).</li>
+<li>
+<strong>Transform the Kernel</strong>: Compute the Fourier transform of this Gaussian kernel.</li>
+<li>
+<strong>Transform the Image</strong>: Compute the Fourier transform of the image.</li>
+<li>
+<strong>Multiply in the Frequency Domain</strong>: Multiply the Fourier transform of the image by the Fourier transform of the Gaussian kernel.</li>
+<li>
+<strong>Inverse Transform</strong>: Compute the inverse Fourier transform of the product to get the blurred image.</li>
+</ol>
+<h4>Example Code in Python</h4>
+<p>Start of the problem</p>
+<div class="code"><pre class="code literal-block"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft2</span><span class="p">,</span> <span class="n">ifft2</span><span class="p">,</span> <span class="kp">fftshift</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+
+<span class="k">def</span> <span class="nf">gaussian_kernel</span><span class="p">(</span><span class="kp">shape</span><span class="p">,</span> <span class="n">sigma_x</span><span class="p">,</span> <span class="n">sigma_y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Create a 2D Gaussian kernel."""</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="p">[(</span><span class="n">ss</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span> <span class="k">for</span> <span class="n">ss</span> <span class="ow">in</span> <span class="kp">shape</span><span class="p">]</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">ogrid</span><span class="p">[</span><span class="o">-</span><span class="n">m</span><span class="p">:</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="n">n</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma_x</span><span class="o">*</span><span class="n">sigma_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sigma_y</span><span class="o">*</span><span class="n">sigma_y</span><span class="p">)))</span>
+    <span class="n">h</span><span class="p">[</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="kp">finfo</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="kp">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="n">h</span><span class="o">.</span><span class="kp">max</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">h</span>
+
+<span class="k">def</span> <span class="nf">apply_gaussian_blur</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sigma_x</span><span class="p">,</span> <span class="n">sigma_y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Apply Gaussian blur to an image using the Convolution Theorem."""</span>
+    <span class="c1"># Create Gaussian kernel</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">gaussian_kernel</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="kp">shape</span><span class="p">,</span> <span class="n">sigma_x</span><span class="p">,</span> <span class="n">sigma_y</span><span class="p">)</span>
+    <span class="n">kernel</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="kp">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+
+    <span class="c1"># Fourier transform of the image and the kernel</span>
+    <span class="n">image_ft</span> <span class="o">=</span> <span class="n">fft2</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">kernel_ft</span> <span class="o">=</span> <span class="n">fft2</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="kp">shape</span><span class="p">)</span>
+
+    <span class="c1"># Multiply in the frequency domain</span>
+    <span class="n">blurred_ft</span> <span class="o">=</span> <span class="n">image_ft</span> <span class="o">*</span> <span class="n">kernel_ft</span>
+
+    <span class="c1"># Inverse Fourier transform to get the blurred image</span>
+    <span class="n">blurred_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="kp">real</span><span class="p">(</span><span class="n">ifft2</span><span class="p">(</span><span class="n">blurred_ft</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">blurred_image</span>
+</pre></div>
+
+<h2>Example usage</h2>
+<pre class="code literal-block"><span></span><code>image = np.random.rand(512, 512)  # Replace with actual image
+sigma_x, sigma_y = 2.0, 3.0
+blurred_image = apply_gaussian_blur(image, sigma_x, sigma_y)
+</code></pre>
+
+<h2>Sigma in Pixels and Running Average</h2>
+<p>The parameter (\sigma) in the Gaussian blur represents the standard deviation of the Gaussian function and is expressed in pixels. It defines the extent of the blur; a larger (\sigma) results in a blurrier image.</p>
+<p>To compare Gaussian blur with a running average (box blur) over a window (e.g., $10 \times 10$ pixels), you can relate the window size to (\sigma). A running average over a ( k \times k )window has an effect similar to a Gaussian blur with (\sigma = \frac{k} / 2.57 ). For example a $ 10 \times 10$ running average window corresponds to (\sigma = \frac{k} / 10/2.57 \approx 3.89 ). Visually, both methods will smooth the image, but the Gaussian blur provides a more natural, smooth transition compared to the abrupt edges of a running average.</p>
+<p>The factor 2.57 is derived empirically from comparing the effective width of a Gaussian function and a box filter. It is used to approximate the standard deviation (\sigma) of a Gaussian filter that has a similar smoothing effect to a box filter (running average) of size k. This factor remains constant for 1D and 2D and does not scale with the square. </p>
+<h3>Implementation details</h3>
+<p>Aforementioned separability is crucial for handling large datasets efficiently. By first applying a 2D Gaussian blur in the xy-plane and then a 1D Gaussian blur along the z-axis, the tool maximizes data locality and leverages the computational advantages of CUDA.</p>
+<h4>CUDA and Data Locality</h4>
+<p>To handle large datasets efficiently, <code>dentk-gauss</code> leverages CUDA for parallel processing. CUDA allows the tool to perform the Gaussian blur operation in the Fourier space, which significantly reduces the computational complexity.</p>
+<h4>Data Locality Optimization</h4>
+<p>Before applying the Gaussian blur in the third dimension, the tool transforms the data so that the z dimension is the fastest changing. This transformation ensures that the data is contiguous in memory, which enhances data locality and speeds up the operation. By performing the 2D Gaussian blur in the xy-plane first and then applying the 1D Gaussian blur along the z-axis, the tool minimizes cache misses and maximizes the efficiency of memory access.</p>
+<h3>Command Line Interface</h3>
+<p>The command line interface for <code>dentk-gauss</code> follows a similar structure to the existing tool <code>dentk-framecalc1</code>.</p>
+<pre class="code literal-block"><span></span><code><span class="nl">Usage</span><span class="p">:</span><span class="w"> </span><span class="n">dentk</span><span class="o">-</span><span class="n">gauss</span><span class="w"> </span><span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span><span class="w"> </span><span class="n">input_den</span><span class="w"> </span><span class="n">output_den</span>
+
+<span class="nl">Positionals</span><span class="p">:</span>
+<span class="w">  </span><span class="n">input_den</span><span class="w"> </span><span class="n">TEXT</span><span class="o">:</span><span class="kt">FILE</span><span class="w"> </span><span class="n">REQUIRED</span>
+<span class="w">                              </span><span class="n">Input</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">Gaussian</span><span class="w"> </span><span class="n">blur</span><span class="p">.</span>
+<span class="w">  </span><span class="n">output_den</span><span class="w"> </span><span class="n">TEXT</span><span class="w"> </span><span class="n">REQUIRED</span><span class="w">    </span><span class="n">Output</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">Gaussian</span><span class="w"> </span><span class="n">blur</span><span class="p">.</span>
+
+<span class="nl">Options</span><span class="p">:</span>
+<span class="w">  </span><span class="o">-</span><span class="n">h</span><span class="p">,</span><span class="o">--</span><span class="n">help</span><span class="w">                   </span><span class="n">Print</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">exit</span>
+<span class="w">  </span><span class="o">--</span><span class="n">sigma_x</span><span class="w"> </span><span class="n">FLOAT</span><span class="o">:</span><span class="n">NONNEGATIVE</span><span class="w"> </span><span class="n">Sigma</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Gaussian</span><span class="w"> </span><span class="n">blur</span><span class="w"> </span><span class="p">[</span><span class="k">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">].</span>
+<span class="w">  </span><span class="o">--</span><span class="n">sigma_y</span><span class="w"> </span><span class="n">FLOAT</span><span class="o">:</span><span class="n">NONNEGATIVE</span><span class="w"> </span><span class="n">Sigma</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Gaussian</span><span class="w"> </span><span class="n">blur</span><span class="w"> </span><span class="p">[</span><span class="k">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">].</span>
+<span class="w">  </span><span class="o">--</span><span class="n">sigma_z</span><span class="w"> </span><span class="n">FLOAT</span><span class="o">:</span><span class="n">NONNEGATIVE</span><span class="w"> </span><span class="n">Sigma</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Gaussian</span><span class="w"> </span><span class="n">blur</span><span class="w"> </span><span class="p">[</span><span class="k">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">].</span>
+<span class="w">  </span><span class="o">--</span><span class="n">force</span><span class="w">                     </span><span class="n">Overwrite</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">they</span><span class="w"> </span><span class="n">exist</span><span class="p">,</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="nb">false</span><span class="p">.</span>
+<span class="w">  </span><span class="o">-</span><span class="n">f</span><span class="p">,</span><span class="o">--</span><span class="n">frames</span><span class="w"> </span><span class="n">TEXT</span><span class="w">            </span><span class="n">Frames</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="w"> </span><span class="n">Frames</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="n">based</span><span class="p">.</span><span class="w"> </span><span class="n">Input</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">range</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span><span class="w"> </span><span class="mi">0-20</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">individual</span><span class="w"> </span><span class="n">coma</span><span class="w"> </span><span class="n">separated</span><span class="w"> </span><span class="n">frames</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mf">9.</span><span class="w"> </span><span class="n">Order</span><span class="w"> </span><span class="n">does</span><span class="w"> </span><span class="n">matter</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">ranges</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">lowest</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">highest</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">included</span><span class="p">.</span><span class="w"> </span><span class="n">Accepts</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="n">literal</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">means</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">processed</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="w"> </span><span class="n">Frames</span><span class="w"> </span><span class="n">might</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">describe</span><span class="w"> </span><span class="n">only</span><span class="w"> </span><span class="n">third</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">flat</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">frame</span><span class="p">.</span>
+<span class="w">  </span><span class="o">-</span><span class="n">r</span><span class="p">,</span><span class="o">--</span><span class="n">reverse</span><span class="o">-</span><span class="n">order</span><span class="w">          </span><span class="n">Output</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">reverse</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">reverse</span><span class="w"> </span><span class="n">specified</span><span class="w"> </span><span class="n">frames</span><span class="p">.</span>
+<span class="w">  </span><span class="o">-</span><span class="n">k</span><span class="p">,</span><span class="o">--</span><span class="n">each</span><span class="o">-</span><span class="n">kth</span><span class="w"> </span><span class="n">UINT</span><span class="o">:</span><span class="n">INT</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">65535</span><span class="p">]</span>
+<span class="w">                              </span><span class="n">Process</span><span class="w"> </span><span class="n">only</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">k</span><span class="o">-</span><span class="n">th</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="n">specified</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">output</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">frames</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="mi">1</span><span class="n">st</span><span class="w"> </span><span class="n">specified</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">+</span><span class="n">kN</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="mf">1.</span><span class="p">..</span><span class="err">\</span><span class="n">infty</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">such</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="n">exists</span><span class="p">.</span><span class="w"> </span><span class="n">Parametter</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="n">integer</span><span class="p">.</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">operation</span><span class="w"> </span><span class="n">takes</span><span class="w"> </span><span class="n">place</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="n">processing</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="n">specification</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">argument</span><span class="w"> </span><span class="o">--</span><span class="n">frames</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">possible</span><span class="w"> </span><span class="n">reverse</span><span class="p">.</span>
+<span class="w">  </span><span class="o">-</span><span class="n">j</span><span class="p">,</span><span class="o">--</span><span class="n">threads</span><span class="w"> </span><span class="n">INT</span><span class="o">:</span><span class="n">INT</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="mi">-10</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1280</span><span class="p">]</span>
+<span class="w">                              </span><span class="n">Number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">extra</span><span class="w"> </span><span class="n">threads</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">program</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">use</span><span class="p">,</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="mf">128.</span><span class="w"> </span><span class="n">Zero</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">denotes</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">threading</span><span class="p">.</span><span class="w"> </span><span class="n">Negative</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="n">represent</span><span class="w"> </span><span class="n">fractions</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">cores</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.,</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="n">means</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="mi">128</span><span class="w"> </span><span class="n">cores</span><span class="p">,</span><span class="w"> </span><span class="mi">-2</span><span class="w"> </span><span class="n">means</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="n">cores</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="p">.</span>
+<span class="p">[</span><span class="n">Option</span><span class="w"> </span><span class="n">Group</span><span class="o">:</span><span class="w"> </span><span class="n">Padding</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="p">]</span>
+<span class="w">  </span><span class="n">Padding</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="p">,</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">NOPAD</span><span class="p">.</span><span class="w"> </span>
+<span class="w">  </span><span class="p">[</span><span class="n">At</span><span class="w"> </span><span class="n">most</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">allowed</span><span class="p">]</span>
+<span class="w">  </span><span class="nl">Options</span><span class="p">:</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padxy</span><span class="o">-</span><span class="n">wrap</span><span class="w">                </span><span class="n">Wrap</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">circularly</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">causing</span><span class="w"> </span><span class="n">wrap</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="w"> </span><span class="n">convolution</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">NOPAD</span><span class="p">.</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padxy</span><span class="o">-</span><span class="n">zero</span><span class="w">                </span><span class="n">Zero</span><span class="w"> </span><span class="n">pad</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">extending</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">ZEROPAD</span><span class="p">.</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padxy</span><span class="o">-</span><span class="n">sym</span><span class="w">                 </span><span class="n">Symmetrically</span><span class="w"> </span><span class="n">pad</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">xy</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">extending</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">SYMPAD</span><span class="p">.</span>
+<span class="p">[</span><span class="n">Option</span><span class="w"> </span><span class="n">Group</span><span class="o">:</span><span class="w"> </span><span class="n">Padding</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="p">]</span>
+<span class="w">  </span><span class="n">Padding</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="p">.</span><span class="w"> </span>
+<span class="w">  </span><span class="p">[</span><span class="n">At</span><span class="w"> </span><span class="n">most</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">allowed</span><span class="p">]</span>
+<span class="w">  </span><span class="nl">Options</span><span class="p">:</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padz</span><span class="o">-</span><span class="n">wrap</span><span class="w">                 </span><span class="n">Wrap</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">circularly</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">causing</span><span class="w"> </span><span class="n">wrap</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="w"> </span><span class="n">convolution</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">NOPAD</span><span class="p">.</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padz</span><span class="o">-</span><span class="n">zero</span><span class="w">                 </span><span class="n">Zero</span><span class="w"> </span><span class="n">pad</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">extending</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">ZEROPAD</span><span class="p">.</span>
+<span class="w">    </span><span class="o">--</span><span class="n">padz</span><span class="o">-</span><span class="n">sym</span><span class="w">                  </span><span class="n">Symmetrically</span><span class="w"> </span><span class="n">pad</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">extending</span><span class="w"> </span><span class="n">Fourier</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">PaddingMode</span><span class="o">::</span><span class="n">SYMPAD</span><span class="p">.</span>
+</code></pre>
+
+<h3>Conclusion</h3>
+<p><code>dentk-gauss</code> is a powerful tool for applying Gaussian blur to large 3D image stacks. By utilizing the separability property of the Gaussian function and leveraging CUDA for accelerated processing, it offers an efficient solution for handling large datasets. The command line interface provides flexible options for specifying the frames to process and the parameters of the Gaussian blur.</p>
+    </div>
+    
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+    },
+    displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script></article><!--End of body content--><footer id="footer">
+            Contents © 2024         <a href="mailto:kulvait%20at%20gmail%20dot%20com">VK</a> - <a href="https://kulvait.github.io/donate/?amount=15&amp;currency=USD"> <img src="https://img.shields.io/badge/donate-%2415-blue.svg" alt="Thank you"></a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a> <br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png">   </a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">KCT framework wiki and blog</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Vojtěch Kulvait</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. <br>
+KCT framework itself is licensed under the terms of GNU GPL3 license. <br>
+Any data provided on this site or within the KCT framework may be subject to different licensing arrangements.
+
+
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
